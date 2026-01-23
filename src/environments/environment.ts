@@ -37,5 +37,5 @@ export const environment = {
     BUSINESS_UNIT: businessUnit,
 
     // ========= User environment ==================
-    userURL: resolveServer(20024, servMsftDev),
+    userURL: resolveServer(20024, 'localhost'),
 };

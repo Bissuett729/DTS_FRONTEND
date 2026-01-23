@@ -7,6 +7,7 @@ import { LoaderPage } from "../../components/loader-page/loader-page";
 import { SupportSidebar } from '../../components/support-sidebar/support-sidebar';
 import { Header } from "../header/header";
 import { Sidebar } from "../sidebar/sidebar";
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'foxcode-layout-template',
@@ -18,11 +19,13 @@ export class LayoutTemplate implements OnInit {
   private authService = inject(AuthService);
   private storageRepository = inject(StorageRepository);
   
-  sidebarCollapsed = signal(false);
+  sidebarCollapsed = signal(true);
   isLoadingPage = signal(true);
   loaderMessage = signal('Loading...');
   supportSidebarOpen = signal(false);
   isDarkMode = signal(false);
+  businessUnit = signal(environment.BUSINESS_UNIT);
+  showUATBanner = signal(environment.mode === 'UAT');
   user = this.authService.user;
 
   ngOnInit(): void {

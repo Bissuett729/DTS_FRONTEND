@@ -124,6 +124,14 @@ export class ChangePassword implements OnInit {
   }
 
   cancelChange(): void {
-    this.router.navigate(['/foxcode']);
+    this.changePasswordForm.reset();
+    this.error.set(null);
+    this.success.set(false);
+    this.successNotAuthorized.set(false);
+    this.isLoading.set(false);
+    this.showOldPassword.set(false);
+    this.showNewPassword.set(false);
+    this.showConfirmPassword.set(false);
+    this.router.navigate(['/auth/login']);
   }
 }

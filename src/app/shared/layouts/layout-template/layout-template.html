@@ -1,38 +1,39 @@
 @if (isLoadingPage()) {
   <foxcode-loader-page [message]="loaderMessage()"></foxcode-loader-page>
 } @else {
-  <div 
-    class="grid grid-rows-[64px_1fr] h-screen overflow-hidden transition-all duration-300" 
-    [ngClass]="sidebarCollapsed() ? 'grid-cols-[0_1fr]' : 'grid-cols-[260px_1fr] max-md:grid-cols-[0_1fr]'">
-    
-    <!-- Header -->
-    <foxcode-header 
-      class="col-span-2"
-      [user]="user()"
-      [supportSidebarOpen]="supportSidebarOpen()"
-      [sidebarCollapsed]="sidebarCollapsed()"
-      [isDarkMode]="isDarkMode()"
-      (onToggleSidebar)="toggleSidebar()"
-      (onToggleSupportSidebar)="toggleSupportSidebar()"
-      (onToggleTheme)="toggleTheme()"
-      (onLogout)="onLogout()">
-    </foxcode-header>
+  <div class="relative">
+    <div class="grid grid-rows-[64px_1fr] h-screen overflow-hidden">
+      
+      <!-- Header -->
+      <foxcode-header 
+        class="col-span-2"
+        [user]="user()"
+        [supportSidebarOpen]="supportSidebarOpen()"
+        [sidebarCollapsed]="sidebarCollapsed()"
+        [isDarkMode]="isDarkMode()"
+        [businessUnit]="businessUnit()"
+        [showUATBanner]="showUATBanner()"
+        (onToggleSidebar)="toggleSidebar()"
+        (onToggleSupportSidebar)="toggleSupportSidebar()"
+        (onToggleTheme)="toggleTheme()"
+        (onLogout)="onLogout()">
+      </foxcode-header>
 
-    <!-- Sidebar -->
-    <foxcode-sidebar 
-      [collapsed]="sidebarCollapsed()"
-      class="overflow-y-auto transition-all duration-300 shadow-xl max-md:fixed max-md:top-17.5 max-md:bottom-0 max-md:w-65 max-md:z-99"
-      [ngClass]="sidebarCollapsed() ? 'max-md:-left-65' : 'max-md:left-0'">
-    </foxcode-sidebar>
-
-    <!-- Main Content -->
-    <main class="bg-content-bg overflow-y-auto">
-      <div class="p-8 max-w-350 mx-auto max-md:p-4">
+      <!-- Main Content -->
+      <main class="col-span-2 bg-content-bg overflow-y-auto w-full h-full">
         <router-outlet></router-outlet>
-      </div>
-    </main>
+      </main>
 
+    </div>
   </div>
+
+  <!-- Left Sidebar -->
+  @if (!sidebarCollapsed()) {
+    <foxcode-sidebar 
+      [businessUnit]="businessUnit()"
+      (onClose)="toggleSidebar()">
+    </foxcode-sidebar>
+  }
 
   <!-- Support Sidebar -->
   @if (supportSidebarOpen()) {

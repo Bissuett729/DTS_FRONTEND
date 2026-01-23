@@ -49,6 +49,12 @@ export class AuthApiRepository implements AuthRepository {
     );
   }
 
+  register<T>(userData: any): Observable<T> {
+    return this.http.post<T>(`${this.userURL}`, userData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Ha ocurrido un error';
     

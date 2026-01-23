@@ -14,6 +14,8 @@ export class Header {
   @Input() supportSidebarOpen = false;
   @Input() sidebarCollapsed = false;
   @Input() isDarkMode = false;
+  @Input() businessUnit = 'MICROSOFT';
+  @Input() showUATBanner = false;
   
   @Output() onToggleSidebar = new EventEmitter<void>();
   @Output() onToggleSupportSidebar = new EventEmitter<void>();

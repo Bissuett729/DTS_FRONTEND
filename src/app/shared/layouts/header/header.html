@@ -14,16 +14,18 @@
             
             <div class="h-8 w-px bg-white/20 max-md:hidden"></div>
             
-            <h1 class="text-white text-sm font-bold m-0 tracking-[0.2em] px-3 py-1.5 rounded-md bg-[#00517e] shadow-sm">
-                MICROSOFT
+            <h1 class="text-white text-sm font-bold m-0 tracking-[0.2em] px-3 py-1.5 rounded-md bg-[#00517e] shadow-sm uppercase">
+                {{ businessUnit }}
             </h1>
         </div>
 
         <!-- Banner Section -->
-        <div class="hidden lg:flex items-center gap-2 px-4 py-2 bg-yellow-500/20 border border-yellow-500/40 rounded-lg animate-pulse">
-            <i class="ri-alert-line text-yellow-400 text-lg"></i>
-            <span class="text-yellow-300 text-xs font-medium">This page is under validation (UAT Environment)</span>
-        </div>
+        @if (showUATBanner) {
+            <div class="hidden lg:flex items-center gap-2 px-4 py-2 bg-yellow-500/20 border border-yellow-500/40 rounded-lg animate-pulse">
+                <i class="ri-alert-line text-yellow-400 text-lg"></i>
+                <span class="text-yellow-300 text-xs font-medium">This page is under validation (UAT Environment)</span>
+            </div>
+        }
 
         <!-- Right Section -->
         <div class="flex items-center gap-3">

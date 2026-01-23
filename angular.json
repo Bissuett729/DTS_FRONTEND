@@ -9,11 +9,16 @@
     "FOXCODE_FRONTEND_21": {
       "projectType": "application",
       "schematics": {
+        "@schematics/angular:application": {
+          "style": "tailwind"
+        },
         "@schematics/angular:component": {
           "skipImport": true,
           "standalone": true,
+          "inlineStyle": true,
           "skipTests": true,
-          "prefix": "foxcode"
+          "prefix": "foxcode",
+          "style": "sass"
         }
       },
       "root": "",
@@ -38,7 +43,12 @@
             ],
             "styles": [
               "src/styles.css"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+              ]
+            }
           },
           "configurations": {
             "production": {

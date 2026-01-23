@@ -1,0 +1,6 @@
+// FoxCode Color Variables
+$foxcode-primary: #035a8b;
+
+// Additional color variables can be added here
+$foxcode-primary-light: lighten($foxcode-primary, 10%);
+$foxcode-primary-dark: darken($foxcode-primary, 10%);

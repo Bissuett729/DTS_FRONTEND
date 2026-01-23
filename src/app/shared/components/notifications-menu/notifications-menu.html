@@ -1,0 +1,55 @@
+<div 
+    class="fixed inset-0 z-40"
+    (click)="emitNotificationAction()">
+</div>
+              
+<div class="absolute right-0 top-12 w-80 max-h-125 bg-[#003d65] rounded-lg shadow-2xl z-50 overflow-hidden border border-[#00243f]">
+    <!-- Header -->
+    <div class="px-4 py-3 bg-[#002b47] border-b border-[#8d8d8d]">
+        <h3 class="text-white font-semibold text-sm">Notifications</h3>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="overflow-y-auto max-h-105 notifications-scroll">
+        @for (notification of notifications; track notification.id) {
+        <div class="px-4 py-3 hover:bg-gray-700/50 cursor-pointer transition-colors border-b border-[#8d8d8d] relative">
+            <!-- Status Badge -->
+            <div class="absolute top-2 right-2">
+            @if (notification.status === 'LOW') {
+                <span class="px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded transform rotate-12">
+                LOW
+                </span>
+            }
+            @if (notification.status === 'PRIORITY') {
+                <span class="px-2 py-0.5 bg-purple-500 text-white text-[10px] font-bold rounded transform rotate-12">
+                PRIORITY
+                </span>
+            }
+            </div>
+
+            <!-- Title -->
+            <h4 class="text-white font-semibold text-sm mb-1 pr-16">
+            {{ notification.title }}
+            </h4>
+
+            <!-- Description -->
+            <p class="text-gray-400 text-xs mb-2">
+            {{ notification.description }}
+            </p>
+
+            <!-- Type Badge -->
+            <div class="flex items-center gap-2 mb-2">
+            <span class="px-2 py-0.5 bg-purple-600 text-white text-[10px] font-semibold rounded">
+                {{ notification.type }}
+            </span>
+            </div>
+
+            <!-- Footer -->
+            <div class="flex items-center justify-between text-xs">
+            <span class="text-blue-400 font-medium">{{ notification.user }}</span>
+            <span class="text-gray-500">{{ notification.time }}</span>
+            </div>
+        </div>
+        }
+    </div>
+</div>

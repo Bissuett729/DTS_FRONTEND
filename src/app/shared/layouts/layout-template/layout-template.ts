@@ -1,51 +1,74 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/application/services/auth.service';
-import { filter } from 'rxjs';
+import { StorageRepository } from '../../../core/domain';
+import { LoaderPage } from "../../components/loader-page/loader-page";
+import { SupportSidebar } from '../../components/support-sidebar/support-sidebar';
+import { Header } from "../header/header";
+import { Sidebar } from "../sidebar/sidebar";
 
 @Component({
   selector: 'foxcode-layout-template',
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './layout-template.html',
-  styleUrl: './layout-template.css',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, LoaderPage, SupportSidebar, Header, Sidebar],
+  templateUrl: './layout-template.html'
 })
 export class LayoutTemplate implements OnInit {
   private authService = inject(AuthService);
-  private router = inject(Router);
+  private storageRepository = inject(StorageRepository);
   
   sidebarCollapsed = signal(false);
-  isNavigating = signal(false);
+  isLoadingPage = signal(true);
+  loaderMessage = signal('Loading...');
+  supportSidebarOpen = signal(false);
+  isDarkMode = signal(false);
   user = this.authService.user;
 
   ngOnInit(): void {
-    // Escuchar eventos de navegación
-    this.router.events.pipe(
-      filter(event => 
-        event instanceof NavigationStart || 
-        event instanceof NavigationEnd || 
-        event instanceof NavigationCancel || 
-        event instanceof NavigationError
-      )
-    ).subscribe(event => {
-      if (event instanceof NavigationStart) {
-        this.isNavigating.set(true);
-      } else {
-        // Pequeño delay para mejor UX
-        setTimeout(() => {
-          this.isNavigating.set(false);
-        }, 300);
-      }
-    });
+    // Load theme from localStorage
+    const savedTheme = this.storageRepository.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkMode.set(true);
+      document.documentElement.classList.add('dark');
+    }
+
+    setTimeout(() => {
+      this.isLoadingPage.set(false);
+    }, 800);
   }
 
   toggleSidebar(): void {
     this.sidebarCollapsed.update(value => !value);
   }
 
-  onLogout(): void {
-    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-      this.authService.logout();
+  toggleSupportSidebar(): void {
+    this.supportSidebarOpen.update(value => !value);
+  }
+
+  closeSupportSidebar(): void {
+    this.supportSidebarOpen.set(false);
+  }
+
+  toggleTheme(): void {
+    this.isDarkMode.update(value => !value);
+    
+    if (this.isDarkMode()) {
+      document.documentElement.classList.add('dark');
+      this.storageRepository.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      this.storageRepository.setItem('theme', 'light');
     }
+  }
+
+  onLogout(): void {
+    this.loaderMessage.set('Goodbye, see you soon');
+    this.isLoadingPage.set(true);
+    
+    setTimeout(() => {
+      const currentToken = this.storageRepository.getItem('accessToken');
+      this.authService.logout(currentToken!);
+    }, 1500);
   }
 }

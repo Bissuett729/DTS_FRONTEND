@@ -10,8 +10,8 @@ export class LogoutUseCase {
   private authRepository = inject(AuthRepository);
   private storageRepository = inject(StorageRepository);
 
-  execute(): Observable<ILogoutResponse> {
-    return this.authRepository.logout().pipe(
+  execute(token: string): Observable<ILogoutResponse> {
+    return this.authRepository.logout(token).pipe(
       tap((response) => {
         // Solo limpiar si el logout fue exitoso
         if (response.success) {

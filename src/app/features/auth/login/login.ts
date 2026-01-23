@@ -14,13 +14,15 @@ export class Login implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 
-  loginForm!: FormGroup;
+  loginForm!: FormGroup
 
   // Exponer signals del AuthService al template
   isLoading = this.authService.isLoading;
   error = this.authService.error;
 
   ngOnInit(): void {
+    // Resetear todo el estado de autenticación al cargar login
+    this.authService.resetAuthState();
     this.initForm();
   }
 

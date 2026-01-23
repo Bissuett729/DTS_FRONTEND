@@ -23,6 +23,7 @@ export class AuthService {
   private userSignal = signal<any | null>(null);
   private isLoadingSignal = signal<boolean>(false);
   private errorSignal = signal<string | null>(null);
+  private allowChangePasswordSignal = signal<boolean>(false);
 
   // Token monitoring
   private tokenExpirationTimer: any = null;
@@ -65,6 +66,7 @@ export class AuthService {
     this.storageRepository.removeItem('user');
     this.storageRepository.removeItem('accessToken');
     this.userSignal.set(null);
+    this.allowChangePasswordSignal.set(false);
     this.stopTokenMonitoring();
   }
 
@@ -97,6 +99,7 @@ export class AuthService {
 
   private startTokenMonitoring(token: string): void {
     this.stopTokenMonitoring();
+    const currentToken = this.storageRepository.getItem('accessToken');
     
     try {
       const payload = this.decodeToken(token);
@@ -118,11 +121,11 @@ export class AuthService {
       } else {
         // Token ya expiró
         console.log('Token expired, logging out...');
-        this.logout();
+        this.logout(currentToken!);
       }
     } catch (error) {
       console.error('Error starting token monitoring:', error);
-      this.logout();
+      this.logout(currentToken!);
     }
   }
 
@@ -168,8 +171,10 @@ export class AuthService {
 
           // Redireccionar según si requiere cambio de contraseña
           if (response.user.requiresPasswordChange) {
+            this.allowChangePasswordSignal.set(true);
             this.router.navigate(['/auth/change-password']);
           } else {
+            this.allowChangePasswordSignal.set(false);
             this.router.navigate(['/foxcode']);
           }
         }),
@@ -182,10 +187,10 @@ export class AuthService {
       .subscribe();
   }
 
-  logout(): void {
+  logout(token: string): void {
     this.stopTokenMonitoring();
     this.logoutUseCase
-      .execute()
+      .execute(token)
       .pipe(
         tap((response) => {
           // Solo limpiar y redirigir si el logout fue exitoso
@@ -228,7 +233,7 @@ export class AuthService {
     const currentToken = this.storageRepository.getItem('accessToken');
     if (!currentToken) {
       console.error('No access token available to refresh');
-      this.logout();
+      this.logout(currentToken!);
       return;
     }
 
@@ -258,7 +263,7 @@ export class AuthService {
         catchError((error) => {
           console.error('Error refreshing token:', error);
           // Si el refresh falla, cerrar sesión
-          this.logout();
+          this.logout(currentToken!);
           return of();
         }),
       )
@@ -267,5 +272,30 @@ export class AuthService {
 
   clearError(): void {
     this.errorSignal.set(null);
+  }
+
+  resetAuthState(): void {
+    this.errorSignal.set(null);
+    this.isLoadingSignal.set(false);
+    this.allowChangePasswordSignal.set(false);
+  }
+
+  canAccessChangePassword(): boolean {
+    return this.allowChangePasswordSignal();
+  }
+
+  markPasswordChanged(): void {
+    const user = this.userSignal();
+    if (user) {
+      this.userSignal.set({
+        ...user,
+        requiresPasswordChange: false,
+      });
+    }
+    this.allowChangePasswordSignal.set(false);
+  }
+
+  changePassword(id: string, currentPassword: string, newPassword: string): Observable<any> {
+    return this.loginUseCase['authRepository'].changePassword(id, currentPassword, newPassword);
   }
 }

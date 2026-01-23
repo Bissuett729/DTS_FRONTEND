@@ -11,7 +11,6 @@ export const routes: Routes = [
     },
     {
         path: 'auth',
-        canActivate: [noAuthGuard],
         loadChildren: () => import('./features/auth/auth.routes').then(m => m.AuthRoutes)
     },
     {

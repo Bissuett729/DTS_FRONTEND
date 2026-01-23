@@ -20,6 +20,10 @@ export class Register implements OnInit {
   success = signal(false);
 
   ngOnInit(): void {
+    // Resetear estado local al cargar register
+    this.isLoading.set(false);
+    this.error.set(null);
+    this.success.set(false);
     this.initForm();
   }
 

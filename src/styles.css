@@ -1,4 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss";
-@import "remixicon/fonts/remixicon.css";
+@import 'tailwindcss';
+@import 'remixicon/fonts/remixicon.css';
+
+@variant dark (&:where(.dark, .dark *));
+
+button {
+  cursor: pointer;
+}
+
+:root {
+  --bg-primary: white;
+  --text-primary: black;
+  --foxcode-color: #035a8b;
+  --content-bg: #fafafa;
+}
+
+.dark {
+  --bg-primary: #111827;
+  --text-primary: white;
+  --foxcode-color: #00649d;
+  --content-bg: #303030;
+}
+
+@theme {
+  --color-bg-primary: var(--bg-primary);
+  --color-text-primary: var(--text-primary);
+  --color-content-bg: var(--content-bg);
+  --color-foxcode: var(--foxcode-color);
+}

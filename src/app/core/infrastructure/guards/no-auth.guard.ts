@@ -1,15 +1,16 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { StorageRepository } from '../../domain/repositories/storage.repository';
+import { AuthService } from '../../application/services/auth.service';
 
 export const noAuthGuard: CanActivateFn = (route, state) => {
-    const storageRepository = inject(StorageRepository);
+    const authService = inject(AuthService);
     const router = inject(Router);
 
-    const token = storageRepository.getItem('accessToken');
+    // Si el usuario ya está autenticado, redirigir a /foxcode
+    if (authService.isUserAuthenticated()) {
+        router.navigate(['/foxcode']);
+        return false;
+    }
 
-    if (!token) { return true }
-
-    router.navigate(['/dashboard']);
-    return false;
+    return true;
 };

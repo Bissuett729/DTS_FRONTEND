@@ -1,17 +1,17 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { StorageRepository } from '../../domain/repositories/storage.repository';
+import { AuthService } from '../../application/services/auth.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const storageRepository = inject(StorageRepository);
+  const authService = inject(AuthService);
   const router = inject(Router);
   
-  const token = storageRepository.getItem('accessToken');
-  
-  if (token) {
+  // Verificar si el usuario está autenticado y el token es válido
+  if (authService.isUserAuthenticated()) {
     return true;
   }
   
+  // Si no está autenticado, redirigir al login
   router.navigate(['/auth/login'], {
     queryParams: { returnUrl: state.url }
   });

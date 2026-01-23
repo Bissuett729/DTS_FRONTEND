@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { AuthRepository } from '../../domain/repositories/auth.repository';
+import { AuthRepository, ILogoutResponse } from '../../domain/repositories/auth.repository';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -17,20 +17,20 @@ export class AuthApiRepository implements AuthRepository {
     );
   }
 
-  logout(): Observable<void> {
-    return this.http.post<void>(`${this.userURL}/logout`, {}).pipe(
+  logout(): Observable<ILogoutResponse> {
+    return this.http.post<ILogoutResponse>(`${this.userURL}/logout`, {}).pipe(
       catchError(this.handleError)
     );
   }
 
-  refreshToken(refreshToken: string): Observable<any> {
-    return this.http.post<any>(`${this.userURL}/refresh-token`, { refreshToken }).pipe(
+  refreshToken<T>(refreshToken: string): Observable<T> {
+    return this.http.post<T>(`${this.userURL}/refresh`, { accessToken: refreshToken }).pipe(
       catchError(this.handleError)
     );
   }
 
-  getCurrentUser(): Observable<any> {
-    return this.http.get<any>(`${this.userURL}/me`).pipe(
+  getCurrentUser<T>(): Observable<T> {
+    return this.http.get<T>(`${this.userURL}/me`).pipe(
       catchError(this.handleError)
     );
   }

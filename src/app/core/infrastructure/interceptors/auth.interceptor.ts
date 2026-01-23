@@ -10,10 +10,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   
   const token = storageRepository.getItem('accessToken');
   
-  if (req.url.includes('/auth/login') || req.url.includes('/auth/refresh-token')) {
+  // No agregar token a las rutas de autenticación
+  if (req.url.includes('/auth/login') || 
+      req.url.includes('/auth/refresh') || 
+      req.url.includes('/auth/validate-token')) {
     return next(req);
   }
   
+  // Agregar token a la petición si existe
   if (token) {
     req = req.clone({
       setHeaders: {
@@ -24,24 +28,32 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   
   return next(req).pipe(
     catchError((error) => {
+      // Si recibimos un 401, intentar refrescar el token
       if (error.status === 401) {
-        const refreshToken = storageRepository.getItem('refreshToken');
+        const currentToken = storageRepository.getItem('accessToken');
         
-        if (refreshToken) {
-          return refreshTokenUseCase.execute(refreshToken).pipe(
-            switchMap(tokens => {
+        if (currentToken) {
+          return refreshTokenUseCase.execute(currentToken).pipe(
+            switchMap(response => {
+              // Reintentar la petición con el nuevo token
               const retryReq = req.clone({
                 setHeaders: {
-                  Authorization: `Bearer ${tokens.accessToken}`
+                  Authorization: `Bearer ${response.accessToken}`
                 }
               });
               return next(retryReq);
             }),
             catchError((refreshError) => {
+              // Si el refresh falla, limpiar storage y redirigir al login
               storageRepository.clear();
+              window.location.href = '/auth/login';
               return throwError(() => refreshError);
             })
           );
+        } else {
+          // No hay token, redirigir al login
+          storageRepository.clear();
+          window.location.href = '/auth/login';
         }
       }
       

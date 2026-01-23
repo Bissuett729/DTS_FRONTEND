@@ -1,1 +1,97 @@
-<p>register works!</p>
+<div class="register-container">
+    <div class="relative z-10 w-full h-full flex justify-end items-center register-wrapper">
+        <div class="register-panel">
+            <div class="text-center register-header">
+                <h1 class="register-title">REGISTER</h1>
+                <img src="../../../../assets/foxcode/logo.png" alt="Foxcode Logo" class="register-logo">
+            </div>
+
+            <form class="w-full register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <!-- Mensaje de éxito -->
+                @if (success()) {
+                    <div class="success-message">
+                        <i class="ri-checkbox-circle-line text-2xl"></i>
+                        <span>Registration successful! Redirecting to login...</span>
+                    </div>
+                }
+
+                <!-- Mensaje de error -->
+                @if (error()) {
+                    <div class="error-message">
+                        <span>{{ error() }}</span>
+                        <button type="button" (click)="clearError()" class="error-close">
+                            <i class="ri-close-line text-lg"></i>
+                        </button>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <div class="input-wrapper"
+                         [class.input-default]="!registerForm.get('fullName')?.invalid || !registerForm.get('fullName')?.touched"
+                         [class.input-error]="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched">
+                        <i class="ri-user-line input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="fullName"
+                            formControlName="fullName"
+                            class="form-input" 
+                            placeholder="Enter your full name" 
+                            required>
+                    </div>
+                    @if (registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched) {
+                        <p class="field-error">Full name is required (min. 3 characters)</p>
+                    }
+                </div>
+                
+                <div class="form-group">
+                    <label for="clock" class="form-label">#Clock</label>
+                    <div class="input-wrapper"
+                         [class.input-default]="!registerForm.get('clock')?.invalid || !registerForm.get('clock')?.touched"
+                         [class.input-error]="registerForm.get('clock')?.invalid && registerForm.get('clock')?.touched">
+                        <i class="ri-time-line input-icon"></i>
+                        <input 
+                            type="number" 
+                            id="clock"
+                            formControlName="clock"
+                            class="form-input" 
+                            placeholder="Enter your clock number" 
+                            required>
+                    </div>
+                    @if (registerForm.get('clock')?.invalid && registerForm.get('clock')?.touched) {
+                        <p class="field-error">Clock number is required</p>
+                    }
+                </div>
+                
+                <button 
+                    type="submit" 
+                    [disabled]="isLoading() || success()"
+                    class="submit-button">
+                    @if (isLoading()) {
+                        <i class="ri-loader-4-line animate-spin text-xl"></i>
+                        <span>Creating Account...</span>
+                    } 
+                    @else if (success()) {
+                        <i class="ri-check-line text-xl"></i>
+                        <span>Success!</span>
+                    }
+                    @else {
+                        <span>Create Account</span>
+                    }
+                </button>
+                
+                <div class="login-link">
+                    <p class="login-text">
+                        Already have an account? 
+                        <a href="/auth/login" class="login-link-text">Sign in here</a>
+                    </p>
+                </div>
+
+            </form>
+
+            <div class="register-footer">
+                <p class="footer-text">Application developed by the test engineering development team.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,3 +23,5 @@ export interface ILoginResponse {
         authorized: boolean;
     };
 }
+
+export interface IRefreshTokenResponse extends ILoginResponse {}

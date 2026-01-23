@@ -160,6 +160,7 @@ export class AuthService {
             roleIds: response.user.roleIds,
             departmentId: response.user.departmentId,
             businessUnitId: response.user.businessUnitId,
+            tools: response.user.tools,
             active: response.user.active,
             requiresPasswordChange: response.user.requiresPasswordChange,
             authorized: response.user.authorized,

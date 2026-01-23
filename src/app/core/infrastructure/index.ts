@@ -1,6 +1,7 @@
 // Repositories
 export * from './repositories/auth-api.repository';
 export * from './repositories/local-storage.repository';
+export * from './repositories/tools-api.repository';
 
 // Guards
 export * from './guards/auth.guard';

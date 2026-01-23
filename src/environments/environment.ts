@@ -31,6 +31,7 @@ const resolveServer = (port: number, fallback: string): string => {
 export const environment = {
     // ========= System environments ==================
     IP: ip,
+    environmentName: 'development',
     ENCRYPTION_KEY: `yHojgZdVh9Q+al5UwAQxHTv0IFakDBQIVlIGvHPRrCc=`,
     production: false,
     mode: isUAT ? 'UAT' : 'PROD',

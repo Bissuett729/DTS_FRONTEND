@@ -8,6 +8,8 @@ import { AuthRepository } from './core/domain/repositories/auth.repository';
 import { AuthApiRepository } from './core/infrastructure/repositories/auth-api.repository';
 import { StorageRepository } from './core/domain/repositories/storage.repository';
 import { LocalStorageRepository } from './core/infrastructure/repositories/local-storage.repository';
+import { UserRepository } from './core/domain/repositories/user.repository';
+import { UserApiRepository } from './core/infrastructure/repositories/user-api.repository';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +19,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor])
     ),
     { provide: AuthRepository, useClass: AuthApiRepository },
-    { provide: StorageRepository, useClass: LocalStorageRepository }
+    { provide: StorageRepository, useClass: LocalStorageRepository },
+    { provide: UserRepository, useClass: UserApiRepository }
   ]
 };

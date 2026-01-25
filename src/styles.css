@@ -2,30 +2,9 @@
 
 @import 'tailwindcss';
 @import 'remixicon/fonts/remixicon.css';
-
-@variant dark (&:where(.dark, .dark *));
+@import './styles/_variables.css';
 
 button {
   cursor: pointer;
 }
 
-:root {
-  --bg-primary: white;
-  --text-primary: black;
-  --foxcode-color: #035a8b;
-  --content-bg: #fafafa;
-}
-
-.dark {
-  --bg-primary: #111827;
-  --text-primary: white;
-  --foxcode-color: #00649d;
-  --content-bg: #303030;
-}
-
-@theme {
-  --color-bg-primary: var(--bg-primary);
-  --color-primary: var(--text-primary);
-  --color-content-bg: var(--content-bg);
-  --color-foxcode: var(--foxcode-color);
-}

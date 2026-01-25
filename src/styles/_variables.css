@@ -1,0 +1,28 @@
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg-primary: white;
+  --text-primary: black;
+  --foxcode-color: #035a8b;
+  --content-bg: #eceff3;
+}
+
+.dark {
+  --bg-primary: #111827;
+  --text-primary: white;
+  --foxcode-color: #00649d;
+  --content-bg: #303030;
+}
+
+@theme {
+  --color-bg-primary: var(--bg-primary);
+  --color-primary: var(--text-primary);
+  --color-content-bg: var(--content-bg);
+  --color-foxcode: var(--foxcode-color);
+}
+
+/* Prevent white flash between route swaps */
+html,
+body {
+  background-color: var(--color-content-bg);
+}

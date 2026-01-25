@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NotificationsMenu } from "../../components";
 
@@ -23,6 +24,7 @@ export class Header {
   @Output() onToggleTheme = new EventEmitter<void>();
 
   notificationsOpen = signal(false);
+  constructor(private router: Router) {}
 
   notifications = [
     {
@@ -139,5 +141,9 @@ export class Header {
 
   toggleTheme(): void {
     this.onToggleTheme.emit();
+  }
+
+  goHome(): void {
+    this.router.navigate(['/foxcode', 'home']);
   }
 }

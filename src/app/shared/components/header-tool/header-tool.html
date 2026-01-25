@@ -1,0 +1,74 @@
+<header class="bg-foxcode border-b border-foxcode/20 dark:border-gray-700 px-2 py-1 flex items-center justify-between shadow-sm">
+    <!-- Tool Name -->
+    <div class="flex items-center gap-3">
+        <h1 class="text-xl font-bold text-white uppercase tracking-wide">{{ toolName }}</h1>
+    </div>
+
+    <!-- Menus & Options -->
+    <div class="flex items-center gap-2">
+        <!-- Menus with optional submenus -->
+        @for (menu of menus; track $index) {
+            <div class="relative group">
+                @if (menu.childrens && menu.childrens.length > 0) {
+                    <!-- Menu with children (dropdown on hover) -->
+                    <button 
+                        type="button"
+                        routerLinkActive="bg-white/25 text-white font-semibold"
+                        [routerLinkActiveOptions]="{ exact: false }"
+                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200">
+                        <span>{{ menu.label }}</span>
+                        <i class="ri-arrow-down-s-line text-base transition-transform group-hover:rotate-180"></i>
+                    </button>
+
+                    <!-- Dropdown menu (shows on hover) -->
+                    <div class="absolute right-0 mt-2 w-56 bg-[#004d7a] dark:bg-gray-800 rounded-lg shadow-xl border border-white/10 dark:border-gray-700 py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        @for (child of menu.childrens; track child.link) {
+                            <a 
+                                [routerLink]="[child.link]"
+                                routerLinkActive="bg-white/25 text-white font-semibold border-l-2 border-white"
+                                [routerLinkActiveOptions]="{ exact: false }"
+                                class="block px-4 py-2 text-sm text-white/90 hover:text-white dark:text-gray-300 hover:bg-white/15 dark:hover:bg-gray-700 transition-colors">
+                                {{ child.label }}
+                            </a>
+                        }
+                    </div>
+                } @else {
+                    <!-- Simple menu link -->
+                    <a 
+                        [routerLink]="[menu.link]"
+                        routerLinkActive="bg-white/25 text-white font-semibold"
+                        [routerLinkActiveOptions]="{ exact: false }"
+                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200">
+                        <span>{{ menu.label }}</span>
+                    </a>
+                }
+            </div>
+        }
+
+        <!-- Options Dropdown -->
+        @if (options.length > 0) {
+            <div class="relative">
+                <button 
+                    type="button"
+                    class="flex items-center justify-center w-9 h-9 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200"
+                    [class.bg-white/20]="openOptionsDropdown()"
+                    (click)="toggleOptions()">
+                    <i class="ri-more-2-fill text-xl"></i>
+                </button>
+
+                @if (openOptionsDropdown()) {
+                    <div class="absolute right-0 mt-2 w-48 bg-[#004d7a] dark:bg-gray-800 rounded-lg shadow-xl border border-white/10 dark:border-gray-700 py-2 z-50">
+                        @for (option of options; track option.label) {
+                            <button 
+                                type="button"
+                                class="w-full text-left px-4 py-2 text-sm text-white/90 hover:text-white dark:text-gray-300 hover:bg-white/15 dark:hover:bg-gray-700 transition-colors"
+                                (click)="executeOption(option.action)">
+                                {{ option.label }}
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</header>

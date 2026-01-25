@@ -16,7 +16,34 @@ export const routes: Routes = [
     {
         path: 'foxcode',
         canActivate: [authGuard],
-        loadComponent: () => import('./shared/layouts/layout-template/layout-template').then(m => m.LayoutTemplate)
+        loadComponent: () => import('./shared/layouts/layout-template/layout-template').then(m => m.LayoutTemplate),
+        children: [
+            {
+                path: 'home',
+                loadComponent: () => import('./features/home/home').then(m => m.Home)
+            },
+            {
+                path: 'microsoft',
+                loadChildren: () => import('./features/business-units/microsoft/microsoft.routes').then(m => m.MicrosoftRoutes)
+            },
+            {
+                path: 'lvo',
+                loadChildren: () => import('./features/business-units/lvo/lvo.routes').then(m => m.LvoRoutes)
+            },
+            {
+                path: 'starr',
+                loadChildren: () => import('./features/business-units/starr/starr.routes').then(m => m.StarrRoutes)
+            },
+            {
+                path: 'development/admin',
+                loadChildren: () => import('./features/admin/admin.routes').then(m => m.AdminRoutes)
+            },
+            {
+                path: '',
+                redirectTo: 'home',
+                pathMatch: 'full'
+            }
+        ]
     },
     {
         path: '**',

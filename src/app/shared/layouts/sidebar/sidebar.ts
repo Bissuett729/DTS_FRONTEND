@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/application';
 import { ToolsApiRepository } from '../../../core/infrastructure/repositories/tools-api.repository';
 import { Tool } from '../../../core/domain/interfaces/tool.interface';
@@ -8,7 +9,7 @@ import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'foxcode-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.html',
   styles: [
   ]
@@ -29,13 +30,21 @@ export class Sidebar implements OnInit {
   // Filter tools based on business unit and mode
   filteredTools = computed(() => {
     const currentBU = this.businessUnit.toUpperCase();
+    const allowedBusinessUnits = [currentBU, 'DEVELOPMENT'];
     const currentMode = environment.environmentName.toLowerCase();
-    
-    return this.allTools().filter(tool => 
-      tool.active && 
-      tool.businessUnitId.name.toUpperCase() === currentBU &&
-      tool.toolMode.some(mode => mode.toLowerCase() === currentMode)
-    );
+
+    return this.allTools()
+      .filter(tool =>
+        tool.active &&
+        allowedBusinessUnits.includes(tool.businessUnitId.name.toUpperCase()) &&
+        tool.toolMode.some(mode => mode.toLowerCase() === currentMode)
+      )
+      .sort((a, b) => {
+        const aIsAdmin = a.businessUnitId.name.toUpperCase() === 'DEVELOPMENT';
+        const bIsAdmin = b.businessUnitId.name.toUpperCase() === 'DEVELOPMENT';
+        if (aIsAdmin === bIsAdmin) return 0;
+        return aIsAdmin ? -1 : 1; // Admin tools first
+      });
   });
 
   ngOnInit(): void {

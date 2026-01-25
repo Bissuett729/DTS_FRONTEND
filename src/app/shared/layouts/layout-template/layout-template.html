@@ -27,6 +27,11 @@
     </div>
   </div>
 
+  <!-- Route-change overlay (smoother than blank flash) -->
+  @if (isRouting()) {
+    <foxcode-loader-page [message]="'Loading...'"></foxcode-loader-page>
+  }
+
   <!-- Left Sidebar -->
   @if (!sidebarCollapsed()) {
     <foxcode-sidebar 

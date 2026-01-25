@@ -1,0 +1,32 @@
+<section class="w-full h-full">
+
+    <foxcode-card>
+        <div class="dark:border-gray-700 flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                    User Management
+                </h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    Create, edit, and manage user accounts. Assign roles, departments, and configure access permissions for the platform.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-x-2">
+                <foxcode-input
+                    icon="ri-search-2-line"
+                    placeholder="Search users by clock or name"
+                    [control]="searchControl">
+                </foxcode-input>
+    
+                <foxcode-button 
+                    label="Filter" 
+                    [disabled]="searchControlValue === ''" 
+                    [loading]="false"
+                    (click)="applyFilters()">
+                </foxcode-button>
+            </div>
+        </div>
+
+    </foxcode-card>
+
+</section>

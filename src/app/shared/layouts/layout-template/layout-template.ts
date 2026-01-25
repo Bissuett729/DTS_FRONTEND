@@ -1,10 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { AuthService } from '../../../core/application/services/auth.service';
 import { StorageRepository } from '../../../core/domain';
 import { LoaderPage } from "../../components/loader-page/loader-page";
-import { SupportSidebar } from '../../components/support-sidebar/support-sidebar';
+import { SupportSidebar } from '../support-sidebar/support-sidebar';
 import { Header } from "../header/header";
 import { Sidebar } from "../sidebar/sidebar";
 import { environment } from '../../../../environments/environment';
@@ -15,18 +15,21 @@ import { environment } from '../../../../environments/environment';
   imports: [CommonModule, RouterOutlet, LoaderPage, SupportSidebar, Header, Sidebar],
   templateUrl: './layout-template.html'
 })
-export class LayoutTemplate implements OnInit {
+export class LayoutTemplate implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private storageRepository = inject(StorageRepository);
+  private router = inject(Router);
   
   sidebarCollapsed = signal(true);
   isLoadingPage = signal(true);
+  isRouting = signal(false);
   loaderMessage = signal('Loading...');
   supportSidebarOpen = signal(false);
   isDarkMode = signal(false);
   businessUnit = signal(environment.BUSINESS_UNIT);
   showUATBanner = signal(environment.mode === 'UAT');
   user = this.authService.user;
+  private routerSub?: any;
 
   ngOnInit(): void {
     // Load theme from localStorage
@@ -39,6 +42,17 @@ export class LayoutTemplate implements OnInit {
     setTimeout(() => {
       this.isLoadingPage.set(false);
     }, 800);
+
+    // Show overlay strictly during navigation (start -> end/cancel/error)
+    this.routerSub = this.router.events.subscribe(evt => {
+      if (evt instanceof NavigationStart) {
+        this.loaderMessage.set('Loading...');
+        this.isRouting.set(true);
+      }
+      if (evt instanceof NavigationEnd || evt instanceof NavigationCancel || evt instanceof NavigationError) {
+        this.isRouting.set(false);
+      }
+    });
   }
 
   toggleSidebar(): void {
@@ -73,5 +87,9 @@ export class LayoutTemplate implements OnInit {
       const currentToken = this.storageRepository.getItem('accessToken');
       this.authService.logout(currentToken!);
     }, 1500);
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe?.();
   }
 }

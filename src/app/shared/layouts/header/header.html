@@ -1,4 +1,4 @@
-<header class="bg-foxcode shadow-lg z-100 relative h-full">
+<header class="bg-foxcode shadow-sm z-100 relative h-full">
     <div class="flex justify-between items-center h-full px-8 max-md:px-4">
         <!-- Left Section -->
         <div class="flex items-center gap-4 h-full">
@@ -36,7 +36,7 @@
             <!-- Version Badge -->
             <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full">
                 <i class="ri-code-box-line text-white/70 text-sm"></i>
-                <span class="text-white/90 text-xs font-medium">v2.38.0</span>
+                <span class="text-white/90 text-xs font-medium">{{ appVersion() }}</span>
             </div>
 
             <!-- Theme Toggle Button -->
@@ -84,9 +84,9 @@
                     <div class="flex flex-col items-end text-white">
                         <div class="flex items-center gap-2">
                             <i class="ri-time-line text-xs text-white/70"></i>
-                            <span class="font-semibold text-sm">{{ user?.clock }}</span>
+                            <span class="font-medium text-sm">{{ user?.clock }}</span>
                             <span class="text-white/50">•</span>
-                            <span class="font-semibold text-sm">{{ user?.username }}</span>
+                            <span class="font-medium text-sm">{{ user?.username }}</span>
                         </div>
                         @if (user?.email) {
                             <span class="text-xs text-white/70 mt-0.5">{{ user?.email }}</span>

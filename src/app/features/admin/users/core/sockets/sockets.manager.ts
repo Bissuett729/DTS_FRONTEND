@@ -2,12 +2,8 @@ import { Injectable, signal } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { UserSocketService } from '../../../../../core/infrastructure/services/user-socket.service';
 import { StorageRepository } from '../../../../../core/domain/repositories/storage.repository';
-import { UsersStateService } from './users.state.service';
+import { UsersStateService } from '../../shared/services/users.state.service';
 
-/**
- * Servicio para manejar conexión y eventos WebSocket de usuarios
- * Conecta los eventos del socket con las actualizaciones del estado
- */
 @Injectable()
 export class UsersSocketManagerService {
   socketConnected = signal<boolean>(false);
@@ -18,9 +14,6 @@ export class UsersSocketManagerService {
     private stateService: UsersStateService
   ) {}
 
-  /**
-   * Conectar al socket de usuarios
-   */
   connect(destroy$: Subject<void>): void {
     const token = this.storageRepository.getItem('accessToken');
     if (!token) {
@@ -39,9 +32,6 @@ export class UsersSocketManagerService {
       });
   }
 
-  /**
-   * Configurar listeners para todos los eventos de usuario
-   */
   setupListeners(destroy$: Subject<void>): void {
     // Usuario creado
     this.userSocketService.onUserCreated()
@@ -76,9 +66,6 @@ export class UsersSocketManagerService {
       });
   }
 
-  /**
-   * Desconectar del socket
-   */
   disconnect(): void {
     this.userSocketService.disconnect();
     this.socketConnected.set(false);

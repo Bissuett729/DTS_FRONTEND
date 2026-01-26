@@ -53,7 +53,7 @@ export class FoxcodeButton {
       danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-600/30 active:bg-red-800',
       success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-600/30 active:bg-green-800',
       warning: 'bg-yellow-500 hover:bg-yellow-600 text-white focus:ring-yellow-500/30 active:bg-yellow-700',
-      ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-gray-400/30',
+      ghost: 'bg-gray-100/80 hover:bg-gray-100/80 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:ring-gray-300/50 dark:focus:ring-gray-500/30 active:bg-gray-200/70 dark:active:bg-gray-600/50',
       outline: 'bg-transparent border-2 border-foxcode text-foxcode hover:bg-foxcode/5 focus:ring-foxcode/30 active:bg-foxcode/10'
     };
     

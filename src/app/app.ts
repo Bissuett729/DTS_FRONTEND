@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { initModalHelper } from './core/infrastructure/repositories/open-modal.repository';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,24 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   templateUrl: './app.html'
 })
-export class App {}
+export class App {
+
+  private dialog = inject(MatDialog);
+
+  constructor() {
+    initModalHelper(this.dialog)
+    this.printFoxCodeTerminal();
+  }
+
+
+  printFoxCodeTerminal(): void {
+    console.log(`
+    ███████╗  ██████╗ ╔██      ██╗ ██████╗  ██████╗  ██████╗   ███████╗
+    ██╔════╝ ██╔═══██╗╚══██  ██══╝ ██╔═══╝ ██╔═══██╗ ██╔══██╗  ██╔════╝
+    ███████╗ ██║   ██║   ╚═██═╝    ██║     ██║   ██║ ██║    ██ ████║
+    ██╔════╝ ██║   ██║   ██  ██    ██╚═══╗ ██║   ██║ ██╚══██╝  ██║
+    ██║      ╚██████╔╝ ██║    ║██  ██████║ ╚██████╔╝ ██████║   ███████║
+    ╚═╝       ╚═════╝  ╚═╝    ╚═╝  ╚═════╝  ╚═════╝  ╚═════╝   ╚══════╝
+    `);
+  }
+}

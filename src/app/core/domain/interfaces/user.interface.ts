@@ -1,13 +1,13 @@
 export interface IUser {
   _id: string;
-  name: string;
-  lastName: string;
+  username: string;
   email: string;
   roleIds: IRole[];
-  departmentId: IDepartment;
-  businessUnit: IBusinessUnit;
+  departmentId?: IDepartment;
+  businessUnitId?: IBusinessUnit;
   tools: ITool[];
   active: boolean;
+  authorized: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   lastLogin?: Date;

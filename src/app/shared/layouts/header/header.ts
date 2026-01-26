@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { NotificationsMenu } from "../../components";
 
 @Component({
@@ -10,7 +11,7 @@ import { NotificationsMenu } from "../../components";
   templateUrl: './header.html',
   styles: []
 })
-export class Header {
+export class Header implements OnInit {
   @Input() user: any;
   @Input() supportSidebarOpen = false;
   @Input() sidebarCollapsed = false;
@@ -24,7 +25,27 @@ export class Header {
   @Output() onToggleTheme = new EventEmitter<void>();
 
   notificationsOpen = signal(false);
+  appVersion = signal<string>('v2.38.0');
+  
+  private http = inject(HttpClient);
+  
   constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    this.loadVersion();
+  }
+
+  private loadVersion(): void {
+    this.http.get<{ version: string; buildDate: string }>('assets/version.json')
+      .subscribe({
+        next: (data) => {
+          this.appVersion.set(data.version);
+        },
+        error: (error) => {
+          console.error('Error loading version:', error);
+        }
+      });
+  }
 
   notifications = [
     {

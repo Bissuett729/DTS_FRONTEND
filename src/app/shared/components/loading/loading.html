@@ -1,0 +1,7 @@
+<section class="flex flex-col w-full">
+  <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+  <div class="flex items-center justify-center gap-2">
+    <i class="ri-loader-2-line animate-spin text-xl"></i>
+    <span [class]="styles">{{ messageLoading }}</span>
+  </div>
+</section>

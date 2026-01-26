@@ -1,19 +1,15 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { Card, FoxcodeInput, FoxcodeButton } from "../../../shared/components";
+import { Card, FoxcodeInput, FoxcodeButton, Loading } from "../../../shared/components";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil, debounceTime } from 'rxjs';
 import { UsersStateService } from './shared/services/users.state.service';
-import { UsersSocketManagerService } from './shared/services/users.socket-manager.service';
+import { UsersSocketManagerService } from './core/sockets/sockets.manager';
 
-/**
- * Componente de gestión de usuarios
- * Responsable únicamente de la presentación y delegando lógica a servicios
- */
 @Component({
   selector: 'foxcode-users',
   standalone: true,
-  imports: [Card, FoxcodeInput, FoxcodeButton, ReactiveFormsModule, CommonModule],
+  imports: [Card, FoxcodeInput, FoxcodeButton, ReactiveFormsModule, CommonModule, Loading],
   providers: [UsersStateService, UsersSocketManagerService],
   templateUrl: './users.html',
   styles: ``,
@@ -22,14 +18,9 @@ export class Users implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private destroy$ = new Subject<void>();
 
-  // Servicios
-  stateService = inject(UsersStateService);
-  socketManager = inject(UsersSocketManagerService);
+  private readonly stateService = inject(UsersStateService);
+  private readonly socketManager = inject(UsersSocketManagerService);
 
-  // Math for template
-  Math = Math;
-
-  // Formulario de filtros
   filterForm: FormGroup = this.fb.group({
     search: ['', [Validators.minLength(2)]]
   });
@@ -48,9 +39,6 @@ export class Users implements OnInit, OnDestroy {
     this.stateService.clear();
   }
 
-  /**
-   * Configurar listeners para cambios en filtros
-   */
   private setupFilters(): void {
     this.filterForm.valueChanges
       .pipe(
@@ -63,9 +51,6 @@ export class Users implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Cargar usuarios con filtros actuales
-   */
   loadUsers(): void {
     const filters = {
       search: this.searchControl.value || undefined
@@ -73,24 +58,18 @@ export class Users implements OnInit, OnDestroy {
     this.stateService.loadUsers(filters, this.destroy$);
   }
 
-  /**
-   * Aplicar filtros manualmente
-   */
   applyFilters(): void {
     if (this.filterForm.valid) {
       this.loadUsers();
     }
   }
 
-  /**
-   * Reiniciar filtros y recargar
-   */
   resetFilters(): void {
     this.filterForm.reset({ search: '' });
     this.loadUsers();
   }
 
-  // Getters para acceso en template
+
   get searchControl() {
     return this.filterForm.controls['search'] as FormControl;
   }
@@ -121,5 +100,24 @@ export class Users implements OnInit, OnDestroy {
 
   get pageSize() {
     return this.stateService.pageSize;
+  }
+
+  toggleAuthorization(userId: string, currentStatus: boolean): void {
+    // TODO: Implement API call to authorize/unauthorize user
+    console.log(`Toggling authorization for user ${userId} from ${currentStatus} to ${!currentStatus}`);
+    
+    // Example API call structure:
+    // this.userService.updateAuthorization(userId, !currentStatus)
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe({
+    //     next: (updatedUser) => {
+    //       this.stateService.updateUser(updatedUser);
+    //       // Show success notification
+    //     },
+    //     error: (error) => {
+    //       console.error('Error updating authorization:', error);
+    //       // Show error notification
+    //     }
+    //   });
   }
 }

@@ -34,12 +34,9 @@ export const environment = {
     environmentName: 'development',
     ENCRYPTION_KEY: `yHojgZdVh9Q+al5UwAQxHTv0IFakDBQIVlIGvHPRrCc=`,
     production: false,
-    // mode: isUAT ? 'UAT' : 'PROD',
-    mode: 'UAT',
-    // BUSINESS_UNIT: businessUnit,
-    BUSINESS_UNIT: 'Microsoft',
+    mode: isUAT ? 'UAT' : 'PROD',
+    BUSINESS_UNIT: businessUnit,
 
     // ========= User environment ==================
-    // userURL: resolveServer(20024, servMsftDev),
-    userURL: resolveServer(20024, 'localhost'),
+    userURL: resolveServer(20024, servMsftDev),
 };

@@ -1,33 +1,49 @@
-<header class="bg-foxcode border-b border-foxcode/20 dark:border-gray-700 px-2 py-1 flex items-center justify-between shadow-sm">
+<header class="bg-foxcode border-b border-foxcode/20 dark:border-gray-700 px-2 flex items-center justify-between shadow-sm">
     <!-- Tool Name -->
     <div class="flex items-center gap-3">
-        <h1 class="text-xl font-bold text-white uppercase tracking-wide">{{ toolName }}</h1>
+        <h1 class="text-lg font-medium text-white uppercase tracking-wide">{{ toolName }}</h1>
     </div>
 
     <!-- Menus & Options -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1 h-full">
         <!-- Menus with optional submenus -->
         @for (menu of menus; track $index) {
-            <div class="relative group">
+            <div class="relative h-full group" #menuContainer>
                 @if (menu.childrens && menu.childrens.length > 0) {
                     <!-- Menu with children (dropdown on hover) -->
-                    <button 
-                        type="button"
-                        routerLinkActive="bg-white/25 text-white font-semibold"
-                        [routerLinkActiveOptions]="{ exact: false }"
-                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200">
-                        <span>{{ menu.label }}</span>
-                        <i class="ri-arrow-down-s-line text-base transition-transform group-hover:rotate-180"></i>
-                    </button>
+                    @if (menu.link) {
+                        <a 
+                            [routerLink]="[menu.link]"
+                            [class.border-white]="isMenuActive(menu)"
+                            [class.text-white]="isMenuActive(menu)"
+                            class="flex items-center h-full gap-1.5 px-3 py-1 text-sm font-medium text-white/95 hover:text-white hover:bg-white/10 transition-all duration-200 border-b-2 border-transparent cursor-pointer"
+                            (mouseenter)="checkDropdownPosition($index, menuContainer)">
+                            <span>{{ menu.label }}</span>
+                            <i class="ri-arrow-down-s-line text-lg transition-transform group-hover:rotate-180 duration-200"></i>
+                        </a>
+                    } @else {
+                        <button 
+                            type="button"
+                            [class.border-b-2]="isMenuActive(menu)"
+                            [class.border-white]="isMenuActive(menu)"
+                            [class.text-white]="isMenuActive(menu)"
+                            class="flex items-center gap-1.5 px-3 py-1 text-sm font-medium text-white/95 hover:text-white hover:bg-white/10 transition-all duration-200 border-b-2 border-transparent h-7"
+                            (mouseenter)="checkDropdownPosition($index, menuContainer)">
+                            <span>{{ menu.label }}</span>
+                            <i class="ri-arrow-down-s-line text-lg transition-transform group-hover:rotate-180 duration-200"></i>
+                        </button>
+                    }
 
-                    <!-- Dropdown menu (shows on hover) -->
-                    <div class="absolute right-0 mt-2 w-56 bg-[#004d7a] dark:bg-gray-800 rounded-lg shadow-xl border border-white/10 dark:border-gray-700 py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <!-- Dropdown menu (shows on hover) - Auto-adjust position -->
+                    <div 
+                        [class]="getDropdownClasses($index)"
+                        class="absolute mt-0 w-64 bg-[#0a4a6e] rounded-md shadow-2xl border border-white/10 py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                         @for (child of menu.childrens; track child.link) {
                             <a 
                                 [routerLink]="[child.link]"
-                                routerLinkActive="bg-white/25 text-white font-semibold border-l-2 border-white"
+                                routerLinkActive="bg-white/20 text-white font-semibold border-l-4 border-white"
                                 [routerLinkActiveOptions]="{ exact: false }"
-                                class="block px-4 py-2 text-sm text-white/90 hover:text-white dark:text-gray-300 hover:bg-white/15 dark:hover:bg-gray-700 transition-colors">
+                                class="block px-4 py-2.5 text-sm text-white/95 hover:text-white hover:bg-white/15 transition-all duration-150 border-l-4 border-transparent">
                                 {{ child.label }}
                             </a>
                         }
@@ -36,9 +52,9 @@
                     <!-- Simple menu link -->
                     <a 
                         [routerLink]="[menu.link]"
-                        routerLinkActive="bg-white/25 text-white font-semibold"
+                        routerLinkActive="border-b-2 border-white"
                         [routerLinkActiveOptions]="{ exact: false }"
-                        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200">
+                        class="flex items-center gap-2 px-3 py-1 text-sm font-medium text-white/95 hover:text-white hover:bg-white/10 transition-all duration-200 border-b-2 border-transparent h-7">
                         <span>{{ menu.label }}</span>
                     </a>
                 }
@@ -47,21 +63,26 @@
 
         <!-- Options Dropdown -->
         @if (options.length > 0) {
-            <div class="relative">
+            <!-- Separator -->
+            <div class="h-6 w-px bg-white/20 mx-1 self-center"></div>
+            
+            <div class="relative h-full group">
                 <button 
                     type="button"
-                    class="flex items-center justify-center w-9 h-9 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200"
-                    [class.bg-white/20]="openOptionsDropdown()"
+                    class="flex items-center justify-center max-h-7 gap-1.5 px-3 py-1 h-full text-sm font-medium text-white/95 hover:text-white hover:bg-white/10 transition-all duration-200 border-b-2 border-transparent rounded-t-md"
+                    [class.bg-white/10]="openOptionsDropdown()"
+                    [class.border-white/40]="openOptionsDropdown()"
                     (click)="toggleOptions()">
-                    <i class="ri-more-2-fill text-xl"></i>
+                    <i class="ri-settings-3-line text-base"></i>
+                    <i class="ri-arrow-down-s-line text-lg transition-transform duration-200" [class.rotate-180]="openOptionsDropdown()"></i>
                 </button>
 
                 @if (openOptionsDropdown()) {
-                    <div class="absolute right-0 mt-2 w-48 bg-[#004d7a] dark:bg-gray-800 rounded-lg shadow-xl border border-white/10 dark:border-gray-700 py-2 z-50">
+                    <div class="absolute right-0 mt-0 w-56 bg-[#0a4a6e] rounded-md shadow-2xl border border-white/10 py-1 z-50">
                         @for (option of options; track option.label) {
                             <button 
                                 type="button"
-                                class="w-full text-left px-4 py-2 text-sm text-white/90 hover:text-white dark:text-gray-300 hover:bg-white/15 dark:hover:bg-gray-700 transition-colors"
+                                class="w-full text-left px-4 py-2.5 text-sm text-white/95 hover:text-white hover:bg-white/15 transition-all duration-150"
                                 (click)="executeOption(option.action)">
                                 {{ option.label }}
                             </button>

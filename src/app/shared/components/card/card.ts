@@ -47,6 +47,6 @@ export class Card {
   }
 
   get borderClass(): string {
-    return this.border ? 'border border-gray-200 dark:border-gray-700' : '';
+    return this.border ? 'border border-gray-200 dark:border-[#6b6b6b]' : '';
   }
 }

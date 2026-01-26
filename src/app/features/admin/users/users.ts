@@ -3,8 +3,8 @@ import { Card, FoxcodeInput, FoxcodeButton } from "../../../shared/components";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil, debounceTime } from 'rxjs';
-import { UsersStateService } from './users.state.service';
-import { UsersSocketManagerService } from './users.socket-manager.service';
+import { UsersStateService } from './shared/services/users.state.service';
+import { UsersSocketManagerService } from './shared/services/users.socket-manager.service';
 
 /**
  * Componente de gestión de usuarios

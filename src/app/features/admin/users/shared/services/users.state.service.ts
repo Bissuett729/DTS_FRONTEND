@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { GetUsersUseCase } from '../../../core/application/use-cases/users';
-import { IUser, IUserFilters } from '../../../core/domain/interfaces/user.interface';
+import { GetUsersUseCase } from '../../../../../core/application/use-cases/users';
+import { IUser, IUserFilters } from '../../../../../core/domain/interfaces/user.interface';
 
 /**
  * Servicio de estado para el módulo de usuarios

@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { UserSocketService } from '../../../core/infrastructure/services/user-socket.service';
-import { StorageRepository } from '../../../core/domain/repositories/storage.repository';
+import { UserSocketService } from '../../../../../core/infrastructure/services/user-socket.service';
+import { StorageRepository } from '../../../../../core/domain/repositories/storage.repository';
 import { UsersStateService } from './users.state.service';
 
 /**

@@ -1,6 +1,9 @@
+import { IBusinessUnit, ITool } from "./tool.interface";
+
 export interface IUser {
   _id: string;
   username: string;
+  clock: number;
   email: string;
   roleIds: IRole[];
   departmentId?: IDepartment;
@@ -13,13 +16,18 @@ export interface IUser {
   lastLogin?: Date;
 }
 
-export interface ITool {
+export interface IToolsByBusinessUnit {
+  bu: string;
+  tools: ITool[];
+}
+
+export interface IToolTemplate {
   _id: string;
   title: string;
-  link: string;
-  toolMode: string[];
-  businessUnitId: IBusinessUnit;
+  tools: string[];
   active: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IRole {
@@ -36,12 +44,6 @@ export interface IDepartment {
   active: boolean;
 }
 
-export interface IBusinessUnit {
-  _id: string;
-  name: string;
-  active: boolean;
-}
-
 export interface ICreateUserDto {
   name: string;
   lastName: string;
@@ -52,21 +54,14 @@ export interface ICreateUserDto {
   businessUnit: string;
 }
 
-export interface IUpdateUserDto {
-  name?: string;
-  lastName?: string;
-  email?: string;
-  roleId?: string;
-  departmentId?: string;
-  businessUnit?: string;
-  active?: boolean;
-}
+export type IUpdateUserDto = Partial<Omit<IUser, '_id' | 'createdAt' | 'updatedAt'>>;
 
 export interface IUserFilters {
-  search?: string;
+  username?: string;
+  clock?: number;
   roleId?: string;
   departmentId?: string;
-  businessUnit?: string;
+  businessUnitId?: string;
   active?: boolean;
   page?: number;
   limit?: number;

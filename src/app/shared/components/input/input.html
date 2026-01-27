@@ -1,25 +1,21 @@
-<div class="w-full">
-  <!-- Label -->
-  @if (label) {
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-      {{ label }}
-      @if (required) {
-        <span class="text-red-500 ml-0.5">*</span>
-      }
-    </label>
-  }
-
-  <!-- Input Container -->
-  <div class="relative">
+<div class="w-full h-full foxcode-input-field">
+  <mat-form-field class="w-full h-auto" appearance="outline" subscriptSizing="dynamic" floatLabel="always">
+    <!-- Label -->
+    @if (label) {
+      <mat-label>
+        {{ label }}
+      </mat-label>
+    }
+  
     <!-- Leading Icon -->
     @if (icon) {
-      <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
-        <i [class]="icon + ' text-lg'"></i>
-      </div>
+      <span matPrefix class="flex items-center mr-1">
+      <i [class]="icon + ' text-xl text-gray-600 dark:text-[#bdbdbd]'"></i>
+      </span>
     }
-
     <!-- Input Field -->
     <input
+      matInput
       [type]="inputType"
       [placeholder]="placeholder"
       [readonly]="readonly"
@@ -30,98 +26,89 @@
       (input)="onInput($event)"
       (focus)="onFocus()"
       (blur)="onBlur()"
-      [class]="'w-full px-4 py-2.5 bg-white dark:bg-[#3a3a3a] border rounded-lg transition-[padding] duration-200 outline-none ' +
-               'text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ' +
-               (icon ? 'pl-10 ' : '') +
-               (showClearButton || showCopy || showPaste || showScan || showPasswordToggle ? 'pr-24 ' : '') +
-               (hasError 
-                 ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/10' 
-                 : isFocused() 
-                   ? 'border-foxcode focus:ring-1 focus:ring-foxcode/10' 
-                   : 'border-gray-300 dark:border-gray-500 hover:border-gray-400 dark:hover:border-gray-400') +
-               (readonly ? ' bg-gray-50 dark:bg-[#282828] cursor-not-allowed' : '') +
-               (isDisabled ? ' opacity-50 cursor-not-allowed' : '')"
+      class="text-base"
     />
-
-    <!-- Action Buttons (Right Side) -->
-    <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-      
+  
+    <!-- Trailing Icons/Buttons -->
+    <span matSuffix class="flex items-center gap-0.5 -mr-2">
       <!-- Clear Button -->
       @if (showClearButton) {
         <button
+          mat-icon-button
           type="button"
           (click)="clearInput()"
-          class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded transition-colors"
-          title="Clear">
-          <i class="ri-close-circle-line text-lg"></i>
+          matTooltip="Clear"
+          class="w-9 h-9">
+          <i class="ri-close-circle-line text-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"></i>
         </button>
       }
-
+  
       <!-- Scan Button -->
       @if (showScan && !readonly && !isDisabled) {
         <button
+          mat-icon-button
           type="button"
           (click)="triggerScan()"
-          class="p-1.5 text-gray-400 hover:text-foxcode dark:hover:text-foxcode rounded transition-colors"
-          title="Scan">
-          <i class="ri-qr-scan-line text-lg"></i>
+          matTooltip="Scan"
+          class="w-9 h-9">
+          <i class="ri-qr-scan-line text-lg text-gray-500 dark:text-gray-400 hover:text-foxcode dark:hover:text-[#4f9eff]"></i>
         </button>
       }
-
+  
       <!-- Copy Button -->
       @if (showCopy && value()) {
         <button
+          mat-icon-button
           type="button"
           (click)="copyToClipboard()"
-          class="p-1.5 text-gray-400 hover:text-foxcode dark:hover:text-foxcode rounded transition-colors"
-          title="Copy">
-          <i class="ri-file-copy-line text-lg"></i>
+          matTooltip="Copy"
+          class="w-9 h-9">
+          <i class="ri-file-copy-line text-lg text-gray-500 dark:text-gray-400 hover:text-foxcode dark:hover:text-[#4f9eff]"></i>
         </button>
       }
-
+  
       <!-- Paste Button -->
       @if (showPaste && !readonly && !isDisabled) {
         <button
+          mat-icon-button
           type="button"
           (click)="pasteFromClipboard()"
-          class="p-1.5 text-gray-400 hover:text-foxcode dark:hover:text-foxcode rounded transition-colors"
-          title="Paste">
-          <i class="ri-clipboard-line text-lg"></i>
+          matTooltip="Paste"
+          class="w-9 h-9">
+          <i class="ri-clipboard-line text-lg text-gray-500 dark:text-gray-400 hover:text-foxcode dark:hover:text-[#4f9eff]"></i>
         </button>
       }
-
+  
       <!-- Password Toggle -->
       @if (type === 'password' && showPasswordToggle) {
         <button
+          mat-icon-button
           type="button"
           (click)="togglePasswordVisibility()"
-          class="p-1.5 text-gray-400 hover:text-foxcode dark:hover:text-foxcode rounded transition-colors"
-          [title]="showPassword() ? 'Hide password' : 'Show password'">
-          <i [class]="(showPassword() ? 'ri-eye-off-line' : 'ri-eye-line') + ' text-lg'"></i>
+          [matTooltip]="showPassword() ? 'Hide password' : 'Show password'"
+          class="w-9 h-9">
+          <i [class]="(showPassword() ? 'ri-eye-off-line' : 'ri-eye-line') + ' text-lg text-gray-500 dark:text-gray-400 hover:text-foxcode dark:hover:text-[#4f9eff]'"></i>
         </button>
       }
-    </div>
-  </div>
-
-  <!-- Hint Text -->
-  @if (hint && !hasError) {
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
-      {{ hint }}
-    </p>
-  }
-
-  <!-- Error Message -->
-  @if (hasError) {
-    <p class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
-      <i class="ri-error-warning-line"></i>
-      <span>{{ errorMessage }}</span>
-    </p>
-  }
-
-  <!-- Character Count -->
-  @if (maxlength && isFocused()) {
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
-      {{ value().length }} / {{ maxlength }}
-    </p>
-  }
+    </span>
+  
+    <!-- Hint Text -->
+    @if (hint && !hasError) {
+      <mat-hint>{{ hint }}</mat-hint>
+    }
+  
+    <!-- Error Message -->
+    @if (hasError) {
+      <mat-error>
+        <i class="ri-error-warning-line mr-1"></i>
+        {{ errorMessage }}
+      </mat-error>
+    }
+  
+    <!-- Character Count -->
+    @if (maxlength) {
+      <mat-hint align="end">{{ value().length }} / {{ maxlength }}</mat-hint>
+    }
+  </mat-form-field>
 </div>
+

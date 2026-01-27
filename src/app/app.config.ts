@@ -10,6 +10,8 @@ import { StorageRepository } from './core/domain/repositories/storage.repository
 import { LocalStorageRepository } from './core/infrastructure/repositories/local-storage.repository';
 import { UserRepository } from './core/domain/repositories/user.repository';
 import { UserApiRepository } from './core/infrastructure/repositories/user-api.repository';
+import { ToolsRepository } from './core/domain/repositories/tools.repository';
+import { ToolsApiRepository } from './core/infrastructure/repositories/tools-api.repository';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: AuthRepository, useClass: AuthApiRepository },
     { provide: StorageRepository, useClass: LocalStorageRepository },
-    { provide: UserRepository, useClass: UserApiRepository }
+    { provide: UserRepository, useClass: UserApiRepository },
+    { provide: ToolsRepository, useClass: ToolsApiRepository }
   ]
 };

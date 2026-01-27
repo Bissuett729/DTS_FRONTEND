@@ -1,0 +1,57 @@
+<div class="w-full h-full foxcode-select-field">
+  <mat-form-field class="w-full h-auto" appearance="outline" subscriptSizing="dynamic">
+    <!-- Label -->
+    @if (label) {
+      <mat-label>
+        {{ label }}
+      </mat-label>
+    }
+  
+    <!-- Leading Icon -->
+    @if (icon) {
+      <span matPrefix class="flex items-center mr-2">
+        <i [class]="icon + ' text-xl text-gray-600 dark:text-gray-400'"></i>
+      </span>
+    }
+  
+    <!-- Select Field -->
+    <mat-select
+      [placeholder]="placeholder"
+      [required]="required"
+      [multiple]="multiple"
+      [formControl]="control ? control : formControlInternal"
+      (selectionChange)="onSelectionChange($event)"
+      (blur)="onBlur()">
+      
+      <!-- Select All Option (only for multiple) -->
+      @if (multiple && showSelectAll && options.length > 0) {
+        <mat-option class="select-all-option" (click)="toggleSelectAll(); $event.stopPropagation()">
+          <span class="flex items-center gap-2">
+            <i [class]="allSelected ? 'ri-checkbox-line' : 'ri-checkbox-blank-line'" class="text-lg"></i>
+            <span class="font-medium">Select All</span>
+          </span>
+        </mat-option>
+        <mat-divider></mat-divider>
+      }
+      
+      @for (option of options; track getOptionValue(option)) {
+        <mat-option [value]="getOptionValue(option)" [disabled]="isOptionDisabled(option)">
+          {{ getOptionLabel(option) }}
+        </mat-option>
+      }
+    </mat-select>
+  
+    <!-- Hint Text -->
+    @if (hint && !hasError) {
+      <mat-hint>{{ hint }}</mat-hint>
+    }
+  
+    <!-- Error Message -->
+    @if (hasError) {
+      <mat-error>
+        <i class="ri-error-warning-line mr-1"></i>
+        {{ errorMessage }}
+      </mat-error>
+    }
+  </mat-form-field>
+</div>

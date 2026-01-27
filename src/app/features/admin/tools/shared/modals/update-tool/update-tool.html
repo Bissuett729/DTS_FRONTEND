@@ -1,0 +1,157 @@
+<foxcode-modal-layout
+  title="Update Tool"
+  subtitle="Modify tool information"
+  icon="ri-user-settings-line"
+  maxWidth="3xl"
+  minWidth="6xl"
+  [loading]="loading()"
+  (closeModal)="close()">
+
+  <form modalContent [formGroup]="updateForm" class="px-2 py-4 space-y-2">
+    <!-- Basic Information Section -->
+    <div class="space-y-4 p-5 bg-white dark:bg-[#1d2328] rounded-xl border border-gray-200 dark:border-[#2a3139] shadow-sm">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 rounded-lg bg-foxcode/10 dark:bg-foxcode/25 flex items-center justify-center shadow-sm">
+          <i class="ri-information-line text-foxcode dark:text-[#4f9eff]"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          Tool Information
+        </h3>
+      </div>
+
+      <div class="flex flex-col gap-y-6.5">
+        <foxcode-input
+          [control]="titleControl"
+          label="Tool Name"
+          placeholder="Enter tool name"
+          icon="ri-text"
+          [required]="true">
+        </foxcode-input>
+
+        <foxcode-input
+          [control]="linkControl"
+          label="Tool Link"
+          placeholder="/tool-path"
+          icon="ri-links-line"
+          [required]="true">
+        </foxcode-input>
+
+        <foxcode-select
+          [control]="businessUnitControl"
+          label="Business Unit"
+          placeholder="Select business unit"
+          icon="ri-building-line"
+          [options]="businessUnits()"
+          optionLabel="name"
+          optionValue="_id"
+          [required]="true">
+        </foxcode-select>
+      </div>
+    </div>
+
+    <!-- Tool Mode Section -->
+    <div class="space-y-4 p-5 bg-white dark:bg-[#1d2328] rounded-xl border border-gray-200 dark:border-[#2a3139] shadow-sm">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 rounded-lg bg-foxcode/10 dark:bg-foxcode/25 flex items-center justify-center shadow-sm">
+          <i class="ri-settings-line text-foxcode dark:text-[#4f9eff]"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          Environment Settings
+        </h3>
+      </div>
+
+      <div class="space-y-3">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Available Environments *
+        </label>
+        <div class="grid grid-cols-2 gap-3">
+          @for (mode of toolModes; track mode.value) {
+            <label
+              class="relative flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200"
+              [class.border-foxcode]="isToolModeSelected(mode.value)"
+              [class.bg-foxcode/5]="isToolModeSelected(mode.value)"
+              [class.border-gray-200]="!isToolModeSelected(mode.value)"
+              [class.dark:border-gray-700]="!isToolModeSelected(mode.value)"
+              [class.hover:border-foxcode/50]="!isToolModeSelected(mode.value)">
+              <input
+                type="checkbox"
+                class="sr-only"
+                [checked]="isToolModeSelected(mode.value)"
+                (change)="toggleToolMode(mode.value)">
+              <div class="flex items-center gap-3 flex-1">
+                <div 
+                  class="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200"
+                  [class.border-foxcode]="isToolModeSelected(mode.value)"
+                  [class.bg-foxcode]="isToolModeSelected(mode.value)"
+                  [class.border-gray-300]="!isToolModeSelected(mode.value)"
+                  [class.dark:border-gray-600]="!isToolModeSelected(mode.value)">
+                  @if (isToolModeSelected(mode.value)) {
+                    <i class="ri-check-line text-white text-sm"></i>
+                  }
+                </div>
+                <div class="flex-1">
+                  <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                    {{ mode.label }}
+                  </span>
+                </div>
+              </div>
+            </label>
+          }
+        </div>
+      </div>
+
+      <!-- Active Status -->
+      <div class="pt-3 border-t border-gray-200 dark:border-gray-700">
+        <label class="relative flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200"
+               [class.border-foxcode]="updateForm.get('active')?.value"
+               [class.bg-foxcode/5]="updateForm.get('active')?.value"
+               [class.border-gray-200]="!updateForm.get('active')?.value"
+               [class.dark:border-gray-700]="!updateForm.get('active')?.value">
+          <input
+            type="checkbox"
+            class="sr-only"
+            formControlName="active">
+          <div class="flex items-center gap-3 flex-1">
+            <div 
+              class="w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200"
+              [class.border-foxcode]="updateForm.get('active')?.value"
+              [class.bg-foxcode]="updateForm.get('active')?.value"
+              [class.border-gray-300]="!updateForm.get('active')?.value">
+              @if (updateForm.get('active')?.value) {
+                <i class="ri-check-line text-white text-sm"></i>
+              }
+            </div>
+            <div class="flex-1">
+              <span class="text-sm font-semibold text-gray-900 dark:text-white">
+                Active
+              </span>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                Tool will be available for assignment
+              </p>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+  </form>
+
+  <div class="flex items-center gap-x-2" modalActions>
+    <foxcode-button
+      label="Cancel"
+      variant="ghost"
+      type="button"
+      icon="ri-close-line"
+      (click)="close()">
+    </foxcode-button>
+    
+    <foxcode-button
+      label="Update Tool"
+      type="submit"
+      icon="ri-check-line"
+      [loading]="submitting()"
+      (click)="onSubmit()"
+      [disabled]="updateForm.invalid || submitting()">
+    </foxcode-button>
+  </div>
+
+</foxcode-modal-layout>

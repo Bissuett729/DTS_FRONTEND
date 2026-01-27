@@ -35,7 +35,7 @@ export class FoxcodeButton {
   }
   
   get buttonClasses(): string {
-    const baseClasses = 'inline-flex items-center justify-center font-medium transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-1';
+    const baseClasses = 'inline-flex items-center justify-center font-medium outline-none focus:ring-2 focus:ring-offset-1';
     
     // Size classes
     const sizeMap = {
@@ -53,7 +53,7 @@ export class FoxcodeButton {
       danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-600/30 active:bg-red-800',
       success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-600/30 active:bg-green-800',
       warning: 'bg-yellow-500 hover:bg-yellow-600 text-white focus:ring-yellow-500/30 active:bg-yellow-700',
-      ghost: 'bg-gray-100/80 hover:bg-gray-100/80 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:ring-gray-300/50 dark:focus:ring-gray-500/30 active:bg-gray-200/70 dark:active:bg-gray-600/50',
+      ghost: 'bg-gray-100/80 dark:bg-[#5f5f5f] hover:bg-gray-100/80 dark:hover:bg-[#7d7d7d] text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:ring-gray-300/50 dark:focus:ring-gray-500/30 active:bg-gray-200/70 dark:active:bg-gray-600/50',
       outline: 'bg-transparent border-2 border-foxcode text-foxcode hover:bg-foxcode/5 focus:ring-foxcode/30 active:bg-foxcode/10'
     };
     

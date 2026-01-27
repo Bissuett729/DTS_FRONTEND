@@ -1,4 +1,4 @@
-import { Component, Input, signal, computed, HostListener, ElementRef } from '@angular/core';
+import { Component, Input, signal, computed, HostListener, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -21,9 +21,17 @@ export class HeaderTool {
   openOptionsDropdown = signal(false);
   currentUrl = signal<string>('');
 
-  constructor(private router: Router, private elementRef: ElementRef) {
+  constructor(
+    private router: Router,
+    private elementRef: ElementRef,
+    private cdr: ChangeDetectorRef
+  ) {
+    // Defer URL initialization to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      this.currentUrl.set(this.router.url);
+    });
+    
     // Track current URL
-    this.currentUrl.set(this.router.url);
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {

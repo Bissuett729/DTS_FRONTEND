@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { Tool } from '../interfaces/tool.interface';
+import { ITool } from '../interfaces/tool.interface';
 
 export abstract class ToolsRepository {
-  abstract getTools(): Observable<Tool[]>;
+  abstract getTools(): Observable<ITool[]>;
 }

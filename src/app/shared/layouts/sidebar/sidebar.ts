@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/application';
 import { ToolsApiRepository } from '../../../core/infrastructure/repositories/tools-api.repository';
-import { Tool } from '../../../core/domain/interfaces/tool.interface';
+import { ITool } from '../../../core/domain/interfaces/tool.interface';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -24,7 +24,7 @@ export class Sidebar implements OnInit {
   private toolsRepository = inject(ToolsApiRepository);
 
   isVisible = signal(false);
-  allTools = signal<Tool[]>([]);
+  allTools = signal<ITool[]>([]);
   isLoading = signal(false);
 
   // Filter tools based on business unit and mode

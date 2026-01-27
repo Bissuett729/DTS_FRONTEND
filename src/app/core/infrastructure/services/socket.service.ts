@@ -78,6 +78,11 @@ export class SocketService {
       console.error(`Socket ${config.name} error:`, error);
     });
 
+    // Listener genérico para debug - captura TODOS los eventos
+    socket.onAny((eventName: string, ...args: any[]) => {
+      console.log(`🔔 Socket ${config.name} received event: ${eventName}`, args);
+    });
+
     this.connections.set(config.name, connection);
   }
 
@@ -185,16 +190,65 @@ export class SocketService {
       }
 
       const handler = (data: T) => {
+        console.log(`📨 Socket event received: ${event}`, data);
         observer.next(data);
       };
 
       connection.socket.on(event, handler);
+      console.log(`👂 Listening to socket event: ${event} on ${config.name}`);
 
       // Cleanup cuando se desuscribe
       return () => {
         connection.socket.off(event, handler);
+        console.log(`🔇 Stopped listening to: ${event}`);
       };
     });
+  }
+
+  /**
+   * Unirse a un room específico
+   * @param configKey - Clave del socket en SOCKETS_CONFIG
+   * @param room - Nombre del room
+   */
+  joinRoom(configKey: string, room: string): void {
+    const config = SOCKETS_CONFIG[configKey];
+    
+    if (!config) {
+      console.error(`Socket configuration not found for key: ${configKey}`);
+      return;
+    }
+
+    const connection = this.connections.get(config.name);
+    
+    if (connection?.socket.connected) {
+      connection.socket.emit('join-room', room);
+      console.log(`📥 Joined room: ${room} on socket ${config.name}`);
+    } else {
+      console.warn(`Socket ${config.name} is not connected. Cannot join room: ${room}`);
+    }
+  }
+
+  /**
+   * Salir de un room específico
+   * @param configKey - Clave del socket en SOCKETS_CONFIG
+   * @param room - Nombre del room
+   */
+  leaveRoom(configKey: string, room: string): void {
+    const config = SOCKETS_CONFIG[configKey];
+    
+    if (!config) {
+      console.error(`Socket configuration not found for key: ${configKey}`);
+      return;
+    }
+
+    const connection = this.connections.get(config.name);
+    
+    if (connection?.socket.connected) {
+      connection.socket.emit('leave-room', room);
+      console.log(`📤 Left room: ${room} on socket ${config.name}`);
+    } else {
+      console.warn(`Socket ${config.name} is not connected. Cannot leave room: ${room}`);
+    }
   }
 
   /**

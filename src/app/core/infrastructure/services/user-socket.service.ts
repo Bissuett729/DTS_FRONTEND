@@ -16,6 +16,11 @@ export class UserSocketService implements IUserSocketService {
     this.socketService.connect(this.socketKey, token);
   }
 
+  joinUsersRoom(): void {
+    // Unirse al room general de usuarios para recibir actualizaciones de todos los usuarios
+    this.socketService.joinRoom(this.socketKey, 'users');
+  }
+
   disconnect(): void {
     this.socketService.disconnect(this.socketKey);
   }

@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { GetUsersUseCase } from '../../../../../core/application/use-cases/users';
-import { IUser, IUserFilters } from '../../../../../core/domain/interfaces/user.interface';
+import { GetUsersUseCase, UpdateUserUseCase } from '../../../../../core/application/use-cases/users';
+import { IUser, IUserFilters, IUpdateUserDto } from '../../../../../core/domain/interfaces/user.interface';
 
 @Injectable()
 export class UsersStateService {
@@ -12,7 +12,10 @@ export class UsersStateService {
   pageSize = signal<number>(10);
   totalPages = signal<number>(0);
 
-  constructor(private getUsersUseCase: GetUsersUseCase) {}
+  constructor(
+    private getUsersUseCase: GetUsersUseCase,
+    private updateUserUseCase: UpdateUserUseCase
+  ) {}
 
   loadUsers(filters: IUserFilters, destroy$: Subject<void>): void {
     if (this.loading()) return;
@@ -46,10 +49,38 @@ export class UsersStateService {
     this.totalUsers.update(total => total + 1);
   }
 
-  updateUser(updatedUser: IUser): void {
+  updateUser(updatedUser: IUser | any): void {
     this.users.update(users =>
-      users.map(u => u._id === updatedUser._id ? updatedUser : u)
+      users.map(u => {
+        const userIdToMatch = updatedUser._id || updatedUser.userId;
+        if (u._id === userIdToMatch) {
+          // Merge para preservar relaciones populadas que puedan venir del listado inicial
+          return {
+            ...u,
+            ...updatedUser,
+            _id: u._id, // Preservar el _id original
+          };
+        }
+        return u;
+      })
     );
+  }
+
+  updateUserInList(updatedUser: IUser): void {
+    this.updateUser(updatedUser);
+  }
+
+  updateUserById(userId: string, data: IUpdateUserDto, destroy$: Subject<void>): void {
+    this.updateUserUseCase.execute(userId, data)
+      .pipe(takeUntil(destroy$))
+      .subscribe({
+        next: (updatedUser) => {
+          this.updateUser(updatedUser);
+        },
+        error: (error) => {
+          console.error('Error updating user:', error);
+        }
+      });
   }
 
   removeUser(userId: string): void {

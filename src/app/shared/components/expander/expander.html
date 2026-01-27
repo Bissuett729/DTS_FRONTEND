@@ -1,0 +1,59 @@
+<div 
+  [class]="'bg-white dark:bg-[#424242] outline-none rounded-xl overflow-hidden transition-all duration-200 ' + paddingClass + ' ' + shadowClass + ' ' + roundedClass + ' ' + borderClass"
+  [class.border]="!borderless"
+  [class.border-gray-200]="!borderless"
+  [class.dark:border-[#2a3139]]="!borderless"
+  [class.opacity-50]="disabled"
+  [class.cursor-not-allowed]="disabled">
+  
+  <!-- Header -->
+  <div 
+    class="expander-header flex items-center justify-between p-4 cursor-pointer transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-[#252b32]"
+    [class]="headerClass"
+    [class.cursor-not-allowed]="disabled"
+    [class.hover:bg-transparent]="disabled"
+    (click)="toggle()">
+    
+    <div class="flex-1">
+      <ng-content select="[expander-header]"></ng-content>
+    </div>
+
+    <!-- Toggle Icon -->
+    <button 
+      class="ml-3 p-2 rounded-lg hover:bg-white/50 dark:hover:bg-black/20 transition-all duration-200 hover:scale-110"
+      [class.pointer-events-none]="disabled"
+      type="button"
+      tabindex="-1"
+      aria-label="Expand/Collapse">
+      <i 
+        class="text-xl text-gray-600 dark:text-gray-400 transition-transform duration-300 ease-in-out"
+        [ngClass]="{
+          'rotate-180 scale-110 text-foxcode dark:text-[#4f9eff]': isExpanded(),
+          'rotate-0 scale-100': !isExpanded(),
+          'ri-arrow-down-s-line': true
+        }"
+        style="display: inline-block; will-change: transform;"
+      ></i>
+    </button>
+  </div>
+
+  <!-- Divider -->
+  <div 
+    class="h-px bg-gray-200 dark:bg-[#2a3139] transition-opacity duration-200"
+    [class.opacity-0]="!isExpanded()"
+    [class.opacity-100]="isExpanded()"></div>
+
+  <!-- Content (Expandable) - Tailwind Animation -->
+  <div 
+    class="expander-content transition-all duration-300 ease-in-out overflow-hidden"
+    [class.max-h-0]="!isExpanded()"
+    [class.max-h-[5000px]]="isExpanded()"
+    [class.opacity-0]="!isExpanded()"
+    [class.opacity-100]="isExpanded()">
+    <div 
+      class="p-4"
+      [class]="contentClass">
+      <ng-content select="[expander-content]"></ng-content>
+    </div>
+  </div>
+</div>

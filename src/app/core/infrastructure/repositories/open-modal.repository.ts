@@ -7,8 +7,10 @@ export function OpenModal<T>(
     config?: {
         data?: any;
         disableClose?: boolean;
+        autoFocus?: boolean;
         maxWidth?: string;
         maxHeight?: string;
+        panelClass?: string | string[];
     }
 ): MatDialogRef<any> {
     if (!dialogInstance) {
@@ -21,6 +23,8 @@ export function OpenModal<T>(
         disableClose: config?.disableClose ?? true,
         maxWidth: config?.maxWidth ?? '90vw',
         maxHeight: config?.maxHeight ?? '90vh',
+        autoFocus: true,
+        panelClass: config?.panelClass ?? 'custom-modal-panel',
     });
 }
 

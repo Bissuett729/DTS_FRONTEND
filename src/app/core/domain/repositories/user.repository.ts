@@ -7,7 +7,10 @@ import {
   IUserListResponse,
   IRole,
   IDepartment,
+  IToolsByBusinessUnit,
+  IToolTemplate,
 } from '../interfaces/user.interface';
+import { IBusinessUnit } from '../interfaces';
 
 /**
  * Contrato del repositorio de usuarios
@@ -53,4 +56,24 @@ export abstract class UserRepository {
    * Obtener todos los departamentos
    */
   abstract getDepartments(businessUnit?: string): Observable<IDepartment[]>;
+
+  /**
+   * Obtener todas las unidades de negocio
+   */
+  abstract getBusinessUnits(): Observable<IBusinessUnit[]>;
+
+  /**
+   * Obtener todas las tools agrupadas por business unit
+   */
+  abstract getToolsGroupedByBusinessUnit(): Observable<IToolsByBusinessUnit[]>;
+
+  /**
+   * Obtener todos los tool templates disponibles
+   */
+  abstract getToolTemplates(): Observable<IToolTemplate[]>;
+
+  /**
+   * Aplicar un tool template a un usuario
+   */
+  abstract applyToolTemplate(userId: string, templateId: string): Observable<IUser>;
 }

@@ -1,4 +1,4 @@
-export interface BusinessUnit {
+export interface IBusinessUnit {
   _id: string;
   name: string;
   active: boolean;
@@ -7,12 +7,12 @@ export interface BusinessUnit {
   __v: number;
 }
 
-export interface Tool {
+export interface ITool {
   _id: string;
   title: string;
   link: string;
   toolMode: string[];
-  businessUnitId: BusinessUnit;
+  businessUnitId: IBusinessUnit;
   active: boolean;
   createdAt: string;
   updatedAt: string;

@@ -25,12 +25,4 @@
 html,
 body {
   background-color: var(--color-content-bg);
-  
-  .mdc-linear-progress__buffer-bar {
-    background: #035a8b36;
-  }
-  
-  .mdc-linear-progress__bar-inner {
-    border-color: #035a8b;
-  }
 }

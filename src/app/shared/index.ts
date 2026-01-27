@@ -7,3 +7,7 @@ export * from './validators/custom-validators';
 
 // Services
 export * from './services/alert.service';
+
+// Components
+export * from './components/input/input';
+export * from './components/select/select';

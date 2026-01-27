@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { Subject, takeUntil, debounceTime } from 'rxjs';
 import { UsersStateService } from './shared/services/users.state.service';
 import { UsersSocketManagerService } from './core/sockets/sockets.manager';
+import { OpenModal } from '../../../core/infrastructure/repositories/open-modal.repository';
+import { UpdateUser } from './shared/modals/update-user/update-user';
 
 @Component({
   selector: 'foxcode-users',
@@ -22,14 +24,13 @@ export class Users implements OnInit, OnDestroy {
   private readonly socketManager = inject(UsersSocketManagerService);
 
   filterForm: FormGroup = this.fb.group({
-    search: ['', [Validators.minLength(2)]]
+    username: ['', [Validators.minLength(2)]]
   });
 
   ngOnInit(): void {
     this.socketManager.connect(this.destroy$);
     this.socketManager.setupListeners(this.destroy$);
     this.loadUsers();
-    this.setupFilters();
   }
 
   ngOnDestroy(): void {
@@ -39,43 +40,45 @@ export class Users implements OnInit, OnDestroy {
     this.stateService.clear();
   }
 
-  private setupFilters(): void {
-    this.filterForm.valueChanges
-      .pipe(
-        debounceTime(300),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(() => {
-        this.stateService.resetPagination();
-        this.loadUsers();
-      });
-  }
-
   loadUsers(): void {
-    const filters = {
-      search: this.searchControl.value || undefined
+    const searchValue = this.searchControl.value;
+    const filters: any = {
+      page: this.currentPage(),
+      limit: this.pageSize()
     };
+
+    if (searchValue) {
+      // Si es un número, buscar por clock, sino por username
+      const isNumeric = /^\d+$/.test(searchValue);
+      if (isNumeric) {
+        filters.clock = parseInt(searchValue, 10);
+      } else {
+        filters.username = searchValue;
+      }
+    }
+
     this.stateService.loadUsers(filters, this.destroy$);
   }
 
   applyFilters(): void {
     if (this.filterForm.valid) {
+      this.stateService.resetPagination();
       this.loadUsers();
     }
   }
 
   resetFilters(): void {
-    this.filterForm.reset({ search: '' });
+    this.filterForm.reset({ username: '' });
     this.loadUsers();
   }
 
 
   get searchControl() {
-    return this.filterForm.controls['search'] as FormControl;
+    return this.filterForm.controls['username'] as FormControl;
   }
 
   get searchControlValue() {
-    return this.filterForm.controls['search'].value;
+    return this.filterForm.controls['username'].value;
   }
 
   get users() {
@@ -102,22 +105,18 @@ export class Users implements OnInit, OnDestroy {
     return this.stateService.pageSize;
   }
 
-  toggleAuthorization(userId: string, currentStatus: boolean): void {
-    // TODO: Implement API call to authorize/unauthorize user
-    console.log(`Toggling authorization for user ${userId} from ${currentStatus} to ${!currentStatus}`);
+  openEditUserModal(userId: string): void {
+    const dialogRef = OpenModal(UpdateUser, { data: userId });
     
-    // Example API call structure:
-    // this.userService.updateAuthorization(userId, !currentStatus)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe({
-    //     next: (updatedUser) => {
-    //       this.stateService.updateUser(updatedUser);
-    //       // Show success notification
-    //     },
-    //     error: (error) => {
-    //       console.error('Error updating authorization:', error);
-    //       // Show error notification
-    //     }
-    //   });
+    dialogRef.afterClosed().subscribe((updatedUser) => {
+      if (updatedUser) {
+        // Update the user in the list
+        this.stateService.updateUserInList(updatedUser);
+      }
+    });
+  }
+
+  toggleAuthorization(userId: string, currentStatus: boolean): void {
+    this.stateService.updateUserById(userId, { authorized: !currentStatus }, this.destroy$);
   }
 }

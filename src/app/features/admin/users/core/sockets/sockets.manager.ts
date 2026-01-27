@@ -29,15 +29,23 @@ export class UsersSocketManagerService {
       .subscribe(connected => {
         this.socketConnected.set(connected);
         console.log(`🔌 Socket ${connected ? 'connected' : 'disconnected'}`);
+        
+        // Cuando se conecta, unirse al room de usuarios
+        if (connected) {
+          this.userSocketService.joinUsersRoom();
+          console.log('📥 Joined users room for real-time updates');
+        }
       });
   }
 
   setupListeners(destroy$: Subject<void>): void {
+    console.log('🎧 Setting up socket listeners...');
+    
     // Usuario creado
     this.userSocketService.onUserCreated()
       .pipe(takeUntil(destroy$))
       .subscribe(user => {
-        console.log('🆕 User created:', user);
+        console.log('🆕 User created via socket:', user);
         this.stateService.addUser(user);
       });
 
@@ -45,7 +53,7 @@ export class UsersSocketManagerService {
     this.userSocketService.onUserUpdated()
       .pipe(takeUntil(destroy$))
       .subscribe(updatedUser => {
-        console.log('✏️ User updated:', updatedUser);
+        console.log('✏️ User updated via socket:', updatedUser);
         this.stateService.updateUser(updatedUser);
       });
 
@@ -53,7 +61,7 @@ export class UsersSocketManagerService {
     this.userSocketService.onUserDeleted()
       .pipe(takeUntil(destroy$))
       .subscribe(({ userId }) => {
-        console.log('🗑️ User deleted:', userId);
+        console.log('🗑️ User deleted via socket:', userId);
         this.stateService.removeUser(userId);
       });
 
@@ -61,9 +69,11 @@ export class UsersSocketManagerService {
     this.userSocketService.onUserStatusChanged()
       .pipe(takeUntil(destroy$))
       .subscribe(({ userId, active }) => {
-        console.log('🔄 User status changed:', userId, active);
+        console.log('🔄 User status changed via socket:', userId, active);
         this.stateService.toggleUserStatus(userId, active);
       });
+      
+    console.log('✅ Socket listeners configured successfully');
   }
 
   disconnect(): void {

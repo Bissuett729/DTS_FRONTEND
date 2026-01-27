@@ -1,13 +1,26 @@
 import { Component, Input, Output, EventEmitter, forwardRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';
 
 @Component({
   selector: 'foxcode-input',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatButtonModule
+  ],
   templateUrl: './input.html',
   styles: ``,
   providers: [
@@ -29,49 +42,49 @@ export class FoxcodeInput implements ControlValueAccessor {
   @Input() hint?: string;
   @Input() icon?: string; // Remixicon class
   @Input() maxlength: string | number | null = null;
-  
+
   // Features
   @Input() showCopy: boolean = false;
   @Input() showPaste: boolean = false;
   @Input() showScan: boolean = false;
   @Input() showClear: boolean = true;
   @Input() showPasswordToggle: boolean = false;
-  
+
   // Custom error messages
   @Input() errorMessages: { [key: string]: string } = {};
-  
+
   // Events
   @Output() onKeyInput = new EventEmitter<string>();
   @Output() onScan = new EventEmitter<void>();
   @Output() onCopy = new EventEmitter<string>();
   @Output() onPaste = new EventEmitter<void>();
   @Output() onClear = new EventEmitter<void>();
-  
+
   // Internal state
   value = signal<string>('');
   isFocused = signal(false);
   showPassword = signal(false);
-  
+
   // ControlValueAccessor
-  onChange: any = () => {};
-  onTouched: any = () => {};
-  
+  onChange: any = () => { };
+  onTouched: any = () => { };
+
   writeValue(value: any): void {
     this.value.set(value || '');
   }
-  
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
-  
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  
+
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
-  
+
   // Internal methods
   onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -79,16 +92,16 @@ export class FoxcodeInput implements ControlValueAccessor {
     this.onChange(input.value);
     this.onKeyInput.emit(input.value);
   }
-  
+
   onFocus(): void {
     this.isFocused.set(true);
   }
-  
+
   onBlur(): void {
     this.isFocused.set(false);
     this.onTouched();
   }
-  
+
   async copyToClipboard(): Promise<void> {
     try {
       await navigator.clipboard.writeText(this.value());
@@ -97,7 +110,7 @@ export class FoxcodeInput implements ControlValueAccessor {
       console.error('Failed to copy:', err);
     }
   }
-  
+
   async pasteFromClipboard(): Promise<void> {
     try {
       const text = await navigator.clipboard.readText();
@@ -111,7 +124,7 @@ export class FoxcodeInput implements ControlValueAccessor {
       console.error('Failed to paste:', err);
     }
   }
-  
+
   clearInput(): void {
     this.value.set('');
     this.onChange('');
@@ -120,39 +133,39 @@ export class FoxcodeInput implements ControlValueAccessor {
       this.control.setValue('');
     }
   }
-  
+
   togglePasswordVisibility(): void {
     this.showPassword.update(v => !v);
   }
-  
+
   triggerScan(): void {
     this.onScan.emit();
   }
-  
+
   get inputType(): string {
     if (this.type === 'password' && this.showPassword()) {
       return 'text';
     }
     return this.type;
   }
-  
+
   get hasError(): boolean {
     return !!(this.control && this.control.invalid && (this.control.dirty || this.control.touched));
   }
-  
+
   get errorMessage(): string {
     if (!this.control || !this.hasError) return '';
-    
+
     const errors = this.control.errors;
     if (!errors) return '';
-    
+
     // Custom error messages
     for (const key in errors) {
       if (this.errorMessages[key]) {
         return this.errorMessages[key];
       }
     }
-    
+
     // Default error messages
     if (errors['required']) return `${this.label || 'This field'} is required`;
     if (errors['email']) return 'Please enter a valid email address';
@@ -161,14 +174,14 @@ export class FoxcodeInput implements ControlValueAccessor {
     if (errors['min']) return `Minimum value is ${errors['min'].min}`;
     if (errors['max']) return `Maximum value is ${errors['max'].max}`;
     if (errors['pattern']) return 'Invalid format';
-    
+
     return 'Invalid value';
   }
-  
+
   get showClearButton(): boolean {
     return this.showClear && this.value().length > 0 && !this.readonly && !this.isDisabled;
   }
-  
+
   get isDisabled(): boolean {
     return this.disabled || this.control?.disabled || false;
   }

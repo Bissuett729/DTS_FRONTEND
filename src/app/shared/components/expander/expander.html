@@ -1,5 +1,5 @@
 <div 
-  [class]="'bg-white dark:bg-[#424242] outline-none rounded-xl overflow-hidden transition-all duration-200 ' + paddingClass + ' ' + shadowClass + ' ' + roundedClass + ' ' + borderClass"
+  [class]="'bg-white dark:bg-[#424242] outline-none rounded-xl overflow-hidden ' + paddingClass + ' ' + shadowClass + ' ' + roundedClass + ' ' + borderClass"
   [class.border]="!borderless"
   [class.border-gray-200]="!borderless"
   [class.dark:border-[#2a3139]]="!borderless"
@@ -8,7 +8,7 @@
   
   <!-- Header -->
   <div 
-    class="expander-header flex items-center justify-between p-4 cursor-pointer transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-[#252b32]"
+    class="expander-header flex items-center justify-between p-4 cursor-pointer transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-[#4e4e4e]"
     [class]="headerClass"
     [class.cursor-not-allowed]="disabled"
     [class.hover:bg-transparent]="disabled"
@@ -49,11 +49,14 @@
     [class.max-h-0]="!isExpanded()"
     [class.max-h-[5000px]]="isExpanded()"
     [class.opacity-0]="!isExpanded()"
-    [class.opacity-100]="isExpanded()">
-    <div 
-      class="p-4"
-      [class]="contentClass">
-      <ng-content select="[expander-content]"></ng-content>
-    </div>
+    [class.opacity-100]="isExpanded()"
+    (transitionend)="onTransitionEnd()">
+    @if (showContent) {
+      <div
+        class="p-4"
+        [class]="contentClass">
+        <ng-content select="[expander-content]"></ng-content>
+      </div>
+    }
   </div>
 </div>

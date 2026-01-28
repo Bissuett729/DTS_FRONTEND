@@ -11,6 +11,7 @@ import { HeaderTool } from '../../shared/components/header-tool/header-tool';
   styles: ``,
 })
 export class Admin {
+
   menus = [
     { label: 'Users', link: 'users' },
     { label: 'Tools', link: 'tools' },

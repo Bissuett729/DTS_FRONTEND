@@ -1,14 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { AuthRepository, ILogoutResponse } from '../../../domain/repositories/auth.repository';
-import { StorageRepository } from '../../../domain/repositories/storage.repository';
+import { ILogoutResponse } from '../../../domain/repositories/auth/auth.repository';
+import { AuthApiRepository } from '../../../infrastructure';
+import { StorageUseCase } from '../..';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LogoutUseCase {
-  private authRepository = inject(AuthRepository);
-  private storageRepository = inject(StorageRepository);
+  private authRepository = inject(AuthApiRepository);
+  private storageRepository = inject(StorageUseCase);
 
   execute(token: string): Observable<ILogoutResponse> {
     return this.authRepository.logout(token).pipe(

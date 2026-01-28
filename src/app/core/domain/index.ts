@@ -1,8 +1,8 @@
 // Repositories
-export * from './repositories/auth.repository';
-export * from './repositories/storage.repository';
-export * from './repositories/modules.repository';
-export * from './repositories/tools-templates.repository';
+export * from './repositories'
 
 // Interfaces
 export * from './interfaces'
+
+// dtos
+export * from './dtos'

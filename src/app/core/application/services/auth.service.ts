@@ -1,12 +1,12 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, tap, of, Observable } from 'rxjs';
-import { StorageRepository } from '../../domain/repositories/storage.repository';
 import { LoginUseCase } from '../use-cases/auth/login.use-case';
 import { LogoutUseCase } from '../use-cases/auth/logout.use-case';
 import { GetCurrentUserUseCase } from '../use-cases/auth/get-current-user.use-case';
 import { RefreshTokenUseCase } from '../use-cases/auth/refresh-token.use-case';
 import { ILoginCredentials } from '../../domain/interfaces';
+import { StorageUseCase } from '../use-cases';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +16,11 @@ export class AuthService {
   private logoutUseCase = inject(LogoutUseCase);
   private getCurrentUserUseCase = inject(GetCurrentUserUseCase);
   private refreshTokenUseCase = inject(RefreshTokenUseCase);
-  private storageRepository = inject(StorageRepository);
+  private storageRepository = inject(StorageUseCase);
   private router = inject(Router);
 
   // State management con signals
-  private userSignal = signal<any | null>(null);
+  userSignal = signal<any | null>(null);
   private isLoadingSignal = signal<boolean>(false);
   private errorSignal = signal<string | null>(null);
   private allowChangePasswordSignal = signal<boolean>(false);

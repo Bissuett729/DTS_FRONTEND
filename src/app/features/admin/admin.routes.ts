@@ -12,27 +12,27 @@ export const AdminRoutes: Routes = [
       },
       {
         path: 'users',
-        loadComponent: () => import('./users/users').then(m => m.Users)
+        loadComponent: () => import('./features/users/users').then(m => m.Users)
       },
       {
         path: 'tools',
-        loadComponent: () => import('./tools/tools').then(m => m.Tools)
+        loadComponent: () => import('./features/tools/tools').then(m => m.Tools)
       },
       {
         path: 'departments',
-        loadComponent: () => import('./departments/departments').then(m => m.Departments)
+        loadComponent: () => import('./features/departments/departments').then(m => m.Departments)
       },
       {
         path: 'business-units',
-        loadComponent: () => import('./business-units/business-units').then(m => m.BusinessUnits)
+        loadComponent: () => import('./features/business-units/business-units').then(m => m.BusinessUnits)
       },
       {
         path: 'roles',
-        loadComponent: () => import('./roles/roles').then(m => m.Roles)
+        loadComponent: () => import('./features/roles/roles').then(m => m.Roles)
       },
       {
         path: 'shifts',
-        loadComponent: () => import('./shifts/shifts').then(m => m.Shifts)
+        loadComponent: () => import('./features/shifts/shifts').then(m => m.Shifts)
       },
       {
         path: '*',

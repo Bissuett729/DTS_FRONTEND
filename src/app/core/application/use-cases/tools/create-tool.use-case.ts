@@ -1,24 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ITool } from '../../../domain/interfaces/tool.interface';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../../environments/environment';
-
-export interface CreateToolDto {
-  title: string;
-  link: string;
-  toolMode: string[];
-  businessUnitId: string;
-  active?: boolean;
-}
+import { CreateToolDto } from '../../../domain';
+import { ToolsApiRepository } from '../../../infrastructure';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CreateToolUseCase {
-  constructor(private http: HttpClient) {}
+  constructor(private toolsRepository: ToolsApiRepository) { }
 
   execute(tool: CreateToolDto): Observable<ITool> {
-    return this.http.post<ITool>(`${environment.userURL}/v1/tools`, tool);
+    return this.toolsRepository.createTool(tool);
   }
 }

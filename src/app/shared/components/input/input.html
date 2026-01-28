@@ -94,12 +94,12 @@
   
     <!-- Hint Text -->
     @if (hint && !hasError) {
-      <mat-hint>{{ hint }}</mat-hint>
+      <mat-hint class="text-xs">{{ hint }}</mat-hint>
     }
   
     <!-- Error Message -->
     @if (hasError) {
-      <mat-error>
+      <mat-error class="text-xs">
         <i class="ri-error-warning-line mr-1"></i>
         {{ errorMessage }}
       </mat-error>
@@ -107,7 +107,7 @@
   
     <!-- Character Count -->
     @if (maxlength) {
-      <mat-hint align="end">{{ value().length }} / {{ maxlength }}</mat-hint>
+      <mat-hint class="text-xs" align="end">{{ value().length }} / {{ maxlength }}</mat-hint>
     }
   </mat-form-field>
 </div>

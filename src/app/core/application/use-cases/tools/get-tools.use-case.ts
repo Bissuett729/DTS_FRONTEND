@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ITool } from '../../../domain/interfaces/tool.interface';
-import { ToolsRepository } from '../../../domain/repositories/tools.repository';
+import { ToolsApiRepository } from '../../../infrastructure';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetToolsUseCase {
-  constructor(private toolsRepository: ToolsRepository) {}
+  constructor(private toolsRepository: ToolsApiRepository) {}
 
   execute(): Observable<ITool[]> {
     return this.toolsRepository.getTools();

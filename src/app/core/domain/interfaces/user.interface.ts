@@ -1,3 +1,5 @@
+import { IDepartment } from "./department.interface";
+import { IRole } from "./roles.interface";
 import { IBusinessUnit, ITool } from "./tool.interface";
 
 export interface IUser {
@@ -28,20 +30,6 @@ export interface IToolTemplate {
   active: boolean;
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-export interface IRole {
-  _id: string;
-  name: string;
-  active: boolean;
-}
-
-export interface IDepartment {
-  _id: string;
-  name: string;
-  description: string;
-  businessUnit: string;
-  active: boolean;
 }
 
 export interface ICreateUserDto {

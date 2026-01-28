@@ -1,15 +1,14 @@
 import { Component, EventEmitter, Input, Output, signal, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { NotificationsMenu } from "../../components";
+import { NotificationsMenu } from "../notifications-menu/notifications-menu";
 
 @Component({
   selector: 'foxcode-header',
   standalone: true,
-  imports: [CommonModule, NotificationsMenu],
   templateUrl: './header.html',
-  styles: []
+  styles: [],
+  imports: [NotificationsMenu]
 })
 export class Header implements OnInit {
   @Input() user: any;

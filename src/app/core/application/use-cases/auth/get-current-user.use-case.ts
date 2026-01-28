@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthRepository } from '../../../domain/repositories/auth.repository';
+import { AuthApiRepository } from '../../../infrastructure';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GetCurrentUserUseCase {
-  private authRepository = inject(AuthRepository);
+  private authRepository = inject(AuthApiRepository);
 
   execute(): Observable<any> {
     return this.authRepository.getCurrentUser();

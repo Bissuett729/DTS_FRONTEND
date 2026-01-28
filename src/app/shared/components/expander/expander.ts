@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
   styles: ``
 })
 export class FoxcodeExpander {
+    private pendingHide = false;
   @Input() expanded: boolean = false;
   @Input() disabled: boolean = false;
   @Input() headerClass: string = '';
@@ -23,15 +24,23 @@ export class FoxcodeExpander {
   @Output() expandedChange = new EventEmitter<boolean>();
 
   isExpanded = signal<boolean>(false);
+  showContent = false;
 
   ngOnInit(): void {
     setTimeout(() => {
       this.isExpanded.set(this.expanded);
+      this.showContent = this.expanded;
     });
   }
 
   ngOnChanges(): void {
     this.isExpanded.set(this.expanded);
+    if (this.expanded) {
+      this.showContent = true;
+      this.pendingHide = false;
+    } else {
+      this.pendingHide = true;
+    }
   }
 
   toggle(): void {
@@ -39,6 +48,12 @@ export class FoxcodeExpander {
     this.isExpanded.update(value => {
       const next = !value;
       this.expandedChange.emit(next);
+      if (next) {
+        this.showContent = true;
+        this.pendingHide = false;
+      } else {
+        this.pendingHide = true;
+      }
       return next;
     });
   }
@@ -47,6 +62,8 @@ export class FoxcodeExpander {
     if (!this.disabled) {
       this.isExpanded.set(true);
       this.expandedChange.emit(true);
+      this.showContent = true;
+      this.pendingHide = false;
     }
   }
 
@@ -54,6 +71,15 @@ export class FoxcodeExpander {
     if (!this.disabled) {
       this.isExpanded.set(false);
       this.expandedChange.emit(false);
+      this.pendingHide = true;
+    }
+  }
+
+  onTransitionEnd(): void {
+    // Solo ocultar cuando la animación de cierre termine
+    if (this.pendingHide && !this.isExpanded()) {
+      this.showContent = false;
+      this.pendingHide = false;
     }
   }
 

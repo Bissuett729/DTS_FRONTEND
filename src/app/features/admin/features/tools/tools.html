@@ -1,0 +1,181 @@
+<section class="w-full h-full flex flex-col gap-y-2">
+
+    <foxcode-card>
+        <div class="dark:border-gray-700 flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-medium tracking-tight text-black dark:text-white">
+                    Tools Management
+                </h2>
+                <p class="text-[#737373] dark:text-[#d6d6d6]">
+                    Manage system tools and configurations.
+                </p>
+            </div>
+
+            <div class="flex items-center gap-x-2">
+                <foxcode-input
+                    icon="ri-search-2-line"
+                    placeholder="Search by tool name, link, or business unit"
+                    [control]="searchControl">
+                </foxcode-input>
+    
+                <foxcode-button 
+                    label="Search" 
+                    [disabled]="searchControlValue === ''" 
+                    [loading]="loading()">
+                </foxcode-button>
+
+                <foxcode-button 
+                    label="Reset" 
+                    variant="ghost">
+                </foxcode-button>
+            </div>
+
+            <foxcode-button
+                label="New Tool"
+                icon="ri-add-line"
+                (click)="openCreateModal()">
+            </foxcode-button>
+        </div>
+    </foxcode-card>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#181c20]">
+        <div class="text-center">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-solid border-foxcode border-r-transparent"></div>
+          <p class="mt-4 text-gray-600 dark:text-gray-400">Loading tools...</p>
+        </div>
+      </div>
+    }
+    @else { 
+      <!-- Controles de expansión global -->
+      <div class="flex gap-2 items-center mb-2 mt-2">
+        <foxcode-button label="Expand All" (onClick)="expandAll()" size="sm"></foxcode-button>
+        <foxcode-button label="Collapse All" (onClick)="collapseAll()" size="sm"></foxcode-button>
+      </div>
+      @if (!loading() && filteredGroups().length > 0) {
+        <div class="flex h-full flex-col gap-y-2 overflow-y-auto">
+          @for (group of filteredGroups(); track group.bu) {
+            <foxcode-expander 
+              [expanded]="isGroupExpanded(group.bu)"
+              (expandedChange)="onExpanderChange(group.bu, $event)">
+              <!-- Header Content -->
+              <div expander-header class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-foxcode/20 dark:bg-foxcode/30 flex items-center justify-center">
+                  <i class="ri-building-line text-xl text-foxcode dark:text-[#4f9eff]"></i>
+                </div>
+                <div>
+                  <h2 class="text-lg font-bold text-gray-900 dark:text-white">
+                    {{ group.bu }}
+                  </h2>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">
+                    {{ group.tools.length }} {{ group.tools.length === 1 ? 'tool' : 'tools' }}
+                  </p>
+                </div>
+              </div>
+              <!-- Expandable Content -->
+              <div expander-content>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  @for (tool of group.tools; track tool._id) {
+                    <div class="group relative bg-gray-50 dark:bg-[#2a2a2a] rounded-xl border border-gray-200 dark:border-[#727272] hover:border-foxcode dark:hover:border-[#a9a9a9] transition-all duration-200 hover:shadow-lg cursor-pointer"
+                         (click)="openUpdateModal(tool)">
+                      <!-- Active Status Badge -->
+                      <div class="absolute top-3 right-3 z-10">
+                        @if (tool.active) {
+                          <span class="px-2 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 flex items-center gap-1">
+                            <i class="ri-checkbox-circle-fill"></i>
+                            Active
+                          </span>
+                        } @else {
+                          <span class="px-2 py-1 rounded-md text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 flex items-center gap-1">
+                            <i class="ri-close-circle-fill"></i>
+                            Inactive
+                          </span>
+                        }
+                      </div>
+                      <div class="p-5">
+                        <!-- Tool Icon and Title -->
+                        <div class="flex items-start gap-3 mb-3">
+                          <div class="w-12 h-12 rounded-xl bg-foxcode/10 dark:bg-foxcode/25 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+                            <i class="ri-tools-fill text-2xl text-foxcode dark:text-[#4f9eff]"></i>
+                          </div>
+                          <div class="flex-1 min-w-0 pt-2">
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white truncate group-hover:text-foxcode dark:group-hover:text-[#4f9eff] transition-colors">
+                              {{ tool.title }}
+                            </h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-1">
+                              <i class="ri-links-line"></i>
+                              {{ tool.link }}
+                            </p>
+                          </div>
+                        </div>
+                        <!-- Tool Modes -->
+                        <div>
+                          <div class="flex items-center gap-2 mb-2">
+                            <i class="ri-settings-3-line text-xs text-gray-500 dark:text-gray-400"></i>
+                            <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Environments</span>
+                          </div>
+                          <div class="flex flex-wrap gap-1.5">
+                            @for (mode of tool.toolMode; track mode) {
+                              <span class="px-2 py-1 rounded-md text-xs font-semibold {{ getToolModeColor(mode) }}">
+                                {{ getToolModeLabel(mode) }}
+                              </span>
+                            }
+                            @if (!tool.toolMode || tool.toolMode.length === 0) {
+                              <span class="px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500">
+                                No environments
+                              </span>
+                            }
+                          </div>
+                        </div>
+                        <!-- Edit Indicator -->
+                        <div class="mt-4 pt-3 border-t border-gray-200 dark:border-[#2a3139]">
+                          <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                            <span>Click to edit</span>
+                            <i class="ri-arrow-right-line group-hover:translate-x-1 transition-transform duration-200"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </foxcode-expander>
+          }
+        </div>
+      }
+    
+      <!-- Empty State -->
+      @if (!loading() && filteredGroups().length === 0) {
+        <div class="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#181c20]">
+          <div class="text-center max-w-md px-6">
+            <div class="w-20 h-20 rounded-2xl bg-foxcode/10 dark:bg-foxcode/25 flex items-center justify-center mx-auto mb-4">
+              <i class="ri-tools-line text-4xl text-foxcode dark:text-[#4f9eff]"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              @if (searchTerm()) {
+                No tools found
+              } @else {
+                No tools yet
+              }
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">
+              @if (searchTerm()) {
+                No tools match your search criteria. Try adjusting your filters.
+              } @else {
+                Get started by creating your first tool configuration.
+              }
+            </p>
+            @if (!searchTerm()) {
+              <foxcode-button
+                label="Create First Tool"
+                icon="ri-add-line"
+                (click)="openCreateModal()">
+              </foxcode-button>
+            }
+          </div>
+        </div>
+      }
+    }
+    
+</section>

@@ -2,7 +2,6 @@ import { Component, EventEmitter, inject, Input, OnInit, Output, signal, compute
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/application';
-import { ToolsApiRepository } from '../../../core/infrastructure/repositories/tools-api.repository';
 import { ITool } from '../../../core/domain/interfaces/tool.interface';
 import { environment } from '../../../../environments/environment';
 
@@ -21,7 +20,6 @@ export class Sidebar implements OnInit {
   @Output() onClose = new EventEmitter<void>();
 
   private authService = inject(AuthService);
-  private toolsRepository = inject(ToolsApiRepository);
 
   isVisible = signal(false);
   allTools = signal<ITool[]>([]);

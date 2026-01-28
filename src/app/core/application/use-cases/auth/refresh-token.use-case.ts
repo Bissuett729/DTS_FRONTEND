@@ -1,15 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { AuthRepository } from '../../../domain/repositories/auth.repository';
-import { StorageRepository } from '../../../domain/repositories/storage.repository';
 import { IRefreshTokenResponse } from '../../../domain';
+import { AuthApiRepository } from '../../../infrastructure';
+import { StorageUseCase } from '../..';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RefreshTokenUseCase {
-  private authRepository = inject(AuthRepository);
-  private storageRepository = inject(StorageRepository);
+  private authRepository = inject(AuthApiRepository);
+  private storageRepository = inject(StorageUseCase);
 
   execute(accessToken: string): Observable<IRefreshTokenResponse> {
     return this.authRepository.refreshToken<IRefreshTokenResponse>(accessToken).pipe(

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/application/services/auth.service';
-import { StorageRepository } from '../../../core/domain';
+import { StorageUseCase } from '../../../core/application';
 
 @Component({
   selector: 'foxcode-change-password',
@@ -16,7 +16,7 @@ export class ChangePassword implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private storageRepository = inject(StorageRepository);
+  private storageRepository = inject(StorageUseCase);
 
   changePasswordForm!: FormGroup;
 

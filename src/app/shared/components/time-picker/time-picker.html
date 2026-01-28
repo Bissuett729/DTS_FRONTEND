@@ -1,0 +1,33 @@
+<div class="w-full h-full foxcode-input-field">
+    <mat-form-field class="w-full h-auto" appearance="outline" subscriptSizing="dynamic" floatLabel="always">
+        <!-- Label -->
+        @if (label) {
+            <mat-label>
+                {{ label }}
+            </mat-label>
+        }
+
+        <input
+            matInput
+            [formControl]="control!"
+            [matTimepicker]="picker"
+            class="text-base"
+        />
+        <mat-timepicker-toggle matIconSuffix [for]="picker" />
+        <mat-timepicker #picker />
+
+
+        <!-- Hint Text -->
+        @if (hint && !hasError) {
+        <mat-hint>{{ hint }}</mat-hint>
+        }
+    
+        <!-- Error Message -->
+        @if (hasError) {
+        <mat-error class="text-xs">
+            <i class="ri-error-warning-line mr-1"></i>
+            {{ errorMessage }}
+        </mat-error>
+        }
+    </mat-form-field>
+</div>

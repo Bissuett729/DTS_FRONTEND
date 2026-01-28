@@ -2,12 +2,14 @@ import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { AuthService } from '../../../core/application/services/auth.service';
-import { StorageRepository } from '../../../core/domain';
 import { LoaderPage } from "../../components/loader-page/loader-page";
 import { SupportSidebar } from '../support-sidebar/support-sidebar';
 import { Header } from "../header/header";
 import { Sidebar } from "../sidebar/sidebar";
 import { environment } from '../../../../environments/environment';
+import { StorageUseCase } from '../../../core/application';
+import { UserSocketsManagerService } from '../..';
+import { InitSidebarSockets } from './core/sockets/init-sockets.socket';
 
 @Component({
   selector: 'foxcode-layout-template',
@@ -16,10 +18,12 @@ import { environment } from '../../../../environments/environment';
   templateUrl: './layout-template.html'
 })
 export class LayoutTemplate implements OnInit, OnDestroy {
+  private userSocketsManagerService = inject(UserSocketsManagerService);
+  private initSidebarSockets = inject(InitSidebarSockets);
   private authService = inject(AuthService);
-  private storageRepository = inject(StorageRepository);
+  private storageRepository = inject(StorageUseCase);
   private router = inject(Router);
-  
+
   sidebarCollapsed = signal(true);
   isLoadingPage = signal(true);
   isRouting = signal(false);
@@ -32,6 +36,8 @@ export class LayoutTemplate implements OnInit, OnDestroy {
   private routerSub?: any;
 
   ngOnInit(): void {
+    this.userSocketsManagerService.connect();
+    this.initSidebarSockets.InitSockets();
     // Load theme from localStorage
     const savedTheme = this.storageRepository.getItem('theme');
     if (savedTheme === 'dark') {
@@ -69,7 +75,7 @@ export class LayoutTemplate implements OnInit, OnDestroy {
 
   toggleTheme(): void {
     this.isDarkMode.update(value => !value);
-    
+
     if (this.isDarkMode()) {
       document.documentElement.classList.add('dark');
       this.storageRepository.setItem('theme', 'dark');
@@ -82,7 +88,7 @@ export class LayoutTemplate implements OnInit, OnDestroy {
   onLogout(): void {
     this.loaderMessage.set('Goodbye, see you soon');
     this.isLoadingPage.set(true);
-    
+
     setTimeout(() => {
       const currentToken = this.storageRepository.getItem('accessToken');
       this.authService.logout(currentToken!);
@@ -91,5 +97,6 @@ export class LayoutTemplate implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe?.();
+    this.userSocketsManagerService.disconnect();
   }
 }

@@ -1,11 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
-import { StorageRepository } from '../../domain/repositories/storage.repository';
 import { RefreshTokenUseCase } from '../../application/use-cases/auth/refresh-token.use-case';
+import { StorageUseCase } from '../../application';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const storageRepository = inject(StorageRepository);
+  const storageRepository = inject(StorageUseCase);
   const refreshTokenUseCase = inject(RefreshTokenUseCase);
   
   const token = storageRepository.getItem('accessToken');

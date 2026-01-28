@@ -1,11 +1,8 @@
 // Repositories
-export * from './repositories/auth-api.repository';
-export * from './repositories/local-storage.repository';
-export * from './repositories/tools-api.repository';
+export * from './repositories'
 
 // Guards
-export * from './guards/auth.guard';
-export * from './guards/no-auth.guard';
+export * from './guards';
 
 // Interceptors
-export * from './interceptors/auth.interceptor';
+export * from './interceptors';

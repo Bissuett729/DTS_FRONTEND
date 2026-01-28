@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthApiRepository } from '../../../core/infrastructure/repositories/auth-api.repository';
+import { AuthApiRepository } from '../../../core/infrastructure/repositories/auth/auth-api.repository';
 
 @Component({
   selector: 'foxcode-register',

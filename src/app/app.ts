@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { initModalHelper } from './core/infrastructure/repositories/open-modal.repository';
+import { initModalHelper } from './core/infrastructure/repositories/modal/open-modal.repository';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({

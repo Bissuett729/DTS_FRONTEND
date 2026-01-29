@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../core/application/services/auth.service';
+import { AuthService, GlobalStateService } from '../../../core/application';
 import { StorageUseCase } from '../../../core/application';
 
 @Component({
@@ -10,13 +10,17 @@ import { StorageUseCase } from '../../../core/application';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './change-password.html',
-  styleUrls: ['./change-password.css']
+  styleUrls: ['./change-password.css'],
 })
 export class ChangePassword implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private globalState = inject(GlobalStateService);
   private router = inject(Router);
   private storageRepository = inject(StorageUseCase);
+
+  // Access user from global state
+  user = this.globalState.currentUser;
 
   changePasswordForm!: FormGroup;
 
@@ -42,11 +46,14 @@ export class ChangePassword implements OnInit {
   }
 
   private initForm(): void {
-    this.changePasswordForm = this.fb.group({
-      currentPassword: ['', [Validators.required, Validators.minLength(6)]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
-    }, { validators: this.passwordMatchValidator });
+    this.changePasswordForm = this.fb.group(
+      {
+        currentPassword: ['', [Validators.required, Validators.minLength(6)]],
+        newPassword: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+      },
+      { validators: this.passwordMatchValidator },
+    );
   }
 
   private passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
@@ -78,10 +85,10 @@ export class ChangePassword implements OnInit {
 
       const { currentPassword, newPassword } = this.changePasswordForm.value;
 
-      // Obtener el ID del usuario del servicio
-      const userId = this.authService.user()?.id;
+      // Obtener el ID del usuario del global state
+      const userId = this.user()?._id;
       const currentToken = this.storageRepository.getItem('accessToken');
-      const userAuthorized = this.authService.user()?.authorized;
+      const userAuthorized = this.user()?.authorized;
 
       if (!userId) {
         this.error.set('User ID not found. Please log in again.');
@@ -112,7 +119,7 @@ export class ChangePassword implements OnInit {
         error: (err) => {
           this.error.set(err.error?.message || 'Error changing password. Please try again.');
           this.isLoading.set(false);
-        }
+        },
       });
     } else {
       this.changePasswordForm.markAllAsTouched();

@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, tap, of, Observable } from 'rxjs';
 import { LoginUseCase } from '../use-cases/auth/login.use-case';
@@ -7,6 +7,7 @@ import { GetCurrentUserUseCase } from '../use-cases/auth/get-current-user.use-ca
 import { RefreshTokenUseCase } from '../use-cases/auth/refresh-token.use-case';
 import { ILoginCredentials } from '../../domain/interfaces';
 import { StorageUseCase } from '../use-cases';
+import { GlobalStateService } from './global-state.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,55 +19,41 @@ export class AuthService {
   private refreshTokenUseCase = inject(RefreshTokenUseCase);
   private storageRepository = inject(StorageUseCase);
   private router = inject(Router);
-
-  // State management con signals
-  userSignal = signal<any | null>(null);
-  private isLoadingSignal = signal<boolean>(false);
-  private errorSignal = signal<string | null>(null);
-  private allowChangePasswordSignal = signal<boolean>(false);
+  private globalState = inject(GlobalStateService);
 
   // Token monitoring
   private tokenExpirationTimer: any = null;
   private readonly TOKEN_REFRESH_BUFFER = 5 * 60 * 1000; // 5 minutos antes de expirar
 
-  // Computed signals
-  readonly user = this.userSignal.asReadonly();
-  readonly isLoading = this.isLoadingSignal.asReadonly();
-  readonly error = this.errorSignal.asReadonly();
-  readonly isAuthenticated = computed(() => this.userSignal() !== null);
+  // Expose global state signals for backward compatibility
+  readonly user = this.globalState.currentUser;
+  readonly isLoading = this.globalState.authLoading;
+  readonly error = this.globalState.authError;
+  readonly isAuthenticated = this.globalState.isAuthenticated;
+
+  // For backward compatibility
+  userSignal = this.globalState.currentUser;
 
   constructor() {
     this.initializeAuth();
   }
 
   private initializeAuth(): void {
-    const userStr = this.storageRepository.getItem('user');
     const token = this.storageRepository.getItem('accessToken');
-    
-    if (userStr && token) {
-      try {
-        const user = JSON.parse(userStr);
-        
-        // Verificar si el token no ha expirado
-        if (this.isTokenValid(token)) {
-          this.userSignal.set(user);
-          this.startTokenMonitoring(token);
-        } else {
-          // Token expirado, limpiar storage
-          this.clearAuthData();
-        }
-      } catch (error) {
-        console.error('Error parsing user from storage:', error);
+
+    if (token) {
+      // Verificar si el token no ha expirado
+      if (this.isTokenValid(token)) {
+        this.startTokenMonitoring(token);
+      } else {
+        // Token expirado, limpiar storage
         this.clearAuthData();
       }
     }
   }
 
   private clearAuthData(): void {
-    this.storageRepository.removeItem('user');
-    this.storageRepository.removeItem('accessToken');
-    this.userSignal.set(null);
-    this.allowChangePasswordSignal.set(false);
+    this.globalState.clearAuthState();
     this.stopTokenMonitoring();
   }
 
@@ -89,7 +76,7 @@ export class AuthService {
         atob(base64)
           .split('')
           .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
+          .join(''),
       );
       return JSON.parse(jsonPayload);
     } catch (error) {
@@ -100,7 +87,7 @@ export class AuthService {
   private startTokenMonitoring(token: string): void {
     this.stopTokenMonitoring();
     const currentToken = this.storageRepository.getItem('accessToken');
-    
+
     try {
       const payload = this.decodeToken(token);
       const expirationTime = payload.exp * 1000; // Convertir a milisegundos
@@ -145,43 +132,34 @@ export class AuthService {
   }
 
   login(credentials: ILoginCredentials): void {
-    this.isLoadingSignal.set(true);
-    this.errorSignal.set(null);
+    this.globalState.setAuthLoading(true);
+    this.globalState.clearAuthError();
 
     this.loginUseCase
       .execute(credentials)
       .pipe(
         tap((response) => {
-          this.userSignal.set({
-            id: response.user._id,
-            email: response.user.email,
-            username: response.user.username,
-            clock: response.user.clock,
-            roleIds: response.user.roleIds,
-            departmentId: response.user.departmentId,
-            businessUnitId: response.user.businessUnitId,
-            tools: response.user.tools,
-            active: response.user.active,
-            requiresPasswordChange: response.user.requiresPasswordChange,
-            authorized: response.user.authorized,
-          });
-          this.isLoadingSignal.set(false);
+          // Update global state (cast to any to handle API response type differences)
+          this.globalState.setUser(response.user as any);
+          this.globalState.setAccessToken(response.accessToken);
+          this.globalState.setAuthenticated(true);
+          this.globalState.setAuthLoading(false);
 
           // Iniciar monitoreo del token
           this.startTokenMonitoring(response.accessToken);
 
           // Redireccionar según si requiere cambio de contraseña
           if (response.user.requiresPasswordChange) {
-            this.allowChangePasswordSignal.set(true);
+            this.globalState.setAllowChangePassword(true);
             this.router.navigate(['/auth/change-password']);
           } else {
-            this.allowChangePasswordSignal.set(false);
+            this.globalState.setAllowChangePassword(false);
             this.router.navigate(['/foxcode']);
           }
         }),
         catchError((error) => {
-          this.errorSignal.set(error.message);
-          this.isLoadingSignal.set(false);
+          this.globalState.setAuthError(error.message);
+          this.globalState.setAuthLoading(false);
           return of();
         }),
       )
@@ -218,10 +196,17 @@ export class AuthService {
   }
 
   refreshUserData(): void {
+    const userId = this.globalState.currentUser()?._id;
+
+    if (!userId) {
+      console.warn('[AuthService] Cannot refresh user data: No user ID available');
+      return;
+    }
+
     this.getCurrentUserUseCase
-      .execute()
+      .execute(userId)
       .pipe(
-        tap((user) => this.userSignal.set(user)),
+        tap((user) => this.globalState.setUser(user)),
         catchError((error) => {
           console.error('Error refreshing user data:', error);
           return of();
@@ -242,23 +227,13 @@ export class AuthService {
       .execute(currentToken)
       .pipe(
         tap((response) => {
-          // Actualizar el usuario con los nuevos datos
-          this.userSignal.set({
-            id: response.user._id,
-            email: response.user.email,
-            username: response.user.username,
-            clock: response.user.clock,
-            roleIds: response.user.roleIds,
-            departmentId: response.user.departmentId,
-            businessUnitId: response.user.businessUnitId,
-            active: response.user.active,
-            requiresPasswordChange: response.user.requiresPasswordChange,
-            authorized: response.user.authorized,
-          });
-          
+          // Actualizar el usuario con los nuevos datos (cast to any for API response compatibility)
+          this.globalState.setUser(response.user as any);
+          this.globalState.setAccessToken(response.accessToken);
+
           // Reiniciar monitoreo del token con el nuevo token
           this.startTokenMonitoring(response.accessToken);
-          
+
           console.log('Token refreshed successfully');
         }),
         catchError((error) => {
@@ -272,28 +247,22 @@ export class AuthService {
   }
 
   clearError(): void {
-    this.errorSignal.set(null);
+    this.globalState.clearAuthError();
   }
 
   resetAuthState(): void {
-    this.errorSignal.set(null);
-    this.isLoadingSignal.set(false);
-    this.allowChangePasswordSignal.set(false);
+    this.globalState.clearAuthError();
+    this.globalState.setAuthLoading(false);
+    this.globalState.setAllowChangePassword(false);
   }
 
   canAccessChangePassword(): boolean {
-    return this.allowChangePasswordSignal();
+    return this.globalState.allowChangePassword();
   }
 
   markPasswordChanged(): void {
-    const user = this.userSignal();
-    if (user) {
-      this.userSignal.set({
-        ...user,
-        requiresPasswordChange: false,
-      });
-    }
-    this.allowChangePasswordSignal.set(false);
+    this.globalState.setRequiresPasswordChange(false);
+    this.globalState.setAllowChangePassword(false);
   }
 
   changePassword(id: string, currentPassword: string, newPassword: string): Observable<any> {

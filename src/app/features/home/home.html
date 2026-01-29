@@ -1,1 +1,145 @@
-<p>home works!</p>
+<div class="p-6 bg-[#f8fafc] min-h-full">
+  <!-- Welcome Banner -->
+  <div class="mb-8 flex justify-center">
+    <div class="bg-white px-12 py-3 rounded-lg shadow-sm border border-gray-100">
+      <h1 class="text-xl font-medium text-gray-700 m-0">
+        Welcome <span class="font-bold text-gray-900">{{ userFullName() }}</span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-12 gap-6">
+    <!-- Sidebar Column (3/12) -->
+    <div class="col-span-12 lg:col-span-3 space-y-4">
+      <!-- Identification Card -->
+      <foxcode-card padding="md" shadow="sm">
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 text-gray-600">
+            <i class="ri-id-card-line text-lg text-foxcode"></i>
+            <span class="font-bold text-gray-800">{{ userClock() }}</span>
+          </div>
+          <div class="flex items-center gap-2 text-gray-600">
+            <i class="ri-history-line text-lg text-foxcode"></i>
+            <span class="font-medium">1st</span>
+          </div>
+        </div>
+      </foxcode-card>
+
+      <!-- Business Unit / Department Card -->
+      <foxcode-card padding="md" shadow="sm">
+        <div class="flex items-center gap-2 text-gray-700">
+          <i class="ri-organization-chart text-lg text-foxcode"></i>
+          <span class="font-semibold">Development - dev</span>
+        </div>
+      </foxcode-card>
+
+      <!-- Assigned Tools Summary Card -->
+      <foxcode-card padding="md" shadow="sm">
+        <div class="space-y-3">
+          @for (item of toolsSummaryByBU(); track item.name) {
+            <div class="flex items-center gap-2 text-gray-700 text-sm">
+              <i class="ri-tools-line text-foxcode"></i>
+              <span class="font-medium"
+                >{{ item.name }} -
+                <span class="text-gray-500 font-normal"
+                  >({{ item.count }} tools assigned)</span
+                ></span
+              >
+            </div>
+          } @empty {
+            <div class="text-gray-400 text-sm italic">No tools assigned</div>
+          }
+        </div>
+      </foxcode-card>
+    </div>
+
+    <!-- Main Content Column (9/12) -->
+    <div
+      class="col-span-12 lg:col-span-9 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col min-h-[600px]"
+    >
+      <!-- Tab Navigation -->
+      <div class="flex border-b border-gray-100 px-6">
+        @for (tab of TABS; track tab.id) {
+          <button
+            (click)="setTab(tab.id)"
+            [class.border-foxcode]="activeTab() === tab.id"
+            [class.text-foxcode]="activeTab() === tab.id"
+            [class.border-transparent]="activeTab() !== tab.id"
+            [class.text-gray-400]="activeTab() !== tab.id"
+            class="px-8 py-4 text-sm font-semibold border-b-2 transition-all hover:text-foxcode cursor-pointer bg-transparent outline-none"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="flex-grow p-6">
+        @if (activeTab() === 'documentation') {
+          <div class="grid grid-cols-12 gap-8">
+            <!-- Left Panel (BU Filter) -->
+            <div class="col-span-12 md:col-span-3 space-y-4">
+              <div
+                class="text-center text-xs font-bold text-gray-400 tracking-widest uppercase mb-4"
+              >
+                - BUSINESS UNIT -
+              </div>
+
+              <div class="flex flex-col gap-3">
+                <button
+                  (click)="setBU('FOXCODE')"
+                  [class.bg-white]="selectedBU() !== 'FOXCODE'"
+                  [class.text-gray-700]="selectedBU() !== 'FOXCODE'"
+                  [class.bg-foxcode]="selectedBU() === 'FOXCODE'"
+                  [class.text-white]="selectedBU() === 'FOXCODE'"
+                  class="w-full py-2 px-4 rounded shadow-sm border border-gray-200 font-bold text-sm transition-all hover:shadow-md cursor-pointer"
+                >
+                  FOXCODE
+                </button>
+
+                <button
+                  (click)="setBU('MICROSOFT')"
+                  [class.bg-white]="selectedBU() !== 'MICROSOFT'"
+                  [class.text-gray-700]="selectedBU() !== 'MICROSOFT'"
+                  [class.bg-foxcode]="selectedBU() === 'MICROSOFT'"
+                  [class.text-white]="selectedBU() === 'MICROSOFT'"
+                  class="w-full py-2 px-4 rounded shadow-sm border border-gray-200 font-bold text-sm transition-all hover:shadow-md cursor-pointer"
+                >
+                  MICROSOFT
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Panel (Table) -->
+            <div class="col-span-12 md:col-span-9">
+              <!-- Filter Bar (Placeholder from mockup) -->
+              <div
+                class="mb-4 bg-gray-50/50 p-2 rounded-lg border border-gray-100 flex justify-between items-center px-4"
+              >
+                <span class="text-xs text-gray-500 font-medium">Filter</span>
+                <i class="ri-arrow-down-s-line text-gray-400"></i>
+              </div>
+
+              <!-- Generic Table Integration -->
+              <foxcode-table
+                [data]="filteredTools()"
+                [columns]="tableColumns"
+                [totalItems]="filteredTools().length"
+                [pageSize]="5"
+                [currentPage]="1"
+              >
+              </foxcode-table>
+            </div>
+          </div>
+        } @else {
+          <div class="flex flex-col items-center justify-center h-full py-20 text-gray-400">
+            <i class="ri-settings-4-line text-5xl mb-4 animate-spin-slow"></i>
+            <p class="text-lg font-medium">
+              Contenido de pestaña "{{ activeTab() }}" en desarrollo...
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

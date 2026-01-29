@@ -9,7 +9,11 @@ export abstract class AuthRepository {
   abstract login<T, R>(credentials: T): Observable<R>;
   abstract logout(token: string): Observable<ILogoutResponse>;
   abstract refreshToken<T>(refreshToken: string): Observable<T>;
-  abstract getCurrentUser<T>(): Observable<T>;
+  abstract getCurrentUser<T>(id: string): Observable<T>;
   abstract validateToken(token: string): Observable<boolean>;
-  abstract changePassword(id: string, currentPassword: string, newPassword: string): Observable<any>;
+  abstract changePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Observable<any>;
 }

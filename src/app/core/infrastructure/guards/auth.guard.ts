@@ -1,10 +1,11 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../../application/services/auth.service';
+import { AuthService, GlobalStateService } from '../../application';
 import { StorageUseCase } from '../../application';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
+  const globalState = inject(GlobalStateService);
   const router = inject(Router);
   const storageRepository = inject(StorageUseCase);
 
@@ -14,12 +15,13 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (!authService.isUserAuthenticated()) {
     // Si no está autenticado, redirigir al login
     router.navigate(['/auth/login'], {
-      queryParams: { returnUrl: state.url }
+      queryParams: { returnUrl: state.url },
     });
     return false;
   }
 
-  const user = authService.user();
+  // Get user from global state
+  const user = globalState.currentUser();
 
   // PRIORIDAD 1: Verificar si el usuario requiere cambio de contraseña
   if (user?.requiresPasswordChange) {
@@ -41,7 +43,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (!user?.authorized) {
     // Usuario no autorizado, redirigir al login
     router.navigate(['/auth/login'], {
-      queryParams: { message: 'Your account is not authorized. Please contact an administrator.' }
+      queryParams: { message: 'Your account is not authorized. Please contact an administrator.' },
     });
     authService.logout(currentToken!);
     return false;

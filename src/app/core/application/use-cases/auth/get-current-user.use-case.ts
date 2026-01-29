@@ -3,12 +3,12 @@ import { Observable } from 'rxjs';
 import { AuthApiRepository } from '../../../infrastructure';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GetCurrentUserUseCase {
   private authRepository = inject(AuthApiRepository);
 
-  execute(): Observable<any> {
-    return this.authRepository.getCurrentUser();
+  execute(id: string): Observable<any> {
+    return this.authRepository.getCurrentUser(id);
   }
 }

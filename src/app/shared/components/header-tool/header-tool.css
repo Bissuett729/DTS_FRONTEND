@@ -1,0 +1,73 @@
+/* Responsive styles for header-tool component */
+
+
+header {
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+/* Menus container: horizontal scroll, no wrap */
+header .menus-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: #0a4a6e #fff0;
+  max-width: 100vw;
+}
+header .menus-scroll::-webkit-scrollbar {
+  height: 6px;
+  background: transparent;
+}
+header .menus-scroll::-webkit-scrollbar-thumb {
+  background: #0a4a6e;
+  border-radius: 4px;
+}
+
+header .menus-scroll > div {
+  min-width: max-content;
+}
+
+@media (max-width: 900px) {
+  header .menus-scroll {
+    gap: 0.15rem;
+    max-width: 100vw;
+  }
+}
+
+@media (max-width: 700px) {
+  header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.5rem 0.5rem;
+  }
+  header .menus-scroll {
+    width: 100%;
+    max-width: 100vw;
+    padding-bottom: 2px;
+  }
+  header h1 {
+    font-size: 1rem;
+    text-align: left;
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 500px) {
+  header .menus-scroll {
+    display: none;
+  }
+  header .hamburger {
+    display: flex !important;
+  }
+}
+
+header .hamburger {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0.25rem 0;
+}

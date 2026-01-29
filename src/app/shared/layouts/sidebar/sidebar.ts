@@ -1,7 +1,16 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal, computed } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  signal,
+  computed,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../../core/application';
+import { GlobalStateService } from '../../../core/application';
 import { ITool } from '../../../core/domain/interfaces/tool.interface';
 import { environment } from '../../../../environments/environment';
 
@@ -10,20 +19,23 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class Sidebar implements OnInit {
-
   @Input() collapsed: boolean = false;
   @Input() businessUnit: string = 'MICROSOFT';
   @Output() onClose = new EventEmitter<void>();
 
-  private authService = inject(AuthService);
+  private globalState = inject(GlobalStateService);
 
   isVisible = signal(false);
-  allTools = signal<ITool[]>([]);
   isLoading = signal(false);
+
+  // Access user from global state
+  user = this.globalState.currentUser;
+
+  // Derive allTools reactively from the user signal
+  allTools = computed(() => this.user()?.tools || []);
 
   // Filter tools based on business unit and mode
   filteredTools = computed(() => {
@@ -32,10 +44,11 @@ export class Sidebar implements OnInit {
     const currentMode = environment.environmentName.toLowerCase();
 
     return this.allTools()
-      .filter(tool =>
-        tool.active &&
-        allowedBusinessUnits.includes(tool.businessUnitId.name.toUpperCase()) &&
-        tool.toolMode.some(mode => mode.toLowerCase() === currentMode)
+      .filter(
+        (tool) =>
+          tool.active &&
+          allowedBusinessUnits.includes(tool.businessUnitId.name.toUpperCase()) &&
+          tool.toolMode.some((mode) => mode.toLowerCase() === currentMode),
       )
       .sort((a, b) => {
         const aIsAdmin = a.businessUnitId.name.toUpperCase() === 'DEVELOPMENT';
@@ -46,12 +59,10 @@ export class Sidebar implements OnInit {
   });
 
   ngOnInit(): void {
-    console.log('Usuario:', this.authService.user());
-    const user = this.authService.user();
+    const user = this.user();
     if (user) {
       console.log('Usuario cargado en sidebar:', user.username);
     }
-    this.allTools.set(user?.tools || []);
     // Trigger animation on init
     setTimeout(() => this.isVisible.set(true), 10);
   }
@@ -60,5 +71,4 @@ export class Sidebar implements OnInit {
     this.isVisible.set(false);
     setTimeout(() => this.onClose.emit(), 300);
   }
-
 }

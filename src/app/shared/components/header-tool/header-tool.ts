@@ -2,6 +2,7 @@ import { Component, Input, signal, computed, HostListener, ElementRef, ChangeDet
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import './header-tool.css';
 
 @Component({
   selector: 'foxcode-header-tool',

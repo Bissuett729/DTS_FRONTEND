@@ -1,6 +1,6 @@
-import { IDepartment } from "./department.interface";
-import { IRole } from "./roles.interface";
-import { IBusinessUnit, ITool } from "./tool.interface";
+import { IDepartment } from './department.interface';
+import { IRole } from './roles.interface';
+import { IBusinessUnit, ITool } from './tool.interface';
 
 export interface IUser {
   _id: string;
@@ -13,6 +13,7 @@ export interface IUser {
   tools: ITool[];
   active: boolean;
   authorized: boolean;
+  requiresPasswordChange?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   lastLogin?: Date;

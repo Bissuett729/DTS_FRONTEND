@@ -1,0 +1,80 @@
+<section
+  class="h-full flex flex-col gap-4 overflow-hidden p-6 min-w-[50vw] max-w-[70vw] max-h-[90vh]">
+
+    <button class="absolute right-px top-px p-1 rounded-full hover:bg-[#00000017] dark:hover:bg-[#ffffff21] outline-none" (click)="onNoClick()">
+        <i class="ri-close-line"></i>
+    </button>
+
+    <section class="bg-[#4d4d4d] dark:bg-[#2c2c2c] shadow text-center text-white text-lg rounded-md px-4">
+        <span class="text-base">Add Images</span>
+    </section>
+
+    <!-- Upload section -->
+        <div
+            class="flex flex-col items-center justify-center border-2 border-dashed border-border rounded-xl py-10 px-6 text-center transition bg-card dark:bg-neutral-800 hover:border-primary/60 hover:bg-primary/5 cursor-pointer"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+            (click)="fileInput.click()">
+
+            <i class="ri-image-add-line text-5xl text-primary mb-3"></i>
+
+            <p class="text-lg font-medium">Click or drag images here</p>
+            <p class="text-sm text-muted-foreground mb-4">PNG, JPG, JPEG — Max 10MB</p>
+
+            <button
+            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition text-sm">
+            Browse images
+            </button>
+
+            <input
+            #fileInput
+            class="hidden"
+            type="file"
+            accept="image/*"
+            multiple
+            (change)="onFileSelect($event)" />
+        </div>
+
+        <!-- Preview section -->
+        <div *ngIf="images.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+
+            <div *ngFor="let img of images; let i = index"
+                class="relative rounded-xl overflow-hidden border bg-card dark:bg-neutral-800 shadow-sm">
+
+            <!-- Remove button -->
+            <button
+                class="absolute top-1 right-1 bg-black/40 hover:bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center"
+                (click)="removeImage(i)">
+                <i class="ri-close-line text-lg"></i>
+            </button>
+
+            <!-- Image preview -->
+            <img [src]="img.preview" class="w-full h-32 object-cover" />
+
+            <!-- Metadata -->
+            <div class="p-2 text-xs">
+                <div class="font-medium truncate">{{ img.name }}</div>
+                <div class="text-muted-foreground">{{ (img.size / 1024) | number:'1.0-0' }} KB</div>
+            </div>
+
+            </div>
+
+        </div>
+
+        <div class="w-full flex items-center gap-x-2 justify-end">
+            <foxcode-button
+                label="cancel"
+                variant="danger"
+                (actionClicked)="onNoClick()">
+            </foxcode-button>
+
+            <foxcode-button
+                label="Upload images"
+                [loading]="uploadingImages"
+                [disabled]="images.length === 0"
+                (actionClicked)="uplaodImages()">
+            </foxcode-button>
+        </div>
+
+</section>

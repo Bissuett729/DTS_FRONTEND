@@ -1,0 +1,1 @@
+export type ContentType = { 'Content-Type'?: string, 'responseType'?: string };

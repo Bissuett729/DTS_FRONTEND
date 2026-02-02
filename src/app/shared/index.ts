@@ -18,3 +18,6 @@ export * from './helpers'
 
 // Constants
 export * from './constants';
+
+// Pipes
+export * from './pipes';

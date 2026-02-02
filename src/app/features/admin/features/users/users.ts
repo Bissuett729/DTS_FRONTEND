@@ -6,13 +6,13 @@ import { UsersStateService } from './shared/services/users.state.service';
 import { UpdateUser } from './shared/modals/update-user/update-user';
 import { OpenModal } from '../../../../core/infrastructure/repositories/modal/open-modal.repository';
 import { FoxcodeInput } from '../../../../shared';
-import { Card, FoxcodeButton } from '../../../../shared/components';
+import { FoxcodeCard, FoxcodeButton } from '../../../../shared/components';
 import { InitUserSockets } from './core/sockets/init-sockets.socket';
 
 @Component({
   selector: 'foxcode-users',
   standalone: true,
-  imports: [Card, FoxcodeInput, FoxcodeButton, ReactiveFormsModule, CommonModule],
+  imports: [FoxcodeCard, FoxcodeInput, FoxcodeButton, ReactiveFormsModule, CommonModule],
   templateUrl: './users.html',
   styles: ``,
 })

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Card, FoxcodeInput, FoxcodeButton } from "../../../../shared/components";
+import { FoxcodeCard, FoxcodeInput, FoxcodeButton } from "../../../../shared/components";
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { IBusinessUnit } from '../../../../core/domain';
@@ -10,7 +10,7 @@ import { InitBusinessUnitsSockets } from './core/sockets/init-sockets.socket';
 
 @Component({
   selector: 'foxcode-business-units',
-  imports: [Card, FoxcodeInput, FoxcodeButton],
+  imports: [FoxcodeCard, FoxcodeInput, FoxcodeButton],
   templateUrl: './business-units.html',
   styles: ``,
 })

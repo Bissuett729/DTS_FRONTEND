@@ -6,12 +6,12 @@ import { OpenModal } from '../../../../core/infrastructure';
 import { ShiftStateService } from './shared/services/shift.state.service';
 import { CreateShift, UpdateShift } from './shared/modals';
 import { FoxcodeInput } from "../../../../shared";
-import { FoxcodeButton, Card } from "../../../../shared/components";
+import { FoxcodeButton, FoxcodeCard } from "../../../../shared/components";
 import { InitShiftsSockets } from './core/sockets/init-sockets.socket';
 
 @Component({
   selector: 'foxcode-shifts',
-  imports: [FoxcodeInput, FoxcodeButton, Card],
+  imports: [FoxcodeInput, FoxcodeButton, FoxcodeCard],
   templateUrl: './shifts.html',
   styles: ``,
 })

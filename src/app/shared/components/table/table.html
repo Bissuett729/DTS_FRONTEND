@@ -1,0 +1,196 @@
+<table class="w-full">
+  <thead class="p-1">
+    <tr class="w-full bg-[#515151] dark:bg-[#303030] text-white">
+      @for (col of columns; track $index) {
+        <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1"
+          [ngClass]="{
+            'cursor-pointer': col.sortable, 
+            'cursor-default': !col.sortable,
+            'rotate-header': col.position === 'vertical',
+            'horizontal-header': !col.position || col.position === 'horizontal'
+          }"
+          (click)="col.sortable ? onSort(col.key) : null">
+          <!-- Contenedor estable: evita “entreponerse” -->
+          <div class="inline-flex items-center justify-center gap-1 whitespace-nowrap leading-none">
+            <span class="truncate">{{ col.label }}</span>
+            @if (col.sortable) {
+              @switch (sortColumn === col.key ? (sortDirection ?? 'none') : 'none') {
+                @case ('none') {
+                  <div class="flex flex-col justify-center">
+                    <i class="ri-arrow-drop-up-line size-1.5 aspect-square text-lg flex items-center justify-center"></i>
+                    <i class="ri-arrow-drop-down-line size-1.5 aspect-square text-lg flex items-center justify-center"></i>
+                  </div>
+                }
+                @case ('desc') {
+                  <i class="ri-arrow-drop-up-line size-1.5 aspect-square text-2xl flex items-center justify-center"></i>
+                }
+                @case ('asc') {
+                  <i class="ri-arrow-drop-down-line size-1.5 aspect-square text-2xl flex items-center justify-center"></i>
+                }
+              }
+            }
+          </div>
+        </th>
+      }
+      @if (actions?.length) {
+        <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">
+          {{ labelAction }}
+        </th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of data; track $index) {
+      <tr 
+        class="text-black border border-[#c3c3c3] dark:text-[#e1e1e1] dark:border-[#2e2e2e]"
+        [ngClass]="row?.rowBackground ? row?.rowBackground : 'odd:bg-white odd:dark:bg-[#4a4a4a] even:bg-[#f0f1f1] even:dark:bg-[#3b3b3b]'">
+          @for (col of columns; track $index) {
+            <td class="text-xs 2xl:text-md whitespace-nowrap overflow-hidden text-ellipsis text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                <div class="w-full h-full text-xs 2xl:text-md p-1 flex items-center justify-center" [ngClass]="col.cellClassFn ? col.cellClassFn(row, col) : ''">
+                  @if (col.type === 'status') {
+                    <span
+                      class="px-2 py-1 rounded-full text-xs font-medium"
+                      [ngClass]="getNestedValue(row, col.key) | statusClass">
+                      {{ getNestedValue(row, col.key) || col.defaultValue || '-' }}
+                    </span>
+                  }
+                  @else if (col.type === 'action') {
+                    <!-- Si es tipo action -->
+                    <div class="flex items-center justify-center gap-1">
+                      @for (action of col.actions; track $index) {
+                        <button
+                          (click)="onAction(action.callbackName, row)"
+                          [ngClass]="{
+                            'm-2' : action?.badgesCount !== undefined && action?.badgesCount !== null
+                          }"
+                          [class]="'p-1 flex items-center gap-1 border dark:border-[#616161] dark:bg-[#4d4d4d] rounded-sm hover:border-[#bbbbbb] hover:bg-[#e9e9e9] dark:hover:bg-[#656565] disabled:bg-[#ededed] disabled:top-0 disabled:cursor-default disabled:text-[#6d6d6d] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#7d7d7d] hover:rounded-md relative active:top-px ' + getClassOfAction(action, row)"
+                          [disabled]="action?.disabledFn?.(row)"
+                          [matTooltip]="getToolTipText(action, row)"
+                          matTooltipPosition="above">
+                          @if (showBadge(action, row)) {
+                            <span [class]="'size-4 rounded-full bg-red-500 absolute -top-2 -right-2 text-xs text-white ' + action?.badgesClass">{{ action?.badgesCount?.(row) }}</span>
+                          }
+                          @if (action?.icon !== undefined && action?.icon !== null) {
+                            <i [class]="action?.icon + ' ' + action?.iconClass"></i>
+                          }
+                          {{ getLabelOfAction(action, row) }}
+                        </button>
+                      }
+                    </div>
+                  }
+                  @else if (col.type === 'boolean') {
+                    <span class="font-medium"
+                      [ngClass]="getNestedValue(row, col.key) 
+                        ? (col.booleanOptions?.trueClass || 'text-green-600') 
+                        : (col.booleanOptions?.falseClass || 'text-red-600')">
+                      {{
+                        getNestedValue(row, col.key) 
+                          ? (col.booleanOptions?.trueLabel || 'YES') 
+                          : (col.booleanOptions?.falseLabel || 'NO')
+                      }}
+                    </span>
+                  }
+                  @else if (col.type === 'counter') {
+                      {{
+                        col.fallbackIf?.(row)
+                          ? getNestedValue(row, col.fallbackKey || col.key)
+                          : (getNestedValue(row, col.key) | elapsedTime)
+                      }}
+                  }
+                  @else if (col.type === 'conditional') {
+                    <div class="flex items-center justify-center">
+                      @if (isNullConditional(row, col)) {
+                        <!-- Si el valor es null o undefined, muestra un guion -->
+                        <span class="text-gray-400">-</span>
+                      }
+                      <!-- Si no es null, evalúa condiciones -->
+                      @if (!isNullConditional(row, col)) {
+                        <i [ngClass]="evaluateConditional(row, col, false) ? 'ri-checkbox-circle-fill' : 'ri-close-circle-fill'" class="" [matTooltip]="col.keyToolTip ? getNestedValue(row, col.keyToolTip) : ''"></i>
+                      }
+                    </div>
+                  }
+                  @else if (col.type === 'progress') {
+                    <div class="w-full flex items-center justify-center p-1">
+                      <div class="relative w-full h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                        <!-- Barra de progreso -->
+                        <div class="h-4 rounded-full transition-all duration-700 ease-in-out relative overflow-hidden"
+                          [ngClass]="col.progressColor ? col.progressColor : 
+                            progressValue(row, col) < 40
+                              ? 'bg-linear-to-r from-red-500 to-red-400'
+                              : progressValue(row, col) < 70
+                                ? 'bg-linear-to-r from-yellow-400 to-yellow-300'
+                                : 'bg-linear-to-r from-green-500 to-green-400'"
+                          [style.width.%]="(progressValue(row, col) / (col.progressMax || 100)) * 100">
+                          <!-- Overlay animado -->
+                          <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.3)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.3)_50%,rgba(255,255,255,0.3)_75%,transparent_75%,transparent)] bg-size-[1rem_1rem] animate-progress-stripes"></div>
+                        </div>
+                        @if (col.progressShowLabel) {
+                          <!-- Etiqueta centrada dentro -->
+                          <span class="absolute inset-0 flex items-center justify-center text-[10px] 2xl:text-xs font-semibold text-white drop-shadow">
+                            {{ progressValue(row, col) }}%
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  }
+                  @else if (col.type === 'truncateText') {
+                    <span class="cursor-help" [matTooltip]="getNestedValue(row, col.key)" [ngClass]="col.truncateClass ? col.truncateClass(row, col) : ''">
+                      {{ getNestedValue(row, col.key) | truncateWords: col.maxWords }}
+                    </span>
+                  }
+                  @else if (col.type === 'input') {
+                    <input 
+                      [type]="col.inputOptions?.type || 'text'"
+                      [placeholder]="col.inputOptions?.placeholder || ''"
+                      [value]="getNestedValue(row, col.key)"
+                      [class]="col.inputOptions?.class || 'border rounded px-1 py-0.5 text-xs w-full'"
+                      (input)="onInputChange(row, col, $event)"
+                    />
+                  }
+                  @else {
+                    <span class="text-xs">
+                      {{ (col.pipeArgs?.length ?? 0) > 0 ? applyPipe(getNestedValue(row, col.key), col) : getNestedValue(row, col.key) }}
+                    </span>
+                  }
+                </div>
+            </td>
+          }
+          @if ((actions?.length ?? 0) > 0) {
+            <!-- Acciones -->
+            <td class="text-xs 2xl:text-md p-1 whitespace-nowrap overflow-hidden text-ellipsis text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+              <div class="flex items-center justify-center gap-1">
+                @for (action of actions; track $index) {
+                  <ng-container>
+                    @if (isActionVisible(action, row)) {
+                      <button
+                        (click)="onAction(action.callbackName, row)"
+                        [ngClass]="{
+                          'm-2' : action.badgesCount !== undefined && action.badgesCount !== null
+                        }"
+                        [class]="'p-1 flex items-center gap-1 border dark:border-[#616161] dark:bg-[#4d4d4d] rounded-sm hover:border-[#bbbbbb] hover:bg-[#e9e9e9] dark:hover:bg-[#656565] disabled:bg-[#ededed] disabled:top-0 disabled:cursor-default disabled:text-[#6d6d6d] dark:disabled:bg-[#3b3b3b] dark:disabled:text-[#7d7d7d] hover:rounded-md relative active:top-px ' + action.class"
+                        [disabled]="action.disabledFn?.(row)"
+                        [matTooltip]="getToolTipText(action, row)"
+                          matTooltipPosition="above">
+                          @if (showBadge(action, row)) {
+                            <span [class]="' size-4 rounded-full bg-red-500 absolute -top-2 -right-2 text-xs text-white ' + action?.badgesClass">{{ action?.badgesCount?.(row) }}</span>
+                            @if (action?.icon) {
+                              <i [class]="getActionIconClass(action, row)"></i>
+                            }
+                            {{ action.label ? action.label : '' }}
+                          }
+                      </button>
+                    }
+                  </ng-container>
+                }
+              </div>
+            </td>
+          }
+      </tr>
+    }
+    @if (data.length === 0) {
+      <tr class="odd:bg-white odd:dark:bg-[#4a4a4a] even:bg-[#f0f1f1] even:dark:bg-[#3b3b3b] text-black border border-[#c3c3c3] dark:text-[#e1e1e1] dark:border-[#2e2e2e]">
+        <td class="text-xs 2xl:text-md p-1 whitespace-nowrap overflow-hidden text-ellipsis text-center border border-[#c3c3c3] dark:border-[#2e2e2e]" [attr.colspan]="columns.length">No data found</td>
+      </tr>
+    }
+  </tbody>
+</table>

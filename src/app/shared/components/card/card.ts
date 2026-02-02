@@ -8,10 +8,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './card.html',
   styles: ``
 })
-export class Card {
+export class FoxcodeCard {
   @Input() padding: 'none' | 'sm' | 'md' | 'lg' = 'sm';
   @Input() shadow: 'none' | 'sm' | 'md' | 'lg' | 'xl' = 'sm';
   @Input() rounded: 'none' | 'sm' | 'md' | 'lg' | 'xl' = 'md';
+  @Input() customClass: string = '';
   @Input() border: boolean = true;
 
   get paddingClass(): string {

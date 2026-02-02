@@ -8,13 +8,13 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ITool, IBusinessUnit } from '../../../../core/domain';
 import { OpenModal } from '../../../../core/infrastructure/repositories/modal/open-modal.repository';
 import { FoxcodeInput } from '../../../../shared';
-import { FoxcodeButton, FoxcodeExpander, Card } from '../../../../shared/components';
+import { FoxcodeButton, FoxcodeExpander, FoxcodeCard } from '../../../../shared/components';
 import { InitToolsSockets } from './core/sockets/init-sockets.socket';
 
 @Component({
   selector: 'foxcode-tools',
   standalone: true,
-  imports: [CommonModule, FoxcodeButton, FoxcodeInput, FoxcodeExpander, ReactiveFormsModule, Card],
+  imports: [CommonModule, FoxcodeButton, FoxcodeInput, FoxcodeExpander, ReactiveFormsModule, FoxcodeCard],
   templateUrl: './tools.html',
   styles: ``,
 })

@@ -1,36 +1,38 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GlobalStateService } from '../../core/application';
-import { Card, Table, ITableColumn } from '../../shared/components';
+import { ITableColumn } from '../../shared/interfaces';
+import { Tab, ITap, FoxcodeCard } from "../../shared/components";
+import { SupportReport } from "./features/support-report/support-report";
+import { Developers } from "./features/developers/developers";
 
 @Component({
   selector: 'foxcode-home',
   standalone: true,
-  imports: [CommonModule, Card, Table],
+  imports: [CommonModule, FoxcodeCard, Tab, SupportReport, Developers],
   templateUrl: './home.html',
-  styles: ``,
 })
 export class Home {
   private globalState = inject(GlobalStateService);
 
   // Constants
-  readonly TABS = [
-    { id: 'support', label: 'Support report' },
-    { id: 'documentation', label: 'Documentation repository' },
-    { id: 'team', label: 'Team of developers' },
+  readonly TABS: ITap[] = [
+    { label: 'Support report', icon: 'ri-coupon-line' },
+    { label: 'Documentation repository', icon: 'ri-book-line' },
+    { label: 'Team of developers', icon: 'ri-team-line' },
   ];
 
   // State
-  activeTab = signal<string>('documentation');
+  activeTabIndex = signal<number>(0);
   selectedBU = signal<string>('MICROSOFT');
 
   // Table Configuration
   tableColumns: ITableColumn[] = [
-    { key: 'title', label: 'Title:', type: 'text' },
-    { key: 'businessUnitId.name', label: 'Unit:', type: 'text' },
-    { key: 'version', label: 'Version:', type: 'text', altern: '1.0.0' },
-    { key: 'associated', label: 'Associated:', type: 'icon', icon: 'ri-contacts-book-2-line' },
-    { key: 'file', label: 'File:', type: 'icon', icon: 'ri-attachment-line' },
+    { key: 'title', label: 'Title:' },
+    { key: 'businessUnitId.name', label: 'Unit:' },
+    { key: 'version', label: 'Version:' },
+    { key: 'associated', label: 'Associated:' },
+    { key: 'file', label: 'File:' },
   ];
 
   // Signals from Global State
@@ -69,8 +71,8 @@ export class Home {
   });
 
   // Methods
-  setTab(tabId: string): void {
-    this.activeTab.set(tabId);
+  setTab(tabIndex: number): void {
+    this.activeTabIndex.set(tabIndex);
   }
 
   setBU(buName: string): void {

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Card, FoxcodeInput, FoxcodeButton } from "../../../../shared/components";
+import { FoxcodeCard, FoxcodeInput, FoxcodeButton } from "../../../../shared/components";
 import { RolesStateService } from './shared/services/roles.state.service';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
@@ -10,7 +10,7 @@ import { InitRolesSockets } from './core/sockets/init-sockets.socket';
 
 @Component({
   selector: 'foxcode-roles',
-  imports: [Card, FoxcodeInput, FoxcodeButton],
+  imports: [FoxcodeCard, FoxcodeInput, FoxcodeButton],
   templateUrl: './roles.html',
   styles: ``,
 })

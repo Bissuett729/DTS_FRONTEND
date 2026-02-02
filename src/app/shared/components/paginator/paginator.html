@@ -1,0 +1,67 @@
+<div class="flex items-center justify-end gap-x-2 w-full h-full">
+  <!-- Selector de tamaño de página -->
+  <foxcode-select
+    [control]="pageSize"
+    [options]="[5, 15, 25, 50, 100]"
+    label="Page size:"
+    (selectionChange)="setPageSize($event)">
+  </foxcode-select>
+
+  <div class="flex items-center h-full">
+    <!-- Ir al inicio -->
+    <button [disabled]="page === 1" (click)="goToFirst()" 
+      class="h-10 w-10 flex items-center justify-center border rounded-l-md bg-white dark:bg-[#353434] 
+        dark:border-[#787878] border-[#b3b3b3] dark:text-[#f3f3f3] dark:disabled:text-[#838383] 
+        disabled:bg-[#f7f7f7] disabled:cursor-default! dark:disabled:bg-[#424242] hover:bg-[#e9e9e9] dark:hover:bg-[#3d3d3d] dark:hover:text-[#dfdfdf]">
+      <i class="ri-home-3-line"></i>
+    </button>
+
+    <!-- Página anterior -->
+    <button [disabled]="page === 1" (click)="goToPrev()" 
+      class="h-10 w-10 flex items-center justify-center border-y border-r bg-white dark:bg-[#353434] 
+        dark:border-[#787878] border-[#b3b3b3] dark:text-[#f3f3f3] dark:disabled:text-[#838383] 
+        disabled:bg-[#f7f7f7] disabled:cursor-default! dark:disabled:bg-[#424242] hover:bg-[#e9e9e9] dark:hover:bg-[#3d3d3d] dark:hover:text-[#dfdfdf]">
+      <i class="ri-arrow-left-s-line"></i>
+    </button>
+
+    <!-- Pocas páginas -->
+     @if (totalPages <= 10) {
+      @for (num of [].constructor(totalPages); track $index) {
+        <button (click)="goToPage($index+1)"
+          class="h-10 w-10 flex items-center justify-center border-y bg-white 
+          dark:bg-[#353434] dark:border-[#787878] border-[#b3b3b3] dark:text-[#f3f3f3] dark:disabled:text-[#838383] disabled:cursor-default!
+          disabled:bg-[#f7f7f7] dark:disabled:bg-[#565656] hover:bg-[#e9e9e9] outline-none
+          dark:hover:bg-[#3d3d3d] dark:hover:text-[#dfdfdf] cursor-pointer"
+          [ngClass]="{'bg-[#b5b5b5]!' : page === $index+1}"
+          [disabled]="page === $index+1">
+          {{ $index + 1 }}
+        </button>
+      }
+     }
+     @else {
+       <select class="h-10 flex items-center justify-center border-y bg-white 
+        dark:bg-[#353434] dark:border-[#787878] border-[#b3b3b3] dark:text-[#f3f3f3] dark:disabled:text-[#838383] disabled:cursor-default!
+        disabled:bg-[#f7f7f7] dark:disabled:bg-[#565656] hover:bg-[#e9e9e9] outline-none
+        dark:hover:bg-[#3d3d3d] dark:hover:text-[#dfdfdf] cursor-pointer" 
+         [(ngModel)]="page" 
+         (change)="goToPage(page)">
+         @for (num of [].constructor(totalPages); track $index) {
+           <option
+             class="bg-white text-black rounded-md dark:bg-[#424242] dark:text-white"
+             [value]="$index+1">
+             Page: {{ $index+1 }}
+           </option>
+         }
+       </select>
+     }
+
+    <!-- Página siguiente -->
+    <button [disabled]="page === totalPages" (click)="goToNext()" 
+      class="h-10 w-10 flex items-center justify-center border rounded-r-md bg-white 
+        dark:bg-[#353434] dark:border-[#787878] border-[#b3b3b3] dark:text-[#f3f3f3] dark:disabled:text-[#838383] disabled:cursor-default!
+        disabled:bg-[#f7f7f7] dark:disabled:bg-[#565656] hover:bg-[#e9e9e9] 
+        dark:hover:bg-[#3d3d3d] dark:hover:text-[#dfdfdf]">
+      <i class="ri-arrow-right-s-line"></i>
+    </button>
+  </div>
+</div>

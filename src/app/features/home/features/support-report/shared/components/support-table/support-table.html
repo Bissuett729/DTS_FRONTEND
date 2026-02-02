@@ -1,0 +1,75 @@
+<foxcode-card class="w-full h-full block overflow-hidden" customClass="h-full w-full overflow-hidden">
+    <div class="h-full w-full overflow-y-auto">
+        <table class="w-full">
+            <thead class="p-1">
+                <tr class="w-full bg-[#515151] dark:bg-[#303030] text-white">
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Ref. Code</th>
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Title</th>
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Tool</th>
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Priority</th>
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Description</th>
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Status</th>
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Creation Date</th>
+                    <th class="border border-[#c3c3c3] dark:border-[#1e1e1e] text-sm text-center font-normal px-1">Option</th>
+                </tr>
+            </thead>
+    
+            <tbody>
+                @for (row of TableData; track $index) {
+                    <tr class="text-black border border-[#c3c3c3] dark:text-[#e1e1e1] dark:border-[#2e2e2e] odd:bg-white odd:dark:bg-[#4a4a4a] even:bg-[#f0f1f1] even:dark:bg-[#3b3b3b]">
+        
+                        <!--ID-->
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <span class="text-nowrap text-xs 2xl:text-sm">#{{row?.code}}</span>
+                        </td>
+    
+                        <!--TITLE-->
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <span class="text-nowrap text-xs 2xl:text-sm max-w-44 block truncate">{{row?.title}}</span>
+                        </td>
+                        
+                        <!--TOOL-->
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <span class="text-nowrap text-xs 2xl:text-sm">{{row?.tool}}</span>
+                        </td>
+        
+                        <!-- Priority -->
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <span class="text-nowrap text-xs 2xl:text-sm">{{row?.priority === 3 ? 'High' : row?.priority === 2 ? 'Medium' : 'Low'}} </span>
+                        </td>
+        
+                        <!--DESCRIPTION-->
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <div class="flex items-center justify-center">
+                                <span [matTooltip]="row?.description" class="text-nowrap text-xs 2xl:text-sm max-w-44 block truncate">{{row?.description}}</span>
+                            </div>
+                        </td>
+    
+                        <!--STATUS-->
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <span  class="text-xs 2xl:text-sm px-2 py-1 rounded-lg" [ngClass]="getStatusClasses(row.status)" >
+                                {{row?.status }} 
+                            </span>
+                        </td>
+        
+                        <!--FECHA-->
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <span class="text-nowrap text-xs 2xl:text-sm">
+                                {{row?.createdAt | date: 'HH:mm dd/MM/yyyy'}}
+                            </span>
+                        </td>
+    
+                        <td class="px-3 py-2 text-center border border-[#c3c3c3] dark:border-[#2e2e2e]">
+                            <a 
+                                [routerLink]="['/foxcode/support-report', row.code]"
+                                matTooltip="view report" 
+                                class="mat-mdc-tooltip-trigger border border-[#ccc] dark:border-[#212121] dark:hover:border-[#676767] rounded-md py-1 px-2 text-xs cursor-pointer bg-[#f3f4f6] dark:bg-[#313131] hover:bg-[#e2e2e2] dark:hover:bg-[#3e3e3e] active:bg-[#c7c7c7] dark:active:bg-[#1b1b1b] active:border-[#868686] dark:active:border-black active:text-black dark:active:text-white disabled:opacity-60 disabled:cursor-not-allowed relative active:top-px">
+                                <i class="ri-search-eye-line text-xs 2xl:text-sm"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</foxcode-card>

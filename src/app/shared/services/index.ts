@@ -1,5 +1,6 @@
 export * from './alert.service';
 export * from './users.sockets.manager.service';
+export * from './sweetAlert.service'
 
 // New Generic Socket Managers
 export * from './users-socket-manager.service';

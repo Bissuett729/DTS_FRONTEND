@@ -1,0 +1,97 @@
+/* Light */
+:host {
+  .pass {
+    background-color: #66ff9a;
+  }
+  .failed {
+    background-color: #ff6868;
+  }
+  .warning {
+    background-color: #fdff99;
+  }
+  .running {
+    background-color: #8cd1fd;
+  }
+
+  /* ✅ PASSED */
+  .pass-report {
+    background-color: #4ade80; /* Verde éxito moderno */
+    color: #064e3b; /* Texto oscuro legible */
+  }
+
+  /* ❌ FAILED */
+  .failed-report {
+    background-color: #ef4444; /* Rojo suave y profesional */
+    color: #fff !important; /* Texto blanco para contraste */
+  }
+
+  /* ⏳ WAITING */
+  .warning-report {
+    background-color: #fde68a; /* Amarillo cálido, menos saturado */
+    color: #78350f; /* Texto marrón oscuro legible */
+  }
+
+  /* ⚙️ RUNNING */
+  .running-report {
+    background-color: #3b82f6; /* Azul moderno y equilibrado */
+    color: #fff !important; /* Texto blanco por contraste */
+  }
+}
+
+:host-context(.darkMode) {
+  .pass {
+    background-color: #107029 !important;
+  }
+  .failed {
+    background-color: #9f2626 !important;
+  }
+  .warning {
+    background-color: #877e1c !important;
+  }
+  .running {
+    background-color: #2f4582 !important;
+  }
+
+  /* ✅ PASSED */
+  .pass-report {
+    background-color: #15803d; /* Verde oscuro */
+    color: #dcfce7;
+  }
+
+  /* ❌ FAILED */
+  .failed-report {
+    background-color: #b91c1c; /* Rojo más oscuro */
+    color: #fee2e2;
+  }
+
+  /* ⏳ WAITING */
+  .waiting-report {
+    background-color: #854d0e; /* Amarillo oscuro dorado */
+    color: #fef9c3;
+  }
+
+  /* ⚙️ RUNNING */
+  .running-report {
+    background-color: #1d4ed8; /* Azul más profundo */
+    color: #dbeafe;
+  }
+}
+
+/* Cabecera normal */
+.horizontal-header {
+  writing-mode: horizontal-tb;
+  transform: rotate(0deg);
+  height: auto;
+  white-space: nowrap;
+}
+
+/* Cabecera vertical */
+.rotate-header {
+  writing-mode: vertical-rl; /* Texto vertical */
+  transform: rotate(180deg); /* Para que se lea de abajo hacia arriba */
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  width: 2rem; /* Ajusta según el espacio que necesites */
+  padding: 0.25rem;
+}

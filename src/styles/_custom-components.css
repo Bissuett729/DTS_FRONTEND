@@ -194,10 +194,6 @@
   padding-bottom: 0;
 }
 
-.foxcode-select-field .mat-mdc-form-field-subscript-wrapper {
-  margin-top: 0;
-}
-
 .foxcode-select-field .mat-mdc-select {
   font-size: 14px;
   line-height: 20px;
@@ -274,7 +270,7 @@
 }
 
 .foxcode-select-field .mat-mdc-form-field-subscript-wrapper {
-  margin-top: 4px;
+  margin-top: 1px;
 }
 
 /* Label positioning - only center when empty */

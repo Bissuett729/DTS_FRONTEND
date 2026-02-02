@@ -19,8 +19,8 @@ export const routes: Routes = [
         loadComponent: () => import('./shared/layouts/layout-template/layout-template').then(m => m.LayoutTemplate),
         children: [
             {
-                path: 'home',
-                loadComponent: () => import('./features/home/home').then(m => m.Home)
+                path: '',
+                loadChildren: () => import('./features/home/home.routes').then(m => m.HomeRoutes)
             },
             {
                 path: 'microsoft',
@@ -40,7 +40,7 @@ export const routes: Routes = [
             },
             {
                 path: '',
-                redirectTo: 'home',
+                redirectTo: '',
                 pathMatch: 'full'
             }
         ]

@@ -26,7 +26,11 @@ export interface SelectOption {
     MatDividerModule
   ],
   templateUrl: './select.html',
-  styles: ``,
+  styles: [`
+    ::ng-deep .foxcode-select-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label:not(.mdc-floating-label--float-above) {
+      top: calc(var(--mat-form-field-container-height, 37px) / 2);
+    }
+  `],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -57,8 +61,8 @@ export class FoxcodeSelect implements ControlValueAccessor {
   formControlInternal = new FormControl();
 
   // ControlValueAccessor properties
-  onChange: any = () => {};
-  onTouched: any = () => {};
+  onChange: any = () => { };
+  onTouched: any = () => { };
 
   get isDisabled(): boolean {
     return this.disabled || this.control?.disabled || false;
@@ -144,10 +148,10 @@ export class FoxcodeSelect implements ControlValueAccessor {
 
   toggleSelectAll(): void {
     if (!this.multiple) return;
-    
+
     const enabledOptions = this.options.filter(opt => !this.isOptionDisabled(opt));
     let newValue: any[];
-    
+
     if (this.allSelected) {
       // Deselect all
       newValue = [];
@@ -155,7 +159,7 @@ export class FoxcodeSelect implements ControlValueAccessor {
       // Select all enabled options
       newValue = enabledOptions.map(opt => this.getOptionValue(opt));
     }
-    
+
     this.value.set(newValue);
     this.onChange(newValue);
     this.onTouched();

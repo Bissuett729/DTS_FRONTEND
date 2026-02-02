@@ -7,7 +7,7 @@ export * from './loader-page/loader-page';
 export * from './loading/loading';
 export * from './select/select';
 export * from './time-picker/time-picker';
-export * from './paginator/paginator';
+export * from './paginator';
 export * from './table/table';
-export * from './table/table.interface';
 export * from './stepper/stepper';
+export * from './tap'

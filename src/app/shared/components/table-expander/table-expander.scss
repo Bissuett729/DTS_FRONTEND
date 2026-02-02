@@ -1,0 +1,43 @@
+/* Light */
+:host {
+  .pass {
+    background-color: #66ff9a;
+  }
+  .failed {
+    background-color: #ff6868;
+  }
+  .warning {
+    background-color: #fdff99;
+  }
+}
+
+:host-context(.darkMode) {
+  .pass {
+    background-color: #107029 !important;
+  }
+  .failed {
+    background-color: #9f2626 !important;
+  }
+  .warning {
+    background-color: #877e1c !important;
+  }
+}
+
+/* Cabecera normal */
+.horizontal-header {
+  writing-mode: horizontal-tb;
+  transform: rotate(0deg);
+  height: auto;
+  white-space: nowrap;
+}
+
+/* Cabecera vertical */
+.rotate-header {
+  writing-mode: vertical-rl; /* Texto vertical */
+  transform: rotate(180deg); /* Para que se lea de abajo hacia arriba */
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  width: 2rem; /* Ajusta según el espacio que necesites */
+  padding: 0.25rem;
+}

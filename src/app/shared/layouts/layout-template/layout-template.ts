@@ -39,37 +39,24 @@ export class LayoutTemplate implements OnInit, OnDestroy {
   user = this.globalState.currentUser;
 
   // Local UI state
-  loaderMessage = signal('Loading...');
+  loaderMessage = signal('Bienvenido a DT Systems...');
   supportSidebarOpen = signal(false);
   businessUnit = signal(environment.BUSINESS_UNIT);
   showUATBanner = signal(environment.mode === 'UAT');
   private routerSub?: any;
+  private routingTimeout?: any;
 
   ngOnInit(): void {
     this.usersSocketManager.connect();
     this.toolsSocketManager.connect();
     this.initSidebarSockets.InitSockets();
 
-    // Initial loading
-    this.globalState.setLoadingPage(true);
+    // Ensure routing state is clean on init
+    this.globalState.setRouting(false);
+
     setTimeout(() => {
       this.globalState.setLoadingPage(false);
-    }, 800);
-
-    // Show overlay strictly during navigation (start -> end/cancel/error)
-    this.routerSub = this.router.events.subscribe((evt) => {
-      if (evt instanceof NavigationStart) {
-        this.loaderMessage.set('Loading...');
-        this.globalState.setRouting(true);
-      }
-      if (
-        evt instanceof NavigationEnd ||
-        evt instanceof NavigationCancel ||
-        evt instanceof NavigationError
-      ) {
-        this.globalState.setRouting(false);
-      }
-    });
+    }, 2000);
   }
 
   toggleSidebar(): void {
@@ -89,7 +76,7 @@ export class LayoutTemplate implements OnInit, OnDestroy {
   }
 
   onLogout(): void {
-    this.loaderMessage.set('Goodbye, see you soon');
+    this.loaderMessage.set('Adios, nos vemos pronto');
     this.globalState.setLoadingPage(true);
 
     setTimeout(() => {
@@ -100,6 +87,9 @@ export class LayoutTemplate implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe?.();
+    if (this.routingTimeout) {
+      clearTimeout(this.routingTimeout);
+    }
     this.usersSocketManager.disconnect();
     this.toolsSocketManager.disconnect();
   }

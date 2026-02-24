@@ -10,8 +10,4 @@ export const SOCKETS_CONFIG: Record<string, SocketConfig> = {
         name: 'socketUser', 
         url: environment.userURL 
     },
-    SupportReport: { 
-        name: 'socketSupportReport', 
-        url: environment.SUPPORT_REPORT 
-    },
 };

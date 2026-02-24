@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../core/application';
 import { NotificationsMenu } from '../notifications-menu/notifications-menu';
+import { SettingsDtsIcon } from "../../icons";
 
 @Component({
   selector: 'foxcode-header',
   standalone: true,
   templateUrl: './header.html',
   styles: [],
-  imports: [NotificationsMenu],
+  imports: [NotificationsMenu, SettingsDtsIcon],
 })
 export class Header implements OnInit {
   @Input() user: any;
@@ -50,94 +51,24 @@ export class Header implements OnInit {
   notifications = [
     {
       id: 1,
-      title: 'Change the support status',
-      description: 'Code FC00-128, support status changed to ...',
+      title: 'Tiempo muerto detectado',
+      description: 'Se emitio un paro en la linea de produccion 3...',
       type: 'SYSTEM',
-      user: 'FOXCODE',
+      user: 'DTS',
       time: '09:40 - 23/01/2026',
-      status: 'LOW',
+      status: 'HIGH',
       isRead: false,
     },
     {
       id: 2,
-      title: 'New comment on support r...',
-      description: 'Code FC00-128, a new comment was adde...',
+      title: 'Nuevo comentario en el reporte de soporte',
+      description: 'Se agregó un nuevo comentario al reporte de soporte FC00-128...',
       type: 'SYSTEM',
-      user: 'FOXCODE',
+      user: 'DTS',
       time: '09:40 - 23/01/2026',
       status: 'LOW',
       isRead: false,
-    },
-    {
-      id: 3,
-      title: 'Support report created',
-      description: 'Code FC00-128, a new support report was...',
-      type: 'SYSTEM',
-      user: 'FOXCODE',
-      time: '09:40 - 23/01/2026',
-      status: 'PRIORITY',
-      isRead: false,
-    },
-    {
-      id: 4,
-      title: 'Support report created',
-      description: 'Code FC00-128, a new support report was...',
-      type: 'SYSTEM',
-      user: 'FOXCODE',
-      time: '09:40 - 23/01/2026',
-      status: 'PRIORITY',
-      isRead: false,
-    },
-    {
-      id: 5,
-      title: 'Support report created',
-      description: 'Code FC00-128, a new support report was...',
-      type: 'SYSTEM',
-      user: 'FOXCODE',
-      time: '09:40 - 23/01/2026',
-      status: 'PRIORITY',
-      isRead: false,
-    },
-    {
-      id: 6,
-      title: 'Support report created',
-      description: 'Code FC00-128, a new support report was...',
-      type: 'SYSTEM',
-      user: 'FOXCODE',
-      time: '09:40 - 23/01/2026',
-      status: 'PRIORITY',
-      isRead: false,
-    },
-    {
-      id: 7,
-      title: 'Support report created',
-      description: 'Code FC00-128, a new support report was...',
-      type: 'SYSTEM',
-      user: 'FOXCODE',
-      time: '09:40 - 23/01/2026',
-      status: 'PRIORITY',
-      isRead: false,
-    },
-    {
-      id: 8,
-      title: 'Support report created',
-      description: 'Code FC00-128, a new support report was...',
-      type: 'SYSTEM',
-      user: 'FOXCODE',
-      time: '09:40 - 23/01/2026',
-      status: 'PRIORITY',
-      isRead: false,
-    },
-    {
-      id: 9,
-      title: 'Support report created',
-      description: 'Code FC00-128, a new support report was...',
-      type: 'WIRING CHECK TOOL KIT',
-      user: 'FOXCODE',
-      time: '09:40 - 23/01/2026',
-      status: 'PRIORITY',
-      isRead: false,
-    },
+    }
   ];
 
   toggleSidebar(): void {

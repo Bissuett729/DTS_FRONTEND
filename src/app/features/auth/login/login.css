@@ -1,79 +1,173 @@
+/* ============================================
+   LAYOUT PRINCIPAL — split panel
+   ============================================ */
+
 .login-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: image-set(
-    url('../../../../assets/login/server-room-bg.webp') type('image/webp'),
-    url('../../../../assets/login/server-room-bg.jpg') type('image/jpeg')
-  );
+  display: flex;
+  overflow: hidden;
+}
+
+/* ============================================
+   LEFT PANEL — imagen + branding
+   ============================================ */
+
+.login-left {
+  position: relative;
+  flex: 0 0 45%;
+  background-image: url('../../../../assets/login/production_line.jpg');
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  overflow-y: auto;
+  display: flex;
+  align-items: flex-end;
 }
 
-/* Wrapper principal */
-.login-wrapper {
-  padding: 1rem;
+.login-left-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 20, 40, 0.45) 0%,
+    rgba(10, 20, 40, 0.75) 60%,
+    rgba(10, 20, 40, 0.92) 100%
+  );
 }
 
-/* Panel de login */
-.login-panel {
-  width: 100%;
-  max-width: 28rem;
+.login-left-content {
+  position: relative;
+  z-index: 2;
+  padding: 2.5rem 2.5rem 3rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: auto;
-  min-height: 100%;
-  background: rgba(0, 0, 0, 0.29);
-  backdrop-filter: blur(11px);
-  -webkit-backdrop-filter: blur(11px);
-  border-radius: 20px;
-  padding: 2rem 1.5rem 0.5rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin: auto;
-}
-
-/* Header del login */
-.login-header {
-  margin-bottom: 2rem;
-}
-
-.login-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 1.5rem;
-  letter-spacing: 2px;
-}
-
-.login-logo {
-  width: 7.5rem;
-  height: auto;
-  margin: 0 auto;
-  display: block;
-}
-
-/* Formulario */
-.login-form {
+  gap: 1.5rem;
   width: 100%;
-  flex: 1;
 }
+
+/* Brand header */
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+  color: #60a5fa;
+}
+
+.brand-name {
+  color: white;
+}
+
+/* Brand body */
+.brand-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.brand-subtitle {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0.75rem 0 0;
+  line-height: 1.6;
+}
+
+/* Badges */
+.brand-badges {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.875rem;
+}
+
+.brand-badge i {
+  font-size: 1rem;
+}
+
+/* ============================================
+   RIGHT PANEL — formulario blanco
+   ============================================ */
+
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Card header */
+.login-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.login-card-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.login-card-subtitle {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ============================================
+   FORMULARIO
+   ============================================ */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-label {
   display: block;
-  color: white;
-  font-size: 0.95rem;
-  font-weight: 500;
+  color: #374151;
+  font-size: 0.9375rem;
+  font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
@@ -81,17 +175,25 @@
 .input-wrapper {
   position: relative;
   width: 100%;
-  padding-left: 3rem;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid;
   border-radius: 0.5rem;
-  color: white;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  padding-left: 2.75rem;
+}
+
+.input-wrapper:focus-within {
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
 }
 
 .input-default {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: #d1d5db;
+}
+
+.input-default:focus-within {
+  border-color: #0f172a;
 }
 
 .input-error {
@@ -100,58 +202,84 @@
 
 .input-icon {
   position: absolute;
-  left: 1rem;
+  left: 0.875rem;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.25rem;
+  color: #9ca3af;
+  font-size: 1.125rem;
+  pointer-events: none;
 }
 
 .form-input {
   width: 100%;
-  height: 100%;
   background: transparent;
   outline: none;
-  padding: 0.875rem 1rem 0.875rem 0;
-  color: white;
+  padding: 0.8125rem 1rem 0.8125rem 0;
+  color: #111827;
+  font-size: 0.9375rem;
 }
 
 .form-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #9ca3af;
 }
 
 .field-error {
-  color: #f87171;
+  color: #ef4444;
   font-size: 0.75rem;
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
 }
 
-/* Hint de contraseña */
-.password-hint {
-  font-size: 0.625rem;
-  color: white;
-  text-align: center;
-  margin-top: 0.25rem;
+/* ============================================
+   OPTIONS ROW (remember me + forgot)
+   ============================================ */
+
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
-.password-default {
-  color: #09a5f0;
-  font-weight: normal;
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
   cursor: pointer;
 }
 
-.password-default:hover {
+.remember-checkbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #0f172a;
+  cursor: pointer;
+}
+
+.forgot-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.forgot-link:hover {
+  color: #2563eb;
   text-decoration: underline;
 }
 
-/* Mensaje de error */
+/* ============================================
+   ERROR MESSAGE
+   ============================================ */
+
 .error-message {
   margin-bottom: 1rem;
   padding: 0.75rem;
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1.5px solid rgba(239, 68, 68, 0.4);
   border-radius: 0.5rem;
-  color: white;
+  color: #b91c1c;
   font-size: 0.875rem;
   display: flex;
   align-items: center;
@@ -159,7 +287,7 @@
 }
 
 .error-close {
-  color: white;
+  color: #b91c1c;
   background: none;
   border: none;
   cursor: pointer;
@@ -167,42 +295,48 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 .error-close:hover {
-  color: #fca5a5;
+  color: #ef4444;
 }
 
-/* Botón de submit */
+/* ============================================
+   SUBMIT BUTTON
+   ============================================ */
+
 .submit-button {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.125rem;
+  padding: 0.9375rem;
+  font-size: 1rem;
   font-weight: 600;
   color: white;
-  background: linear-gradient(to bottom right, #006197, #016da7);
+  background: #0f172a;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.submit-button i {
+  font-size: 1.125rem;
 }
 
 .submit-button:hover:not(:disabled) {
-  background: linear-gradient(to bottom right, #0095e6, #0066b3);
-  transform: translateY(-2px);
-  box-shadow: 0 0 9px rgba(0, 168, 255, 0.4);
+  background: #1e293b;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.3);
+  transform: translateY(-1px);
 }
 
 .submit-button:active:not(:disabled) {
   transform: translateY(0);
+  box-shadow: none;
 }
 
 .submit-button:disabled {
@@ -210,47 +344,47 @@
   cursor: not-allowed;
 }
 
-/* Link de registro */
-.register-link {
-  text-align: center;
-  margin-top: 1.5rem;
+/* ============================================
+   CARD FOOTER
+   ============================================ */
+
+.login-card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  padding-top: 0.5rem;
 }
 
-.register-text {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.95rem;
+.version-text {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #9ca3af;
+  letter-spacing: 0.08em;
   margin: 0;
 }
 
-.register-link-text {
-  color: #006197;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
+.footer-links {
+  display: flex;
+  gap: 1.25rem;
 }
 
-.register-link-text:hover {
-  color: #00d4ff;
+.footer-link {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #0f172a;
   text-decoration: underline;
 }
 
-/* Footer */
-.login-footer {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  margin-top: 1.5rem;
-}
+/* ============================================
+   NUMBER INPUT — hide spinners
+   ============================================ */
 
-.footer-text {
-  font-size: 0.625rem;
-  color: white;
-  text-align: center;
-  margin: 0;
-  padding-bottom: 0.5rem;
-}
-
-/* Quitar botones de aumentar/disminuir en input type="number" */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -263,546 +397,100 @@ input[type="number"] {
 }
 
 /* ============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE
    ============================================ */
 
-/* Mobile devices (320px - 480px) */
-@media (max-width: 480px) {
-  .login-wrapper {
-    padding: 0.5rem;
-  }
-
-  .login-panel {
-    max-width: 100%;
-    padding: 1.5rem 1rem 0.5rem;
-    border-radius: 15px;
-    min-height: calc(100vh - 1rem);
-  }
-
-  .login-header {
-    margin-bottom: 1.5rem;
-  }
-
-  .login-title {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-    letter-spacing: 1px;
-  }
-
-  .login-logo {
-    width: 6rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.25rem;
-  }
-
-  .form-label {
-    font-size: 0.875rem;
-  }
-
-  .input-wrapper {
-    padding-left: 2.75rem;
-    font-size: 0.9375rem;
-  }
-
-  .input-icon {
-    left: 0.875rem;
-    font-size: 1.125rem;
-  }
-
-  .form-input {
-    padding: 0.75rem 0.75rem 0.75rem 0;
-  }
-
-  .password-hint {
-    font-size: 0.5625rem;
-  }
-
-  .submit-button {
-    padding: 0.875rem;
-    font-size: 1rem;
-  }
-
-  .register-text {
-    font-size: 0.875rem;
-  }
-
-  .footer-text {
-    font-size: 0.5625rem;
-  }
-}
-
-/* Tablets (481px - 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-  .login-wrapper {
-    padding: 1rem;
-  }
-
-  .login-panel {
-    max-width: 26rem;
-    padding: 2rem 1.75rem 0.75rem;
-    border-radius: 18px;
-  }
-
-  .login-title {
-    font-size: 2.25rem;
-  }
-
-  .login-logo {
-    width: 7rem;
-  }
-
-  .form-label {
-    font-size: 0.9375rem;
-  }
-
-  .input-wrapper {
-    padding-left: 2.875rem;
-  }
-
-  .input-icon {
-    left: 0.9375rem;
-  }
-
-  .submit-button {
-    padding: 0.9375rem;
-    font-size: 1.0625rem;
-  }
-}
-
-/* Landscape phones and small tablets (481px - 768px landscape) */
-@media (min-width: 481px) and (max-width: 900px) and (orientation: landscape) {
+/* Tablets portrait and small (up to 768px) — stacked layout */
+@media (max-width: 768px) {
   .login-container {
-    background-attachment: scroll;
+    flex-direction: column;
   }
 
-  .login-panel {
-    max-width: 24rem;
-    padding: 1.5rem 1.5rem 0.5rem;
-    min-height: auto;
-    margin: 1rem auto;
+  .login-left {
+    flex: 0 0 45vh;
+    min-height: 200px;
   }
 
-  .login-header {
-    margin-bottom: 1.25rem;
+  .login-left-content {
+    padding: 1.5rem 1.5rem 2rem;
+    gap: 1rem;
   }
 
-  .login-title {
-    font-size: 1.75rem;
-    margin-bottom: 0.75rem;
+  .brand-title {
+    font-size: 1.5rem;
   }
 
-  .login-logo {
-    width: 5.5rem;
+  .brand-subtitle {
+    font-size: 0.875rem;
   }
 
-  .form-group {
-    margin-bottom: 1rem;
+  .login-right {
+    flex: 1;
+    padding: 1.5rem 1rem;
+    background: #ffffff;
+    align-items: flex-start;
+    justify-content: center;
   }
 
-  .input-wrapper {
-    padding-left: 2.5rem;
+  .login-card {
+    max-width: 100%;
+    gap: 1.25rem;
   }
 
-  .input-icon {
-    left: 0.75rem;
-    font-size: 1.125rem;
-  }
-
-  .form-input {
-    padding: 0.625rem 0.75rem 0.625rem 0;
-  }
-
-  .submit-button {
-    padding: 0.75rem;
-    font-size: 1rem;
-    margin-top: 0.75rem;
-  }
-
-  .register-link {
-    margin-top: 1rem;
-  }
-
-  .login-footer {
-    margin-top: 1rem;
+  .login-card-title {
+    font-size: 1.5rem;
   }
 }
 
-/* Desktop and tablets in portrait (769px - 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .login-wrapper {
-    padding: 0;
-    justify-content: flex-end;
-    align-items: stretch;
+/* Mobile (up to 480px) */
+@media (max-width: 480px) {
+  .login-left {
+    flex: 0 0 38vh;
   }
 
-  .login-panel {
-    max-width: 28rem;
-    min-height: 100vh;
-    padding: 2rem 2rem 1rem;
-    border-radius: 20px 0 0 20px;
-    margin: 0;
-    margin-right: 0;
+  .login-left-content {
+    padding: 1.25rem 1.25rem 1.5rem;
   }
 
-  .login-header {
-    margin-bottom: 1.5rem;
+  .brand-title {
+    font-size: 1.25rem;
   }
 
-  .login-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+  .brand-badges {
+    gap: 1rem;
   }
 
-  .login-logo {
-    width: 6.5rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.25rem;
-  }
-
-  .submit-button {
-    margin-top: 0.75rem;
-  }
-
-  .register-link {
-    margin-top: 1.25rem;
-  }
-
-  .login-footer {
-    margin-top: 1.25rem;
+  .brand-badge {
+    font-size: 0.8125rem;
   }
 }
 
-/* Laptops estándar (1025px - 1366px) */
-@media (min-width: 1025px) and (max-width: 1366px) {
-  .login-wrapper {
-    padding: 0;
-    justify-content: flex-end;
-    align-items: stretch;
+/* Landscape phones — hide left panel, show only form */
+@media (max-height: 520px) and (orientation: landscape) {
+  .login-left {
+    display: none;
   }
 
-  .login-panel {
-    max-width: 30rem;
-    padding: 2rem 2.5rem 1rem;
-    border-radius: 20px 0 0 20px;
-    margin: 0;
-    margin-right: 0;
-    min-height: 100vh;
-  }
-
-  .login-header {
-    margin-bottom: 1.75rem;
-  }
-
-  .login-title {
-    font-size: 2.25rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .login-logo {
-    width: 7rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-
-  .form-label {
-    font-size: 0.95rem;
-  }
-
-  .input-wrapper {
-    padding-left: 3rem;
-  }
-
-  .form-input {
-    padding: 0.8rem 1rem 0.8rem 0;
-  }
-
-  .submit-button {
-    padding: 0.875rem;
-    font-size: 1.0625rem;
-    margin-top: 0.875rem;
-  }
-
-  .register-link {
-    margin-top: 1.5rem;
-  }
-
-  .login-footer {
-    margin-top: 1.5rem;
+  .login-right {
+    background: #f8fafc;
   }
 }
 
-/* Laptops grandes (1367px and up) */
-@media (min-width: 1367px) {
-  .login-wrapper {
-    padding: 0;
-    justify-content: flex-end;
-    align-items: stretch;
+/* Large screens — widen left panel slightly */
+@media (min-width: 1440px) {
+  .login-left {
+    flex: 0 0 50%;
   }
 
-  .login-panel {
-    max-width: 32rem;
-    padding: 3rem 3rem 1rem;
-    border-radius: 20px 0 0 20px;
-    margin: 0;
-    margin-right: 0;
-    min-height: 100vh;
+  .login-left-content {
+    padding: 3rem;
   }
 
-  .login-header {
-    margin-bottom: 2.5rem;
-  }
-
-  .login-title {
+  .brand-title {
     font-size: 2.5rem;
   }
 
-  .login-logo {
-    width: 8rem;
-  }
-
-  .form-group {
-    margin-bottom: 1.75rem;
-  }
-
-  .form-label {
-    font-size: 1rem;
-  }
-
-  .input-wrapper {
-    padding-left: 3rem;
-  }
-
-  .submit-button {
-    padding: 1rem;
-    font-size: 1.125rem;
-  }
-
-  .register-link {
-    margin-top: 2rem;
-  }
-
-  .login-footer {
-    margin-top: 2rem;
-  }
-}
-
-/* Extra large screens (1440px and up) */
-@media (min-width: 1440px) {
-  .login-panel {
-    max-width: 35rem;
-    min-height: 100vh;
-  }
-
-  .login-title {
-    font-size: 3rem;
-  }
-
-  .login-logo {
-    width: 9rem;
-  }
-}
-
-/* Ultra-wide screens (1920px and up) */
-@media (min-width: 1920px) {
-  .login-panel {
-    max-width: 38rem;
-    padding: 4rem 4rem 1rem;
-    min-height: 100vh;
-  }
-}
-
-/* iPhone SE and similar small devices */
-@media (max-width: 375px) {
-  .login-panel {
-    padding: 1.25rem 0.875rem 0.5rem;
-  }
-
-  .login-title {
-    font-size: 1.5rem;
-  }
-
-  .login-logo {
-    width: 5.5rem;
-  }
-
-  .form-label {
-    font-size: 0.8125rem;
-  }
-
-  .input-wrapper {
-    padding-left: 2.5rem;
-    font-size: 0.875rem;
-  }
-
-  .input-icon {
-    left: 0.75rem;
-    font-size: 1rem;
-  }
-
-  .form-input {
-    padding: 0.6875rem 0.625rem 0.6875rem 0;
-  }
-
-  .submit-button {
-    padding: 0.8125rem;
-    font-size: 0.9375rem;
-  }
-
-  .password-hint,
-  .footer-text {
-    font-size: 0.5rem;
-  }
-}
-
-/* Laptop screens con altura limitada (hasta 768px de altura) */
-@media (min-width: 1025px) and (max-height: 768px) {
-  .login-panel {
-    padding: 1.5rem 2.5rem 0.75rem;
-    overflow-y: auto;
-  }
-
-  .login-header {
-    margin-bottom: 1.25rem;
-  }
-
-  .login-title {
-    font-size: 2rem;
-    margin-bottom: 0.875rem;
-  }
-
-  .login-logo {
-    width: 6rem;
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-input {
-    padding: 0.75rem 1rem 0.75rem 0;
-  }
-
-  .submit-button {
-    margin-top: 0.75rem;
-    padding: 0.75rem;
-    font-size: 1rem;
-  }
-
-  .register-link {
-    margin-top: 1rem;
-  }
-
-  .login-footer {
-    margin-top: 1rem;
-  }
-}
-
-/* Laptop screens con altura muy limitada (hasta 720px) */
-@media (min-width: 1025px) and (max-height: 720px) {
-  .login-panel {
-    padding: 1.25rem 2.5rem 0.5rem;
+  .login-card {
     max-width: 28rem;
-  }
-
-  .login-header {
-    margin-bottom: 1rem;
-  }
-
-  .login-title {
-    font-size: 1.875rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .login-logo {
-    width: 5.5rem;
-  }
-
-  .form-group {
-    margin-bottom: 0.875rem;
-  }
-
-  .form-label {
-    font-size: 0.9rem;
-    margin-bottom: 0.375rem;
-  }
-
-  .input-wrapper {
-    padding-left: 2.75rem;
-  }
-
-  .input-icon {
-    left: 0.875rem;
-    font-size: 1.125rem;
-  }
-
-  .form-input {
-    padding: 0.6875rem 0.875rem 0.6875rem 0;
-  }
-
-  .password-hint {
-    font-size: 0.5625rem;
-  }
-
-  .submit-button {
-    margin-top: 0.625rem;
-    padding: 0.6875rem;
-    font-size: 0.9375rem;
-  }
-
-  .register-link {
-    margin-top: 0.875rem;
-  }
-
-  .register-text {
-    font-size: 0.875rem;
-  }
-
-  .login-footer {
-    margin-top: 0.875rem;
-  }
-}
-
-/* Very small heights (for landscape on small phones) */
-@media (max-height: 600px) and (orientation: landscape) {
-  .login-panel {
-    max-height: 95vh;
-    overflow-y: auto;
-    padding: 1rem 1.5rem 0.5rem;
-  }
-
-  .login-header {
-    margin-bottom: 0.75rem;
-  }
-
-  .login-title {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .login-logo {
-    width: 4.5rem;
-  }
-
-  .form-group {
-    margin-bottom: 0.75rem;
-  }
-
-  .submit-button {
-    margin-top: 0.5rem;
-    padding: 0.625rem;
-  }
-
-  .register-link {
-    margin-top: 0.75rem;
-  }
-
-  .login-footer {
-    margin-top: 0.75rem;
   }
 }

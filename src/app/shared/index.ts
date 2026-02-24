@@ -21,3 +21,6 @@ export * from './constants';
 
 // Pipes
 export * from './pipes';
+
+// Icons
+export * from './icons';

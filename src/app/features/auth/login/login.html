@@ -1,16 +1,40 @@
 <div class="login-container">
-    <div class="relative z-10 w-full h-full flex justify-end items-center login-wrapper">
-        <div class="login-panel">
-            <div class="text-center login-header">
-                <h1 class="login-title">LOGIN</h1>
-                <picture>
-                    <source srcset="../../../../assets/foxcode/logo.webp" type="image/webp">
-                    <img src="../../../../assets/foxcode/logo.png" alt="Foxcode Logo" class="login-logo">
-                </picture>
+
+    <!-- LEFT PANEL: branding + background image -->
+    <div class="login-left">
+        <div class="login-left-overlay"></div>
+        <div class="login-left-content">
+            <div class="brand-header">
+                <i class="ri-bar-chart-box-line brand-icon"></i>
+                <span class="brand-name">DT System</span>
+            </div>
+            <div class="brand-body">
+                <h2 class="brand-title">Gestión Inteligente de Paros de Producción</h2>
+                <p class="brand-subtitle">Registre, analice y reduzca los paros de producción en tiempo real desde una sola plataforma.</p>
+            </div>
+            <div class="brand-badges">
+                <span class="brand-badge">
+                    <i class="ri-time-line"></i> Control de Paros
+                </span>
+                <span class="brand-badge">
+                    <i class="ri-line-chart-line"></i> Reportes por Línea
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: form -->
+    <div class="login-right">
+        <div class="login-card">
+
+            <div class="login-card-header">
+                <h1 class="login-card-title">Acceso al Sistema</h1>
+                <p class="login-card-subtitle">Bienvenido de nuevo. Por favor ingrese sus credenciales.</p>
             </div>
 
-            <form class="w-full login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                <!-- Mensaje de error -->
+            <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+                <!-- Error message -->
                 @if (error()) {
                     <div class="error-message">
                         <span>{{ error() }}</span>
@@ -20,70 +44,81 @@
                     </div>
                 }
 
+                <!-- Usuario / Clock -->
                 <div class="form-group">
-                    <label for="clock" class="form-label">#Clock</label>
+                    <label for="clock" class="form-label">Usuario</label>
                     <div class="input-wrapper"
                          [class.input-default]="!loginForm.get('clock')?.invalid || !loginForm.get('clock')?.touched"
                          [class.input-error]="loginForm.get('clock')?.invalid && loginForm.get('clock')?.touched">
                         <i class="ri-user-3-line input-icon"></i>
-                        <input 
-                            type="number" 
+                        <input
+                            type="number"
                             id="clock"
                             formControlName="clock"
-                            class="form-input" 
-                            placeholder="Enter your clock number" 
+                            class="form-input"
+                            placeholder="ej: 123456"
                             required>
                     </div>
                     @if (loginForm.get('clock')?.invalid && loginForm.get('clock')?.touched) {
-                        <p class="field-error">Clock number is required</p>
+                        <p class="field-error">El número de clock es requerido</p>
                     }
                 </div>
-                
+
+                <!-- Contraseña -->
                 <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
+                    <label for="password" class="form-label">Contraseña</label>
                     <div class="input-wrapper"
                          [class.input-default]="!loginForm.get('password')?.invalid || !loginForm.get('password')?.touched"
                          [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-                        <i class="ri-lock-password-line input-icon"></i>
-                        <input 
-                            type="password" 
+                        <i class="ri-lock-2-line input-icon"></i>
+                        <input
+                            type="password"
                             id="password"
                             formControlName="password"
-                            class="form-input" 
-                            placeholder="Enter your password" 
+                            class="form-input"
+                            placeholder="••••••••"
                             required>
                     </div>
                     @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                        <p class="field-error">Password must be at least 6 characters</p>
+                        <p class="field-error">La contraseña debe tener al menos 6 caracteres</p>
                     }
-                    <p class="password-hint">If your first time, your password is <strong class="password-default">Foxconn123@</strong></p>                    
                 </div>
-                
-                <button 
-                    type="submit" 
+
+                <!-- Remember me + Forgot password -->
+                <div class="form-options">
+                    <label class="remember-label">
+                        <input type="checkbox" class="remember-checkbox"> Recordarme
+                    </label>
+                    <a href="#" class="forgot-link">¿Olvidó su contraseña?</a>
+                </div>
+
+                <!-- Submit -->
+                <button
+                    type="submit"
                     [disabled]="isLoading()"
                     class="submit-button">
                     @if (isLoading()) {
                         <i class="ri-loader-4-line animate-spin text-xl"></i>
-                        <span>Loading...</span>
-                    } 
+                        <span>Cargando...</span>
+                    }
                     @else {
-                        <span>Sign In</span>
+                        <span>Ingresar</span>
+                        <i class="ri-arrow-right-line"></i>
                     }
                 </button>
-                
-                <div class="register-link">
-                    <p class="register-text">
-                        Don't have an account? 
-                        <a href="/auth/register" class="register-link-text">Click here</a>
-                    </p>
-                </div>
 
             </form>
 
-            <div class="login-footer">
-                <p class="footer-text">Application developed by the test engineering development team.</p>
+            <!-- Footer -->
+            <div class="login-card-footer">
+                <p class="version-text">DT System ERP V1.0.0</p>
+                <!-- <div class="footer-links">
+                    <a href="#" class="footer-link">Soporte Técnico</a>
+                    <a href="#" class="footer-link">Manual de Usuario</a>
+                </div> -->
             </div>
+
         </div>
     </div>
+
 </div>

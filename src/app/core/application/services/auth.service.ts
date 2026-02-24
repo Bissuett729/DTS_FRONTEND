@@ -154,6 +154,7 @@ export class AuthService {
             this.router.navigate(['/auth/change-password']);
           } else {
             this.globalState.setAllowChangePassword(false);
+            this.globalState.setLoadingPage(true);
             this.router.navigate(['/foxcode']);
           }
         }),

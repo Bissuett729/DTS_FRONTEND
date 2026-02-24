@@ -9,21 +9,34 @@ import { CommonModule } from '@angular/common';
   styles: [`
     /* Custom scrollbar for notifications menu */
     .notifications-scroll::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
 
     .notifications-scroll::-webkit-scrollbar-track {
-      background: #002b47;
+      background: #f1f5f9;
       border-radius: 4px;
     }
 
     .notifications-scroll::-webkit-scrollbar-thumb {
-      background: #035a8b;
+      background: #cbd5e1;
       border-radius: 4px;
     }
 
     .notifications-scroll::-webkit-scrollbar-thumb:hover {
-      background: #0478b8;
+      background: #94a3b8;
+    }
+
+    /* Dark mode scrollbar */
+    :host-context(.dark) .notifications-scroll::-webkit-scrollbar-track {
+      background: #1b1f28;
+    }
+
+    :host-context(.dark) .notifications-scroll::-webkit-scrollbar-thumb {
+      background: #353b43;
+    }
+
+    :host-context(.dark) .notifications-scroll::-webkit-scrollbar-thumb:hover {
+      background: #424b60;
     }
   `]
 })

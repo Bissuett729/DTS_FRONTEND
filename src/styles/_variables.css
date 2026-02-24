@@ -4,7 +4,9 @@
   --bg-primary: white;
   --text-primary: black;
   --foxcode-color: #035a8b;
-  --content-bg: #eceff3;
+  --content-bg: #f6f7f8;
+  
+  --dt-primary: #246CE0;
 }
 
 .dark {
@@ -12,6 +14,9 @@
   --text-primary: white;
   --foxcode-color: #00649d;
   --content-bg: #303030;
+
+
+  --dt-primary: #246CE0;
 }
 
 @theme {
@@ -19,6 +24,7 @@
   --color-primary: var(--text-primary);
   --color-content-bg: var(--content-bg);
   --color-foxcode: var(--foxcode-color);
+  --color-dt-primary: var(--dt-primary); 
 }
 
 /* Prevent white flash between route swaps */

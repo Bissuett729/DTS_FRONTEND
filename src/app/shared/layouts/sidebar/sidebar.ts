@@ -11,13 +11,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GlobalStateService } from '../../../core/application';
-import { ITool } from '../../../core/domain/interfaces/tool.interface';
-import { environment } from '../../../../environments/environment';
+import { SettingsDtsIcon } from "../../icons";
+import { LoaderDts } from "../../components/loader-dts/loader-dts";
 
 @Component({
   selector: 'foxcode-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SettingsDtsIcon, LoaderDts],
   templateUrl: './sidebar.html',
   styles: [],
 })
@@ -39,22 +39,13 @@ export class Sidebar implements OnInit {
 
   // Filter tools based on business unit and mode
   filteredTools = computed(() => {
-    const currentBU = this.businessUnit.toUpperCase();
-    const allowedBusinessUnits = [currentBU, 'DEVELOPMENT'];
-    const currentMode = environment.environmentName.toLowerCase();
-
     return this.allTools()
-      .filter(
-        (tool) =>
-          tool.active &&
-          allowedBusinessUnits.includes(tool.businessUnitId.name.toUpperCase()) &&
-          tool.toolMode.some((mode) => mode.toLowerCase() === currentMode),
-      )
+      .filter(tool => tool.active )
       .sort((a, b) => {
-        const aIsAdmin = a.businessUnitId.name.toUpperCase() === 'DEVELOPMENT';
-        const bIsAdmin = b.businessUnitId.name.toUpperCase() === 'DEVELOPMENT';
+        const aIsAdmin = a?.businessUnitId?.name.toUpperCase() === 'DEVELOPMENT';
+        const bIsAdmin = b?.businessUnitId?.name.toUpperCase() === 'DEVELOPMENT';
         if (aIsAdmin === bIsAdmin) return 0;
-        return aIsAdmin ? -1 : 1; // Admin tools first
+        return aIsAdmin ? -1 : 1;
       });
   });
 

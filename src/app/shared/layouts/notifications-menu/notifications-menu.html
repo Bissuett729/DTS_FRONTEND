@@ -3,51 +3,116 @@
     (click)="emitNotificationAction()">
 </div>
               
-<div class="absolute right-0 top-12 w-80 max-h-125 bg-[#003d65] rounded-lg shadow-2xl z-50 overflow-hidden border border-[#00243f]">
+<div class="absolute right-0 top-12 w-80 max-h-125 bg-white dark:bg-[#1b1f28] rounded-lg shadow-2xl z-50 overflow-hidden border border-[#e2e2e2] dark:border-[#353b43]">
     <!-- Header -->
-    <div class="px-4 py-3 bg-[#002b47] border-b border-[#8d8d8d]">
-        <h3 class="text-white font-semibold text-sm">Notifications</h3>
+    <div class="px-4 py-3 bg-[#f1f5f9] dark:bg-[#0000001a] border-b border-[#e2e2e2] dark:border-[#424b60]">
+        <h3 class="text-[#334155] dark:text-white font-semibold text-sm">Notifications</h3>
     </div>
 
     <!-- Notifications List -->
     <div class="overflow-y-auto max-h-105 notifications-scroll">
         @for (notification of notifications; track notification.id) {
-        <div class="px-4 py-3 hover:bg-gray-700/50 cursor-pointer transition-colors border-b border-[#8d8d8d] relative">
-            <!-- Status Badge -->
-            <div class="absolute top-2 right-2">
-            @if (notification.status === 'LOW') {
-                <span class="px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded transform rotate-12">
-                LOW
-                </span>
-            }
-            @if (notification.status === 'PRIORITY') {
-                <span class="px-2 py-0.5 bg-purple-500 text-white text-[10px] font-bold rounded transform rotate-12">
-                PRIORITY
-                </span>
-            }
+        <div class="px-4 py-3 hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] cursor-pointer transition-all duration-200 border-b border-[#f1f1f1] dark:border-[#353b43] relative">
+            <!-- Priority Badge -->
+            <div class="absolute top-2 right-2 flex flex-col gap-1">
+                @if (notification.status === 'LOW') {
+                    <span class="px-2 py-0.5 bg-green-500 dark:bg-green-600 text-white text-[10px] font-bold rounded shadow-sm">
+                        LOW
+                    </span>
+                }
+                @if (notification.status === 'NORMAL') {
+                    <span class="px-2 py-0.5 bg-blue-500 dark:bg-blue-600 text-white text-[10px] font-bold rounded shadow-sm">
+                        NORMAL
+                    </span>
+                }
+                @if (notification.status === 'HIGH') {
+                    <span class="px-2 py-0.5 bg-orange-500 dark:bg-orange-600 text-white text-[10px] font-bold rounded shadow-sm">
+                        HIGH
+                    </span>
+                }
+                @if (notification.status === 'CRITICAL') {
+                    <span class="px-2 py-0.5 bg-red-500 dark:bg-red-700 text-white text-[10px] font-bold rounded shadow-sm animate-pulse">
+                        CRITICAL
+                    </span>
+                }
             </div>
 
             <!-- Title -->
-            <h4 class="text-white font-semibold text-sm mb-1 pr-16">
-            {{ notification.title }}
+            <h4 class="text-[#334155] dark:text-white font-semibold text-sm mb-1 pr-16">
+                {{ notification.title }}
             </h4>
 
             <!-- Description -->
-            <p class="text-gray-400 text-xs mb-2">
-            {{ notification.description }}
+            <p class="text-[#64748b] dark:text-[#aab3be] text-xs mb-2">
+                {{ notification.message || notification.description }}
             </p>
 
-            <!-- Type Badge -->
-            <div class="flex items-center gap-2 mb-2">
-            <span class="px-2 py-0.5 bg-purple-600 text-white text-[10px] font-semibold rounded">
-                {{ notification.type }}
-            </span>
+            <!-- Type & Category Badges -->
+            <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <!-- Type Badge -->
+                @if (notification.type === 'INFO') {
+                    <span class="px-2 py-0.5 bg-[#246CE0] dark:bg-[#246ce0d1] text-white text-[10px] font-semibold rounded shadow-sm flex items-center gap-1">
+                        <i class="ri-information-line"></i> INFO
+                    </span>
+                }
+                @if (notification.type === 'WARNING') {
+                    <span class="px-2 py-0.5 bg-yellow-500 dark:bg-yellow-600 text-white text-[10px] font-semibold rounded shadow-sm flex items-center gap-1">
+                        <i class="ri-error-warning-line"></i> WARNING
+                    </span>
+                }
+                @if (notification.type === 'SUCCESS') {
+                    <span class="px-2 py-0.5 bg-green-500 dark:bg-green-600 text-white text-[10px] font-semibold rounded shadow-sm flex items-center gap-1">
+                        <i class="ri-checkbox-circle-line"></i> SUCCESS
+                    </span>
+                }
+                @if (notification.type === 'ERROR') {
+                    <span class="px-2 py-0.5 bg-red-600 dark:bg-red-700 text-white text-[10px] font-semibold rounded shadow-sm flex items-center gap-1">
+                        <i class="ri-close-circle-line"></i> ERROR
+                    </span>
+                }
+
+                <!-- Category Badge -->
+                @if (notification.category === 'SYSTEM') {
+                    <span class="px-2 py-0.5 bg-slate-500 dark:bg-slate-600 text-white text-[10px] font-medium rounded">
+                        <i class="ri-settings-3-line"></i> System
+                    </span>
+                }
+                @if (notification.category === 'BILLING') {
+                    <span class="px-2 py-0.5 bg-emerald-500 dark:bg-emerald-600 text-white text-[10px] font-medium rounded">
+                        <i class="ri-money-dollar-circle-line"></i> Billing
+                    </span>
+                }
+                @if (notification.category === 'SECURITY') {
+                    <span class="px-2 py-0.5 bg-rose-600 dark:bg-rose-700 text-white text-[10px] font-medium rounded">
+                        <i class="ri-shield-check-line"></i> Security
+                    </span>
+                }
+                @if (notification.category === 'TASK') {
+                    <span class="px-2 py-0.5 bg-indigo-500 dark:bg-indigo-600 text-white text-[10px] font-medium rounded">
+                        <i class="ri-task-line"></i> Task
+                    </span>
+                }
+                @if (notification.category === 'MESSAGE') {
+                    <span class="px-2 py-0.5 bg-cyan-500 dark:bg-cyan-600 text-white text-[10px] font-medium rounded">
+                        <i class="ri-message-3-line"></i> Message
+                    </span>
+                }
+                @if (notification.category === 'ALERT') {
+                    <span class="px-2 py-0.5 bg-amber-500 dark:bg-amber-600 text-white text-[10px] font-medium rounded">
+                        <i class="ri-alarm-warning-line"></i> Alert
+                    </span>
+                }
+                @if (notification.category === 'OTHER') {
+                    <span class="px-2 py-0.5 bg-gray-500 dark:bg-gray-600 text-white text-[10px] font-medium rounded">
+                        <i class="ri-more-line"></i> Other
+                    </span>
+                }
             </div>
 
             <!-- Footer -->
             <div class="flex items-center justify-between text-xs">
-            <span class="text-blue-400 font-medium">{{ notification.user }}</span>
-            <span class="text-gray-500">{{ notification.time }}</span>
+                <span class="text-[#246CE0] dark:text-[#73a9ff] font-medium">{{ notification.source || 'System' }}</span>
+                <span class="text-[#94a3b8] dark:text-[#7e8a9a]">{{ notification.createdAt || notification.time }}</span>
             </div>
         </div>
         }

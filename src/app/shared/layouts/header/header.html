@@ -1,9 +1,9 @@
-<header class="bg-foxcode shadow-sm z-100 relative h-full">
+<header class="bg-white dark:bg-[#1b1f28] shadow-sm z-100 relative h-full">
     <div class="flex justify-between items-center h-full px-8 max-md:px-4">
         <!-- Left Section -->
         <div class="flex items-center gap-4 h-full">
             <button 
-                class="hover:bg-white/10 active:bg-white/20 border-none rounded-lg p-2 cursor-pointer flex items-center justify-center text-white transition-all duration-200"
+                class="rounded-lg p-2 cursor-pointer flex items-center justify-center border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
                 (click)="toggleSidebar()">
                 @if (sidebarCollapsed) {
                     <i class="ri-menu-line text-xl"></i>
@@ -12,15 +12,22 @@
                 }
             </button>
             
-            <div class="h-8 w-px bg-white/20 max-md:hidden"></div>
+            <div class="h-8 w-px bg-[#f1f1f1] dark:bg-[#424b60] max-md:hidden"></div>
+
+            <div class="flex items-center gap-x-2">
+                <svg-icon-settings-dts fill="#246CE0" width="30" height="30"></svg-icon-settings-dts>
+                <h1 class="font-bold dark:text-white text-nowrap whitespace-nowrap">
+                    Down Time Systems
+                </h1>
+            </div>
             
-            <button 
+            <!-- <button 
                 type="button"
                 title="Ir al Home"
                 class="text-white text-xs font-medium m-0 tracking-[0.2em] px-3 py-2.5 rounded-md bg-[#006197] shadow-lg uppercase hover:bg-[#06669e] active:bg-[#0a76b6] transition-colors"
                 (click)="goHome()">
                 {{ businessUnit }}
-            </button>
+            </button> -->
         </div>
 
         <!-- Banner Section -->
@@ -34,34 +41,34 @@
         <!-- Right Section -->
         <div class="flex items-center gap-3">
             <!-- Version Badge -->
-            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full">
-                <i class="ri-code-box-line text-white/70 text-sm"></i>
-                <span class="text-white/90 text-xs font-medium">{{ appVersion() }}</span>
+            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-[#f1f5f9] dark:bg-[#0000001a] border border-[#e2e2e2] dark:border-[#353b43] rounded-md">
+                <i class="ri-code-box-line text-[#334155] dark:text-[#aab3be] text-sm"></i>
+                <span class="text-[#334155] dark:text-[#aab3be] text-xs font-medium">{{ appVersion() }}</span>
             </div>
 
             <!-- Theme Toggle Button -->
             <button 
                 title="Toggle theme"
-                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg hover:bg-white/10 active:bg-white/20 text-white transition-all duration-200"
+                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
                 (click)="toggleTheme()">
                 <i class="ri-sun-line text-lg dark:hidden"></i>
                 <i class="ri-moon-line text-lg hidden dark:block"></i>
             </button>
 
             <!-- Bug Report Button -->
-            <button 
+            <!-- <button 
                 title="Report a bug"
-                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg hover:bg-white/10 active:bg-white/20 text-white transition-all duration-200"
+                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
                 [class.bg-white/20]="supportSidebarOpen"
                 (click)="toggleSupportSidebar()">
                 <i class="ri-bug-line text-lg"></i>
-            </button>
+            </button> -->
 
             <!-- Notifications Button -->
             <div class="relative">
                 <button 
                     title="Notifications"
-                    class="relative w-9 h-9 cursor-pointer flex items-center justify-center rounded-lg hover:bg-white/10 active:bg-white/20 text-white transition-all duration-200"
+                    class="relative w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
                     [class.bg-white/20]="notificationsOpen()"
                     (click)="toggleNotifications()">
                     <i class="ri-notification-2-line text-lg"></i>
@@ -76,36 +83,38 @@
                 }
             </div>
 
-            <div class="h-8 w-px bg-white/20 max-md:hidden"></div>
+            <div class="h-8 w-px bg-[#f1f1f1] dark:bg-[#424b60] max-md:hidden"></div>
 
             <!-- User Info -->
             @if (user) {
                 <div class="flex items-center gap-3 max-md:hidden">
                     <div class="flex flex-col items-end text-white">
                         <div class="flex items-center gap-2">
-                            <i class="ri-time-line text-xs text-white/70"></i>
-                            <span class="font-medium text-sm">{{ user?.clock }}</span>
-                            <span class="text-white/50">•</span>
-                            <span class="font-medium text-sm">{{ user?.username }}</span>
+                            <i class="ri-time-line text-xs text-[#404040] dark:text-[#d6d6d6]"></i>
+                            <span class="font-medium text-sm text-[#404040] dark:text-[#d6d6d6]">{{ user?.clock }}</span>
+                            <span class="text-[#404040] dark:text-[#d6d6d6]">•</span>
+                            <span class="font-medium text-sm text-[#404040] dark:text-[#d6d6d6]">{{ user?.username }}</span>
                         </div>
                         @if (user?.email) {
-                            <span class="text-xs text-white/70 mt-0.5">{{ user?.email }}</span>
+                            <span class="text-xs text-[#404040] dark:text-[#d6d6d6] mt-0.5">{{ user?.email }}</span>
                         }
                     </div>
                     
-                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold text-sm">
+                    <div class="w-10 h-10 rounded-full bg-dt-primary flex items-center justify-center text-white font-semibold text-sm">
                         {{ user?.username?.charAt(0).toUpperCase() }}
                     </div>
                 </div>
             }
+            
+            <div class="h-8 w-px bg-[#f1f1f1] dark:bg-[#424b60] max-md:hidden"></div>
 
             <!-- Logout Button -->
             <button 
                 type="button"
-                class="flex items-center cursor-pointer gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 active:bg-white/30 text-white transition-all duration-200 font-medium text-sm"
+                class="flex items-center cursor-pointer gap-2 px-3 py-2 bg-[#f1f5f9] dark:bg-[#0000001a] dark:hover:bg-[#9c9c9c2b] border border-[#e2e2e2] dark:border-[#353b43] rounded-md font-medium text-sm"
                 (click)="logout()">
-                <i class="ri-logout-box-r-line text-base"></i>
-                <span class="max-md:hidden">Logout</span>
+                <i class="ri-logout-box-r-line text-base text-[#334155] dark:text-[#aab3be]"></i>
+                <span class="max-md:hidden text-[#334155] dark:text-[#aab3be]">Logout</span>
             </button>
         </div>
     </div>

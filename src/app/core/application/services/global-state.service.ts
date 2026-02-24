@@ -105,6 +105,12 @@ export class GlobalStateService {
     const savedTheme = this.storage.getItem('theme');
     if (savedTheme === 'dark' || savedTheme === 'light') {
       this._theme.set(savedTheme);
+      // Apply theme to DOM immediately
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     }
 
     // Load language from storage

@@ -1,11 +1,11 @@
 <div class="flex items-center justify-end gap-x-2 w-full h-full">
   <!-- Selector de tamaño de página -->
-  <foxcode-select
+  <dts-select
     [control]="pageSize"
     [options]="[5, 15, 25, 50, 100]"
     label="Page size:"
     (selectionChange)="setPageSize($event)">
-  </foxcode-select>
+  </dts-select>
 
   <div class="flex items-center h-full">
     <!-- Ir al inicio -->

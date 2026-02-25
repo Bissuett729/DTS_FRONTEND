@@ -2,13 +2,13 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'foxcode-card',
+  selector: 'dts-card',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './card.html',
   styles: ``
 })
-export class FoxcodeCard {
+export class DtsCard {
   @Input() padding: 'none' | 'sm' | 'md' | 'lg' = 'sm';
   @Input() shadow: 'none' | 'sm' | 'md' | 'lg' | 'xl' = 'sm';
   @Input() rounded: 'none' | 'sm' | 'md' | 'lg' | 'xl' = 'md';

@@ -5,7 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { IPagination } from './paginator.interface';
-import { FoxcodeSelect } from "../select/select";
+import { DtsSelect } from "../select/select";
 
 @Component({
   selector: 'foxcode-paginator',
@@ -16,7 +16,7 @@ import { FoxcodeSelect } from "../select/select";
     MatSelectModule,
     MatFormFieldModule,
     MatIconModule,
-    FoxcodeSelect
+    DtsSelect
 ],
   templateUrl: './paginator.html'
 })

@@ -1,0 +1,95 @@
+<dts-modal-layout 
+    [title]="modalConfig.title" 
+    [subtitle]="modalConfig.subtitle" 
+    [icon]="modalConfig.icon"
+    (closeModal)="onClose()">
+
+    <dts-card shadow="none" modalContent class="py-2 overflow-y-auto">
+
+        <div class="flex flex-col @[480px]:flex-row gap-6 items-center">
+            <div class="relative group">
+                <div
+                class="bg-slate-200 dark:bg-slate-700 bg-center bg-no-repeat aspect-square bg-cover rounded-2xl min-h-32 w-32 flex items-center justify-center border-2 border-dashed border-slate-400 dark:border-slate-500 overflow-hidden"
+                data-alt="Placeholder for user profile photo upload">
+                    <i class="ri-camera-ai-line text-4xl text-slate-400 dark:text-slate-500 group-hover:scale-110 transition-transform"></i>
+                </div>
+    
+                <div class="absolute -bottom-2 -right-2 bg-primary text-white rounded-full p-1.5 shadow-md border-2 border-white dark:border-surface-dark">
+                <i class="ri-pencil-line text-sm"></i>
+                </div>
+            </div>
+    
+            <div class="flex flex-col items-center @[480px]:items-start justify-center gap-2">
+                <p class="text-slate-900 dark:text-white text-xl font-bold leading-tight">Foto de perfil</p>
+                <p class="text-slate-500 dark:text-slate-400 text-sm text-center @[480px]:text-left mb-2">Recomendado: Imagen cuadrada, máximo 2MB (JPG, PNG)</p>
+            </div>
+        </div> 
+
+        <form [formGroup]="userForm" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <dts-input
+                label="Nombre completo"
+                placeholder="Ejemp. Miguel Angel Bissuett Lira"
+                icon="ri-user-line"
+                [control]="userForm.controls.username"
+                [required]="true">
+            </dts-input>
+
+            <dts-input
+                label="Email"
+                type="email"
+                placeholder="usuario@ejemplo.com"
+                icon="ri-mail-line"
+                [control]="userForm.controls.email"
+                [required]="true"
+                [showCopy]="true"
+                [errorMessages]="{
+                    required: 'El email es obligatorio',
+                    email: 'Ingresa un email válido'
+                }">
+            </dts-input>
+
+            <dts-input
+                label="Numero de empleado"
+                type="number"
+                placeholder="Ejemp. 12345"
+                icon="ri-time-line"
+                [control]="userForm.controls.clock"
+                [required]="true">
+            </dts-input>
+
+            <dts-select
+                label="Seleccion de roles"
+                placeholder="Selecciona un rol para el usuario"
+                icon="ri-shield-person-line"
+                [control]="userForm.controls.roleIds"
+                optionValue="_id"
+                optionLabel="name"
+                [required]="true"
+                [showSelectAll]="true"
+                [multiple]="true"
+                [options]="roles$()">
+            </dts-select>
+
+        </form>
+
+    </dts-card>
+
+    <div modalActions class="flex items-center gap-x-2">
+
+        <dts-button
+            label="Cancelar"
+            variant="outline"
+            (onClick)="onClose()">
+        </dts-button>
+
+        <dts-button
+            label="Crear Usuario"
+            [disabled]="!userForm.valid"
+            [loading]="loadingCreateUser$()"
+            (onClick)="createUser()">
+        </dts-button>
+
+    </div>
+
+</dts-modal-layout>

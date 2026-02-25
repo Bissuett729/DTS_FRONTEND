@@ -155,7 +155,7 @@ export class AuthService {
           } else {
             this.globalState.setAllowChangePassword(false);
             this.globalState.setLoadingPage(true);
-            this.router.navigate(['/foxcode']);
+            this.router.navigate(['/dts']);
           }
         }),
         catchError((error) => {

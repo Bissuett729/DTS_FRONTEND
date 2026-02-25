@@ -14,7 +14,7 @@ export interface SelectOption {
 }
 
 @Component({
-  selector: 'foxcode-select',
+  selector: 'dts-select',
   standalone: true,
   imports: [
     CommonModule,
@@ -34,12 +34,12 @@ export interface SelectOption {
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FoxcodeSelect),
+      useExisting: forwardRef(() => DtsSelect),
       multi: true
     }
   ]
 })
-export class FoxcodeSelect implements ControlValueAccessor {
+export class DtsSelect implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = 'Select an option';
   @Input() control?: FormControl;
@@ -160,6 +160,13 @@ export class FoxcodeSelect implements ControlValueAccessor {
       newValue = enabledOptions.map(opt => this.getOptionValue(opt));
     }
 
+    // Update the form control directly to ensure mat-select updates
+    if (this.control) {
+      this.control.setValue(newValue);
+    } else {
+      this.formControlInternal.setValue(newValue);
+    }
+    
     this.value.set(newValue);
     this.onChange(newValue);
     this.onTouched();

@@ -1,7 +1,7 @@
 <button
   [type]="type"
   [disabled]="disabled || loading"
-  [class]="buttonClasses"
+  [class]="'relative active:top-px ' + buttonClasses"
   [title]="tooltip"
   (click)="handleClick($event)">
   

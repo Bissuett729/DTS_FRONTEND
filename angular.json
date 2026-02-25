@@ -17,13 +17,13 @@
           "standalone": true,
           "inlineStyle": true,
           "skipTests": true,
-          "prefix": "foxcode",
+          "prefix": "dts",
           "style": "sass"
         }
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "foxcode",
+      "prefix": "dts",
       "architect": {
         "build": {
           "builder": "@angular/build:application",

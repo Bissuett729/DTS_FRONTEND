@@ -17,7 +17,7 @@ import { LoaderDts } from "../../components/loader-dts/loader-dts";
 @Component({
   selector: 'foxcode-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, SettingsDtsIcon, LoaderDts],
+  imports: [CommonModule, RouterModule, SettingsDtsIcon, LoaderDts, RouterModule],
   templateUrl: './sidebar.html',
   styles: [],
 })
@@ -30,6 +30,30 @@ export class Sidebar implements OnInit {
 
   isVisible = signal(false);
   isLoading = signal(false);
+
+  public menus = [
+    { 
+      name: 'Inicio', 
+      menus: [
+        { name: 'Panel de control', route: 'home', icon: 'ri-dashboard-2-line' },
+      ]
+    },
+    { 
+      name: 'Seguimiento', 
+      menus: [
+        { name: 'Registro', route: 'register', icon: 'ri-dashboard-2-line' },
+        { name: 'Análisis', route: 'analysis', icon: 'ri-dashboard-2-line' },
+        { name: 'Reportes', route: 'reports', icon: 'ri-dashboard-2-line' },
+      ]
+    },
+    { 
+      name: 'Administración', 
+      menus: [
+        { name: 'Usuarios', route: 'users', icon: 'ri-dashboard-2-line' },
+        { name: 'Configuración', route: 'config', icon: 'ri-dashboard-2-line' },
+      ]
+    },
+  ];
 
   // Access user from global state
   user = this.globalState.currentUser;

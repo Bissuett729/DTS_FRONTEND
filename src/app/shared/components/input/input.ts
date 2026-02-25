@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, forwardRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';
 
 @Component({
-  selector: 'foxcode-input',
+  selector: 'dts-input',
   standalone: true,
   imports: [
     CommonModule,
@@ -26,16 +26,16 @@ type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'sea
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FoxcodeInput),
+      useExisting: forwardRef(() => DtsInput),
       multi: true
     }
   ]
 })
-export class FoxcodeInput implements ControlValueAccessor {
+export class DtsInput implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = '';
   @Input() type: InputType = 'text';
-  @Input() control?: FormControl;
+  @Input() control?: AbstractControl | null;
   @Input() readonly: boolean = false;
   @Input() disabled: boolean = false;
   @Input() required: boolean = false;

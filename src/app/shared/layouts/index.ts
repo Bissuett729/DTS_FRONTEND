@@ -1,4 +1,4 @@
-export * from './foxcode-modal-layout/foxcode-modal-layout'
+export * from './modal-layout/modal-layout'
 export * from './header/header'
 export * from './layout-template/layout-template'
 export * from './notifications-menu/notifications-menu'

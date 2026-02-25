@@ -41,47 +41,20 @@
       </div>
     } @else {
       <nav class="py-4 w-full">
-          <ul class="list-none m-0 py-0 px-4 w-full">
-            <li>
-              <p class="font-semibold text-[#64748b] dark:text-[#a2a4a5] text-xs uppercase tracking-wide mb-2">Inicio</p>
-            </li>
-            <li class="mt-2 w-full py-2 pl-4 pr-2 rounded-md bg-dt-primary space-x-2 text-white hover:cursor-pointer transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-[0.98]">
-              <i class="ri-dashboard-2-line transition-transform duration-200"></i>
-              <a href="#" class="inline-block">Panel de control</a>
-            </li>
-            
-            <li class="my-2 w-full h-px bg-[#f1f1f1] dark:bg-[#424b60] max-md:hidden"></li>
-
-            <li>
-              <p class="font-semibold text-[#64748b] dark:text-[#a2a4a5] text-xs uppercase tracking-wide mb-2">Seguimiento</p>
-            </li>
-            <li class="mt-1 w-full py-2 pl-4 pr-2 rounded-md space-x-2 text-[#334155] dark:text-[#7e8a9a] hover:text-[#0054db] dark:hover:text-[#73a9ff] hover:bg-[#246ce02e] dark:hover:bg-[#0364ff36] hover:cursor-pointer transition-all duration-200 ease-in-out hover:translate-x-1 hover:shadow-sm active:scale-[0.98]">
-              <i class="ri-dashboard-2-line transition-transform duration-200"></i>
-              <a href="#" class="inline-block">Registro</a>
-            </li>
-            <li class="mt-1 w-full py-2 pl-4 pr-2 rounded-md space-x-2 text-[#334155] dark:text-[#7e8a9a] hover:text-[#0054db] dark:hover:text-[#73a9ff] hover:bg-[#246ce02e] dark:hover:bg-[#0364ff36] hover:cursor-pointer transition-all duration-200 ease-in-out hover:translate-x-1 hover:shadow-sm active:scale-[0.98]">
-              <i class="ri-dashboard-2-line transition-transform duration-200"></i>
-              <a href="#" class="inline-block">Análisis</a>
-            </li>
-            <li class="mt-1 w-full py-2 pl-4 pr-2 rounded-md space-x-2 text-[#334155] dark:text-[#7e8a9a] hover:text-[#0054db] dark:hover:text-[#73a9ff] hover:bg-[#246ce02e] dark:hover:bg-[#0364ff36] hover:cursor-pointer transition-all duration-200 ease-in-out hover:translate-x-1 hover:shadow-sm active:scale-[0.98]">
-              <i class="ri-dashboard-2-line transition-transform duration-200"></i>
-              <a href="#" class="inline-block">Reportes</a>
-            </li>
-
-            <li class="my-2 w-full h-px bg-[#f1f1f1] dark:bg-[#424b60] max-md:hidden"></li>
-
-            <li>
-              <p class="font-semibold text-[#64748b] dark:text-[#a2a4a5] text-xs uppercase tracking-wide mb-2">Administración</p>
-            </li>
-            <li class="mt-1 w-full py-2 pl-4 pr-2 rounded-md space-x-2 text-[#334155] dark:text-[#7e8a9a] hover:text-[#0054db] dark:hover:text-[#73a9ff] hover:bg-[#246ce02e] dark:hover:bg-[#0364ff36] hover:cursor-pointer transition-all duration-200 ease-in-out hover:translate-x-1 hover:shadow-sm active:scale-[0.98]">
-              <i class="ri-dashboard-2-line transition-transform duration-200"></i>
-              <a href="#" class="inline-block">Administración</a>
-            </li>
-            <li class="mt-1 w-full py-2 pl-4 pr-2 rounded-md space-x-2 text-[#334155] dark:text-[#7e8a9a] hover:text-[#0054db] dark:hover:text-[#73a9ff] hover:bg-[#246ce02e] dark:hover:bg-[#0364ff36] hover:cursor-pointer transition-all duration-200 ease-in-out hover:translate-x-1 hover:shadow-sm active:scale-[0.98]">
-              <i class="ri-dashboard-2-line transition-transform duration-200"></i>
-              <a href="#" class="inline-block">Configuración</a>
-            </li>
-          </ul>
+          <div class="flex flex-col m-0 py-0 px-4 w-full">
+            @for (menu of menus; track $index) {
+              <span class="font-semibold text-[#64748b] dark:text-[#a2a4a5] text-xs uppercase tracking-wide mb-2">{{ menu.name }}</span>
+              @for (item of menu?.menus; track $index) {
+                <a (click)="close()" routerLinkActive="bg-dt-primary text-white hover:text-white dark:hover:text-white hover:bg-dt-primary dark:hover:bg-dt-primary" [routerLink]="item.route" class="mt-1 w-full py-2 pl-4 pr-2 rounded-md space-x-2 text-[#334155] dark:text-[#7e8a9a] 
+                    hover:text-[#0054db] dark:hover:text-[#73a9ff] hover:bg-[#246ce02e] dark:hover:bg-[#0364ff36] hover:cursor-pointer 
+                    transition-all duration-200 ease-in-out hover:translate-x-1 hover:shadow-sm active:scale-[0.98]">
+                  <i class="ri-dashboard-2-line transition-transform duration-200"></i>
+                  {{ item.name }}
+                </a>
+              }
+              <p class="my-2 w-full h-px bg-[#f1f1f1] dark:bg-[#424b60] max-md:hidden"></p>
+            }
+          </div>
       </nav>
     }
   </div>

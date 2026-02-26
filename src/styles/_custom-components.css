@@ -100,6 +100,14 @@
    FOXCODE INPUT FIELD - CUSTOM STYLES
    ============================================ */
 
+.dark .foxcode-input-field .mat-mdc-form-field .mdc-text-field--outlined .mat-mdc-notch-piece {
+  border-color: #4b4b4c !important;
+}
+
+.dark .foxcode-input-field .mdc-text-field--outlined.mdc-text-field--disabled .mat-mdc-notch-piece {
+  border-color: #323232 !important;
+}
+
 .foxcode-input-field {
   font-size: 14px;
 }
@@ -188,6 +196,14 @@
    ============================================ */
 .foxcode-select-field {
   font-size: 14px;
+}
+
+.dark .foxcode-select-field .mat-mdc-form-field .mdc-text-field--outlined .mat-mdc-notch-piece {
+  border-color: #4b4b4c !important;
+}
+
+.dark .foxcode-select-field .mat-mdc-form-field .mdc-text-field--disabled .mat-mdc-notch-piece {
+  border-color: #323232 !important;
 }
 
 .foxcode-select-field .mat-mdc-text-field-wrapper {
@@ -288,7 +304,7 @@
 }
 
 .dark .mat-mdc-select-panel {
-  background-color: #1f2937 !important;
+  background-color: #1c1c1c  !important;
 }
 
 .mat-mdc-option {
@@ -301,11 +317,11 @@
 }
 
 .dark .mat-mdc-option:hover {
-  background-color: #374151 !important;
+  background-color: #232326 !important;
 }
 
 .dark .mat-mdc-option.mat-mdc-option-active {
-  background-color: #374151 !important;
+  background-color: #27272a !important;
 }
 
 .dark .mat-mdc-option.mdc-list-item--selected {

@@ -3,6 +3,7 @@ export * from './card/card';
 export * from './expander/expander';
 export * from './header-tool/header-tool';
 export * from './input/input';
+export * from './textarea/textarea';
 export * from './loader-page/loader-page';
 export * from './loading/loading';
 export * from './select/select';

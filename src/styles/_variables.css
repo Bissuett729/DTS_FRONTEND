@@ -6,7 +6,10 @@
   --foxcode-color: #035a8b;
   --content-bg: #f6f7f8;
   
-  --dt-primary: #246CE0;
+  /* DTS VARIABLES */
+  --dts-title: #3f3f46;
+  --dts-badges: #71717a;
+  --dts-primary: #246CE0;
 }
 
 .dark {
@@ -14,9 +17,11 @@
   --text-primary: white;
   --foxcode-color: #00649d;
   --content-bg: #303030;
-
-
-  --dt-primary: #246CE0;
+  
+  /* DTS VARIABLES */
+  --dts-title: #e4e4e7;
+  --dts-badges: #a1a1aa;
+  --dts-primary: #246CE0;
 }
 
 @theme {
@@ -24,7 +29,9 @@
   --color-primary: var(--text-primary);
   --color-content-bg: var(--content-bg);
   --color-foxcode: var(--foxcode-color);
-  --color-dt-primary: var(--dt-primary); 
+  --color-dts-primary: var(--dts-primary); 
+  --color-dts-title: var(--dts-title);
+  --color-dts-badges: var(--dts-badges);
 }
 
 /* Prevent white flash between route swaps */

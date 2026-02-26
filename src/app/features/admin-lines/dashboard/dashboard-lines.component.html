@@ -1,0 +1,120 @@
+<section class="w-full h-full flex flex-col gap-y-2 p-2">
+
+    <dts-card shadow="none">
+
+        <div class="flex items-center justify-between">
+
+            <div class="flex flex-col gap-1">
+                <span class="text-3xl font-bold tracking-tight text-dts-title">Administración de Líneas</span>
+                <span class="text-dts-badges">Gestiona las líneas de producción y sus configuraciones.</span>
+            </div>
+
+            <dts-button
+                label="Agregar Nueva Línea"
+                icon="ri-add-line"
+                (onClick)="addNewLine()">
+            </dts-button>
+
+        </div>
+
+    </dts-card>
+
+    <div class="grid grid-cols-4 gap-2">
+        <dts-card shadow="none" customClass="group border border-gray-200 dark:border-[#727272] hover:border-[#035a8b] dark:hover:border-[#a9a9a9] hover:shadow-lg cursor-pointer">
+            <div class="relative flex items-center">
+                <div class="absolute top-3 right-3 z-10">
+                    <span class="px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                        <i class="ri-checkbox-circle-fill"></i> 
+                        Active 
+                    </span>
+                </div>
+    
+                <div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-[#035a8b]/10 dark:bg-[#035a8b]/25 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+                            <i class="ri-building-3-line text-2xl text-[#035a8b] dark:text-[#4f9eff]"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 pt-2">
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white truncate group-hover:text-[#035a8b] dark:group-hover:text-[#4f9eff]">
+                                OL A2
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dts-card>
+
+        <dts-card shadow="none" customClass="group border border-gray-200 dark:border-[#727272] hover:border-[#035a8b] dark:hover:border-[#a9a9a9] hover:shadow-lg cursor-pointer">
+            <div class="relative flex items-center">
+                <div class="absolute top-3 right-3 z-10">
+                    <span class="px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                        <i class="ri-checkbox-circle-fill"></i> 
+                        Active 
+                    </span>
+                </div>
+    
+                <div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-[#035a8b]/10 dark:bg-[#035a8b]/25 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+                            <i class="ri-building-3-line text-2xl text-[#035a8b] dark:text-[#4f9eff]"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 pt-2">
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white truncate group-hover:text-[#035a8b] dark:group-hover:text-[#4f9eff]">
+                                FA BONDING A
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dts-card>
+
+        <dts-card shadow="none" customClass="group border border-gray-200 dark:border-[#727272] hover:border-[#035a8b] dark:hover:border-[#a9a9a9] hover:shadow-lg cursor-pointer">
+            <div class="relative flex items-center">
+                <div class="absolute top-3 right-3 z-10">
+                    <span class="px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                        <i class="ri-checkbox-circle-fill"></i> 
+                        Active 
+                    </span>
+                </div>
+    
+                <div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-[#035a8b]/10 dark:bg-[#035a8b]/25 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+                            <i class="ri-building-3-line text-2xl text-[#035a8b] dark:text-[#4f9eff]"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 pt-2">
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white truncate group-hover:text-[#035a8b] dark:group-hover:text-[#4f9eff]">
+                                TEST DOCKING 1
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dts-card>
+
+        <dts-card shadow="none" customClass="group border border-gray-200 dark:border-[#727272] hover:border-[#035a8b] dark:hover:border-[#a9a9a9] hover:shadow-lg cursor-pointer">
+            <div class="relative flex items-center">
+                <div class="absolute top-3 right-3 z-10">
+                    <span class="px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                        <i class="ri-checkbox-circle-fill"></i> 
+                        Active 
+                    </span>
+                </div>
+    
+                <div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-12 h-12 rounded-xl bg-[#035a8b]/10 dark:bg-[#035a8b]/25 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-200">
+                            <i class="ri-building-3-line text-2xl text-[#035a8b] dark:text-[#4f9eff]"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 pt-2">
+                            <h3 class="text-base font-bold text-gray-900 dark:text-white truncate group-hover:text-[#035a8b] dark:group-hover:text-[#4f9eff]">
+                                PA POLY
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dts-card>
+    </div>
+
+</section>

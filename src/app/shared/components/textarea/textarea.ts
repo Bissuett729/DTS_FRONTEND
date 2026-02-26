@@ -6,11 +6,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
-type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 @Component({
-  selector: 'dts-input',
+  selector: 'dts-textarea',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,22 +19,22 @@ type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'sea
     MatInputModule,
     MatTooltipModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    TextFieldModule
   ],
-  templateUrl: './input.html',
+  templateUrl: './textarea.html',
   styles: ``,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DtsInput),
+      useExisting: forwardRef(() => DtsTextarea),
       multi: true
     }
   ]
 })
-export class DtsInput implements ControlValueAccessor {
+export class DtsTextarea implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = '';
-  @Input() type: InputType = 'text';
   @Input() control?: AbstractControl;
   @Input() readonly: boolean = false;
   @Input() disabled: boolean = false;
@@ -43,28 +42,24 @@ export class DtsInput implements ControlValueAccessor {
   @Input() hint?: string;
   @Input() icon?: string; // Remixicon class
   @Input() maxlength: string | number | null = null;
+  @Input() rows: number = 4;
+  @Input() autoResize: boolean = false;
 
   // Features
   @Input() showCopy: boolean = false;
-  @Input() showPaste: boolean = false;
-  @Input() showScan: boolean = false;
   @Input() showClear: boolean = true;
-  @Input() showPasswordToggle: boolean = false;
 
   // Custom error messages
   @Input() errorMessages: { [key: string]: string } = {};
 
   // Events
   @Output() onKeyInput = new EventEmitter<string>();
-  @Output() onScan = new EventEmitter<void>();
   @Output() onCopy = new EventEmitter<string>();
-  @Output() onPaste = new EventEmitter<void>();
   @Output() onClear = new EventEmitter<void>();
 
   // Internal state
   value = signal<string>('');
   isFocused = signal(false);
-  showPassword = signal(false);
 
   // ControlValueAccessor
   onChange: any = () => { };
@@ -86,12 +81,11 @@ export class DtsInput implements ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  // Internal methods
   onInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.value.set(input.value);
-    this.onChange(input.value);
-    this.onKeyInput.emit(input.value);
+    const textarea = event.target as HTMLTextAreaElement;
+    this.value.set(textarea.value);
+    this.onChange(textarea.value);
+    this.onKeyInput.emit(textarea.value);
   }
 
   onFocus(): void {
@@ -112,20 +106,6 @@ export class DtsInput implements ControlValueAccessor {
     }
   }
 
-  async pasteFromClipboard(): Promise<void> {
-    try {
-      const text = await navigator.clipboard.readText();
-      this.value.set(text);
-      this.onChange(text);
-      this.onPaste.emit();
-      if (this.control) {
-        this.control.setValue(text);
-      }
-    } catch (err) {
-      console.error('Failed to paste:', err);
-    }
-  }
-
   clearInput(): void {
     this.value.set('');
     this.onChange('');
@@ -133,21 +113,6 @@ export class DtsInput implements ControlValueAccessor {
     if (this.control) {
       this.control.setValue('');
     }
-  }
-
-  togglePasswordVisibility(): void {
-    this.showPassword.update(v => !v);
-  }
-
-  triggerScan(): void {
-    this.onScan.emit();
-  }
-
-  get inputType(): string {
-    if (this.type === 'password' && this.showPassword()) {
-      return 'text';
-    }
-    return this.type;
   }
 
   get hasError(): boolean {
@@ -164,23 +129,18 @@ export class DtsInput implements ControlValueAccessor {
     const errors = this.control.errors;
     if (!errors) return '';
 
-    // Custom error messages
     for (const key in errors) {
       if (this.errorMessages[key]) {
         return this.errorMessages[key];
       }
     }
 
-    // Default error messages
-    if (errors['required']) return `${this.label || 'This field'} es requerido`;
-    if (errors['email']) return 'Por favor ingrese una dirección de correo electrónico válida';
-    if (errors['minlength']) return `La longitud mínima es de ${errors['minlength'].requiredLength} caracteres`;
-    if (errors['maxlength']) return `La longitud máxima es de ${errors['maxlength'].requiredLength} caracteres`;
-    if (errors['min']) return `El valor mínimo es ${errors['min'].min}`;
-    if (errors['max']) return `El valor máximo es ${errors['max'].max}`;
-    if (errors['pattern']) return 'Formato inválido';
+    if (errors['required']) return `${this.label || 'This field'} is required`;
+    if (errors['minlength']) return `Minimum length is ${errors['minlength'].requiredLength} characters`;
+    if (errors['maxlength']) return `Maximum length is ${errors['maxlength'].requiredLength} characters`;
+    if (errors['pattern']) return 'Invalid format';
 
-    return 'Valor inválido';
+    return 'Invalid value';
   }
 
   get showClearButton(): boolean {

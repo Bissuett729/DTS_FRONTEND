@@ -1,0 +1,80 @@
+<div class="w-full h-full foxcode-textarea-field">
+  <mat-form-field class="w-full h-auto" appearance="outline" subscriptSizing="dynamic" floatLabel="always">
+
+    <!-- Label -->
+    @if (label) {
+      <mat-label>{{ label }}</mat-label>
+    }
+
+    <!-- Leading Icon -->
+    @if (icon) {
+      <span matPrefix class="flex items-start mt-3 mr-1">
+        <i [class]="icon + ' text-xl text-gray-600 dark:text-[#bdbdbd]'"></i>
+      </span>
+    }
+
+    <!-- Textarea Field -->
+    <textarea
+      matInput
+      [rows]="rows"
+      [placeholder]="placeholder"
+      [readonly]="readonly"
+      [required]="required"
+      [maxlength]="maxlength ?? ''"
+      [formControl]="formControl"
+      [value]="value()"
+      [cdkTextareaAutosize]="autoResize"
+      (input)="onInput($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      class="text-base resize-none">
+    </textarea>
+
+    <!-- Trailing Icons/Buttons -->
+    <span matSuffix class="flex items-start mt-1 gap-0.5 -mr-2">
+
+      <!-- Clear Button -->
+      @if (showClearButton) {
+        <button
+          mat-icon-button
+          type="button"
+          (click)="clearInput()"
+          matTooltip="Clear"
+          class="w-9 h-9">
+          <i class="ri-close-circle-line text-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"></i>
+        </button>
+      }
+
+      <!-- Copy Button -->
+      @if (showCopy && value()) {
+        <button
+          mat-icon-button
+          type="button"
+          (click)="copyToClipboard()"
+          matTooltip="Copy"
+          class="w-9 h-9">
+          <i class="ri-file-copy-line text-lg text-gray-500 dark:text-gray-400 hover:text-foxcode dark:hover:text-[#4f9eff]"></i>
+        </button>
+      }
+    </span>
+
+    <!-- Hint Text -->
+    @if (hint && !hasError) {
+      <mat-hint class="text-xs">{{ hint }}</mat-hint>
+    }
+
+    <!-- Error Message -->
+    @if (hasError) {
+      <mat-error class="text-xs">
+        <i class="ri-error-warning-line mr-1"></i>
+        {{ errorMessage }}
+      </mat-error>
+    }
+
+    <!-- Character Count -->
+    @if (maxlength) {
+      <mat-hint class="text-xs" align="end">{{ value().length }} / {{ maxlength }}</mat-hint>
+    }
+
+  </mat-form-field>
+</div>

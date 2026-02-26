@@ -36,6 +36,7 @@ export class Sidebar implements OnInit {
       name: 'Inicio', 
       menus: [
         { name: 'Panel de control', route: 'home', icon: 'ri-dashboard-2-line' },
+        { name: 'Perfil', route: 'profile', icon: 'ri-user-line' },
       ]
     },
     { 
@@ -51,6 +52,7 @@ export class Sidebar implements OnInit {
       menus: [
         { name: 'Usuarios', route: 'users', icon: 'ri-dashboard-2-line' },
         { name: 'Configuración', route: 'config', icon: 'ri-dashboard-2-line' },
+        { name: 'Líneas', route: 'admin-lines', icon: 'ri-dashboard-2-line' },
       ]
     },
   ];

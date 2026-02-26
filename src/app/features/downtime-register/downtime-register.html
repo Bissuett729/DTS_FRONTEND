@@ -1,12 +1,12 @@
 <section class="w-full h-full flex flex-col gap-y-2 p-2">
 
-    <dts-card>
+    <dts-card shadow="none">
 
         <div class="flex items-center justify-between">
 
             <div class="flex flex-col gap-1">
-                <span class="text-3xl font-bold tracking-tight">Produccion y tiempo muerto por hora</span>
-                <span class="text-[#737373] dark:text-[#d6d6d6]">Registrar las métricas diarias de los turnos y los datos de rendimiento técnico.</span>
+                <span class="text-3xl font-bold tracking-tight text-dts-title">Produccion y tiempo muerto por hora</span>
+                <span class="text-dts-badges">Registrar las métricas diarias de los turnos y los datos de rendimiento técnico.</span>
             </div>
 
             <dts-button
@@ -19,32 +19,31 @@
 
     </dts-card>
 
-    <dts-card>
+    <dts-card shadow="none">
 
         <div class="space-y-2">
 
             <div class="flex items-center gap-x-2">
-                <i class="ri-information-2-fill text-[#246ce0]"></i>
-                <h1 class="font-semibold text-lg">Informaci&oacute;n General</h1>
+                <i class="ri-information-2-fill text-[#246ce0] text-xl"></i>
+                <h1 class="font-semibold text-lg text-dts-title">Informaci&oacute;n General</h1>
             </div>
 
             <div class="w-full flex justify-center">
-                <span class="h-px w-[90%] bg-[#f1f1f1]"></span>
+                <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
             </div>
 
             <form [formGroup]="downtimeForm" class="grid grid-cols-4 gap-2">
 
                 <dts-date-picker
                     label="Fecha"
-                    [control]="getDownTimeFormControl('date')"
-                    hint="Selecciona una fecha"
-                    >
+                    [control]="downtimeForm.controls.date"
+                    hint="Selecciona una fecha">
                 </dts-date-picker>
 
                 <dts-input
                     label="Numero de Semana"
                     type="number"
-                    [control]="getDownTimeFormControl('weekNumber')">
+                    [control]="downtimeForm.controls.weekNumber">
                 </dts-input>
 
 
@@ -52,7 +51,7 @@
                     label="Turno"
                     optionValue="value"
                     optionLabel="viewValue"
-                    [control]="getDownTimeFormControl('shift')"
+                    [control]="downtimeForm.controls.shift"
                     [options]="shifts">
                 </dts-select>
 
@@ -60,25 +59,28 @@
                     label="Línea"
                     optionValue="value"
                     optionLabel="viewValue"
-                    [control]="getDownTimeFormControl('line')"
+                    [control]="downtimeForm.controls.line"
                     [options]="lines">
                 </dts-select>
 
                 <dts-time-picker
                     label="Hora de Inicio"
-                    [control]="getDownTimeFormControl('startTime')">
+                    interval="1h"
+                    [control]="downtimeForm.controls.startTime">
                 </dts-time-picker>
 
                 <dts-time-picker
                     label="Hora de Fin"
-                    [control]="getDownTimeFormControl('endTime')">
+                    interval="1h"
+                    hint="Auto-calculado (inicio + 1h)"
+                    [control]="downtimeForm.controls.endTime">
                 </dts-time-picker>
 
                 <dts-input
                     label="#Empleado del Supervisor"
                     class="col-span-2"
                     type="number"
-                    [control]="getDownTimeFormControl('supervisor')">
+                    [control]="downtimeForm.controls.supervisor">
                 </dts-input>
 
             </form>
@@ -87,38 +89,58 @@
 
     </dts-card>
 
-    <section class="grid grid-cols-12 gap-2">
+    <section class="grid grid-cols-12 grid-rows-1 gap-2">
 
-        <dts-card class="col-span-4">
-            <div class="space-y-2">
+        <dts-card shadow="none" class="col-span-4 row-span-1 h-full">
+            <div class="space-y-2 h-full">
 
                 <div class="flex items-center gap-x-2">
-                    <i class="ri-bar-chart-box-fill text-[#246ce0]"></i>
-                    <h1 class="font-semibold text-lg">Metricas</h1>
+                    <i class="ri-bar-chart-box-fill text-[#246ce0] text-xl"></i>
+                    <h1 class="font-semibold text-lg text-dts-title">Metricas</h1>
                 </div>
 
                 <div class="w-full flex justify-center">
-                    <span class="h-px w-[90%] bg-[#f1f1f1]"></span>
+                    <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
                 </div>
 
                 <form class="flex flex-col gap-y-4 px-6">
 
                     <dts-input
                         label="STD (Salida Esperada)"
-                        [control]="getMetricsFormControl('standarOut')">
+                        type="number"
+                        [control]="metricsForm.controls.standardOut">
                     </dts-input>
 
                     <dts-input 
                         label="REAL (Salida Actual)"
-                        [control]="getMetricsFormControl('actualOut')">
+                        type="number"
+                        [control]="metricsForm.controls.actualOut">
                     </dts-input>
 
                 </form>
 
-                <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col items-center">
-                    <span class="text-xs uppercase font-bold tracking-widest opacity-60">Eficiencia</span>
-                    <span class="text-3xl font-black text-[#246ce0]">84.2%</span>
-                    <span class="text-[10px] mt-1 text-green-600 dark:text-green-400 font-bold flex items-center gap-1">
+                <div class="p-4 mt-4 bg-slate-50 dark:bg-[#1f1f21] rounded-lg border border-slate-100 dark:border-[#343439] flex flex-col items-center">
+                    <span class="text-xs uppercase font-bold tracking-widest opacity-60 text-dts-title">Eficiencia</span>
+                    <span 
+                        class="text-3xl font-black"
+                        [ngClass]="{
+                            'text-[#246ce0]' : efficiency >= 0,
+                            'text-green-600' : efficiency >= 85,
+                            'text-[#f59e0b]' : efficiency >= 50 && efficiency < 85,
+                            'text-[#ef4444]' : efficiency < 50 && efficiency > 0,
+                            'text-gray-500' : efficiency < 0
+                        }">
+                        {{ efficiency }}%
+                    </span>
+                    <span class="text-[10px] mt-1 font-bold flex items-center gap-1"
+                        [ngClass]="{
+                                'text-[#246ce0]' : efficiency >= 0,
+                                'text-green-600' : efficiency >= 85,
+                                'text-[#f59e0b]' : efficiency >= 50 && efficiency < 85,
+                                'text-[#ef4444]' : efficiency < 50 && efficiency > 0,
+                                'text-gray-500' : efficiency < 0
+                                
+                            }">
                         <i class="ri-line-chart-line text-sm"></i>
                         Auto-calculado
                     </span>
@@ -126,22 +148,169 @@
             </div>
         </dts-card>
 
-        <dts-card class="col-span-8">
-            <div class="space-y-2">
+        <div class="col-span-8 flex flex-col gap-y-2 row-span-1 h-full">
 
-                <div class="flex items-center gap-x-2">
-                    <i class="ri-time-fill text-[#246ce0]"></i>
-                    <h1 class="font-semibold text-lg">Clasificaci&oacute;n de tiempo muerto</h1>
+            <dts-card shadow="none">
+                <div class="space-y-2">
+    
+                    <div class="flex items-center gap-x-2">
+                        <i class="ri-time-fill text-[#246ce0] text-xl"></i>
+                        <h1 class="font-semibold text-lg text-dts-title">Resumen del Tiempo Muerto</h1> 
+                    </div>
+    
+                    <div class="w-full flex justify-center">
+                        <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
+                    </div>
+    
+                    <form class="grid grid-cols-3 gap-2">
+    
+                        <dts-input
+                            label="Tiempo muerto generado"
+                            type="number"
+                            [control]="downtimeTotalForm.controls.generatedDowntime">
+                        </dts-input>
+
+                        <dts-input
+                            label="Tiempo muerto no reportado"
+                            type="number"
+                            [control]="downtimeTotalForm.controls.unreportedDowntime">
+                        </dts-input>
+
+                        <dts-input
+                            label="Total de tiempo muerto reportado"
+                            type="number"
+                            [control]="downtimeTotalForm.controls.totalReportedDowntime">
+                        </dts-input>
+    
+                    </form>
                 </div>
+            </dts-card>
 
-                <div class="w-full flex justify-center">
-                    <span class="h-px w-[90%] bg-[#f1f1f1]"></span>
+            <dts-card shadow="none" class="flex-1">
+                <div class="space-y-2">
+    
+                    <div class="flex items-center justify-between pr-2">
+                        <div class="flex items-center gap-x-2">
+                            <i class="ri-time-fill text-[#246ce0] text-xl"></i>
+                            <h1 class="font-semibold text-lg text-dts-title">Clasificaci&oacute;n de Tiempo Muerto</h1>
+                        </div>
+
+                        <div class="flex items-center justify-center">
+                            <dts-button
+                                label="Clasificar tiempo muerto"
+                                icon="ri-edit-2-line"
+                                [disabled]="classficationForm.invalid"
+                                (onClick)="addClassifyDowntime()">
+                            </dts-button>
+                        </div>
+                    </div>
+    
+                    <div class="w-full flex justify-center">
+                        <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
+                    </div>
+    
+                    <form class="flex flex-col gap-y-2">
+    
+                        <dts-input
+                            label="Tiempo muerto generado"
+                            type="number"
+                            [control]="classficationForm.controls.downtimeReported">
+                        </dts-input>
+
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 bg-slate-50 dark:bg-[#1f1f21] border border-slate-100 dark:border-[#343439] p-4 rounded-xl">
+                            @for (department of departments; track $index) {
+                                <label class="flex items-center gap-2 cursor-pointer group">
+                                    <input [formControl]="classficationForm.controls.department" [value]="department" class="rounded-full border-slate-300 text-primary focus:ring-primary" type="radio">
+                                    <span class="text-xs font-bold group-hover:text-primary transition-colors dark:text-[#b7b7b7]">{{ department }}</span>
+                                </label>
+                            }
+                        </div>
+
+                    </form>
                 </div>
-
-                <form class="grid grid-cols-4 gap-2"></form>
-            </div>
-        </dts-card>
+            </dts-card>
+        </div>
 
     </section>
+
+    <dts-card shadow="none">
+
+        <div class="space-y-2 h-full">
+            <div class="flex items-center gap-x-2">
+                <i class="ri-bar-chart-box-fill text-[#246ce0] text-xl"></i>
+                <h1 class="font-semibold text-lg text-dts-title">Registro de Tiempos Muertos</h1>
+            </div>
+
+            <div class="w-full flex justify-center">
+                <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
+            </div>
+
+            <div class="bg-white dark:bg-[#27272a] border border-primary/10 rounded-md overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-[#222224] border-b border-primary/10">
+                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Departamento</th>
+                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Duraci&oacute;n</th>
+                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Descripcion del Problema</th>
+                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Accion Realizada</th>
+                            <th class="px-4 py-4 text-xs text-[#71717a] font-medium uppercase"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-primary/10">
+                        @for (classification of classifications; track $index) {
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-[#3f3f46]/30 transition-colors">
+
+                                <td class="px-6 py-3 text-xs text-[#3f3f46] dark:text-[#b7b7b7] font-medium">
+                                    {{ classification.department }}
+                                </td>
+
+                                <td class="px-6 py-3 text-xs text-[#3f3f46] dark:text-[#b7b7b7]">
+                                    {{ classification.downtimeReported }} min
+                                </td>
+
+                                <td class="px-4 py-2 text-xs text-[#3f3f46] dark:text-[#b7b7b7]">
+                                    <dts-select
+                                        placeholder="Selecciona una razón"
+                                        [options]="getReasons(classification.department)"
+                                        [control]="classification.problemDescription">
+                                    </dts-select>
+                                </td>
+
+                                <td class="px-4 py-2 text-xs text-[#3f3f46] dark:text-[#b7b7b7]">
+                                    <dts-input
+                                        label="Acción realizada"
+                                        [control]="classification.actionTaken">
+                                    </dts-input>
+                                </td>
+
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center justify-center">
+                                        <button
+                                            (click)="removeClassification($index)"
+                                            class="text-red-400 hover:text-red-600 transition-colors p-1 rounded"
+                                            title="Eliminar">
+                                            <i class="ri-delete-bin-line text-lg"></i>
+                                        </button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        } @empty {
+                            <tr>
+                                <td colspan="5" class="px-6 py-12 text-center text-sm text-slate-400">
+                                    <div class="flex flex-col items-center gap-2">
+                                        <i class="ri-inbox-line text-3xl opacity-30"></i>
+                                        <span>No hay clasificaciones registradas</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </dts-card>
 
 </section>

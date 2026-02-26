@@ -14,7 +14,7 @@
             class="text-base"
         />
         <mat-timepicker-toggle matIconSuffix [for]="picker" />
-        <mat-timepicker #picker />
+        <mat-timepicker #picker [interval]="interval ?? '1h'" />
 
 
         <!-- Hint Text -->

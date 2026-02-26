@@ -48,6 +48,6 @@ export class DtsCard {
   }
 
   get borderClass(): string {
-    return this.border ? 'border border-gray-200 dark:border-[#6b6b6b]' : '';
+    return this.border ? 'border border-gray-200 dark:border-[#3d3d3d]' : '';
   }
 }

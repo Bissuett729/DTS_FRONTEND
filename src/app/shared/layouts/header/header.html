@@ -1,9 +1,9 @@
-<header class="bg-white dark:bg-[#1b1f28] shadow-sm z-100 relative h-full">
+<header class="bg-white dark:bg-[#27272a] shadow-sm z-100 relative h-full">
     <div class="flex justify-between items-center h-full px-8 max-md:px-4">
         <!-- Left Section -->
         <div class="flex items-center gap-4 h-full">
             <button 
-                class="rounded-lg p-2 cursor-pointer flex items-center justify-center border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
+                class="rounded-lg p-2 cursor-pointer flex items-center justify-center border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#2f2f32] hover:bg-[#f2f5fa] dark:hover:bg-[#2b2b2b] text-dts-badges"
                 (click)="toggleSidebar()">
                 @if (sidebarCollapsed) {
                     <i class="ri-menu-line text-xl"></i>
@@ -16,7 +16,7 @@
 
             <div class="flex items-center gap-x-2">
                 <svg-icon-settings-dts fill="#246CE0" width="30" height="30"></svg-icon-settings-dts>
-                <h1 class="font-bold dark:text-white text-nowrap whitespace-nowrap">
+                <h1 class="font-bold text-dts-title text-nowrap whitespace-nowrap">
                     Down Time Systems
                 </h1>
             </div>
@@ -41,15 +41,15 @@
         <!-- Right Section -->
         <div class="flex items-center gap-3">
             <!-- Version Badge -->
-            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-[#f1f5f9] dark:bg-[#0000001a] border border-[#e2e2e2] dark:border-[#353b43] rounded-md">
-                <i class="ri-code-box-line text-[#334155] dark:text-[#aab3be] text-sm"></i>
-                <span class="text-[#334155] dark:text-[#aab3be] text-xs font-medium">{{ appVersion() }}</span>
+            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 bg-[#fafafa] dark:bg-[#2b2b2b] border border-[#eeeeee] dark:border-[#2f2f32] rounded-md">
+                <i class="ri-code-box-line text-dts-badges text-sm"></i>
+                <span class="text-dts-badges text-xs font-medium">{{ appVersion() }}</span>
             </div>
 
             <!-- Theme Toggle Button -->
             <button 
                 title="Toggle theme"
-                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
+                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#eeeeee] dark:hover:border-[#2f2f32] hover:bg-[#fafafa] dark:hover:bg-[#2b2b2b] text-dts-badges"
                 (click)="toggleTheme()">
                 <i class="ri-sun-line text-lg dark:hidden"></i>
                 <i class="ri-moon-line text-lg hidden dark:block"></i>
@@ -58,7 +58,7 @@
             <!-- Bug Report Button -->
             <!-- <button 
                 title="Report a bug"
-                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
+                class="w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#eeeeee] dark:hover:border-[#2f2f32] hover:bg-[#fafafa] dark:hover:bg-[#2b2b2b] text-dts-badges"
                 [class.bg-white/20]="supportSidebarOpen"
                 (click)="toggleSupportSidebar()">
                 <i class="ri-bug-line text-lg"></i>
@@ -68,7 +68,7 @@
             <div class="relative">
                 <button 
                     title="Notifications"
-                    class="relative w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#d7d7d7] dark:hover:border-[#353b43] hover:bg-[#f2f5fa] dark:hover:bg-[#181c24] text-black dark:text-[#d4d4d4]"
+                    class="relative w-9 h-9 flex items-center cursor-pointer justify-center rounded-lg border border-transparent hover:border-[#eeeeee] dark:hover:border-[#2f2f32] hover:bg-[#fafafa] dark:hover:bg-[#2b2b2b] text-dts-badges"
                     [class.bg-white/20]="notificationsOpen()"
                     (click)="toggleNotifications()">
                     <i class="ri-notification-2-line text-lg"></i>
@@ -90,17 +90,17 @@
                 <div class="flex items-center gap-3 max-md:hidden">
                     <div class="flex flex-col items-end text-white">
                         <div class="flex items-center gap-2">
-                            <i class="ri-time-line text-xs text-[#404040] dark:text-[#d6d6d6]"></i>
-                            <span class="font-medium text-sm text-[#404040] dark:text-[#d6d6d6]">{{ user?.clock }}</span>
-                            <span class="text-[#404040] dark:text-[#d6d6d6]">•</span>
-                            <span class="font-medium text-sm text-[#404040] dark:text-[#d6d6d6]">{{ user?.username }}</span>
+                            <i class="ri-time-line text-xs text-dts-badges"></i>
+                            <span class="font-medium text-sm text-dts-badges">{{ user?.clock }}</span>
+                            <span class="text-dts-badges">•</span>
+                            <span class="font-medium text-sm text-dts-badges">{{ user?.username }}</span>
                         </div>
                         @if (user?.email) {
-                            <span class="text-xs text-[#404040] dark:text-[#d6d6d6] mt-0.5">{{ user?.email }}</span>
+                            <span class="text-xs text-dts-badges mt-0.5">{{ user?.email }}</span>
                         }
                     </div>
                     
-                    <div class="w-10 h-10 rounded-full bg-dt-primary flex items-center justify-center text-white font-semibold text-sm">
+                    <div class="w-10 h-10 rounded-full bg-dt-primary flex items-center justify-center border dark:border-[#424b60] dark:bg-[#00000038] text-white font-semibold text-sm">
                         {{ user?.username?.charAt(0).toUpperCase() }}
                     </div>
                 </div>

@@ -21,6 +21,7 @@ export class DtsTimePicker {
   @Input() disabled: boolean = false;
   @Input() required: boolean = false;
   @Input() hint?: string;
+  @Input() interval?: string;
 
   // Custom error messages
   @Input() errorMessages: { [key: string]: string } = {};

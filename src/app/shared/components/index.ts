@@ -6,6 +6,7 @@ export * from './input/input';
 export * from './loader-page/loader-page';
 export * from './loading/loading';
 export * from './select/select';
+export * from './date-picker/date-picker';
 export * from './time-picker/time-picker';
 export * from './paginator';
 export * from './table/table';

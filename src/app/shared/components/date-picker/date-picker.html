@@ -1,0 +1,34 @@
+<div class="w-full h-full foxcode-input-field">
+  <mat-form-field class="w-full h-auto" appearance="outline" subscriptSizing="dynamic" floatLabel="always">
+    <!-- Label -->
+    @if (label) {
+      <mat-label>{{ label }}</mat-label>
+    }
+
+    <input
+      matInput
+      [formControl]="control!"
+      [matDatepicker]="picker"
+      [min]="minDate"
+      [max]="maxDate"
+      [readonly]="readonly"
+      [required]="required"
+      class="text-base"
+    />
+    <mat-datepicker-toggle matIconSuffix [for]="picker" />
+    <mat-datepicker #picker />
+
+    <!-- Hint Text -->
+    @if (hint && !hasError) {
+      <mat-hint>{{ hint }}</mat-hint>
+    }
+
+    <!-- Error Message -->
+    @if (hasError) {
+      <mat-error class="text-xs">
+        <i class="ri-error-warning-line mr-1"></i>
+        {{ errorMessage }}
+      </mat-error>
+    }
+  </mat-form-field>
+</div>

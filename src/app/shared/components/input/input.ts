@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, forwardRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, AbstractControl, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,7 @@ type InputType = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'sea
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -35,7 +36,7 @@ export class DtsInput implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() placeholder: string = '';
   @Input() type: InputType = 'text';
-  @Input() control?: AbstractControl | null;
+  @Input() control?: AbstractControl;
   @Input() readonly: boolean = false;
   @Input() disabled: boolean = false;
   @Input() required: boolean = false;
@@ -151,6 +152,10 @@ export class DtsInput implements ControlValueAccessor {
 
   get hasError(): boolean {
     return !!(this.control && this.control.invalid && (this.control.dirty || this.control.touched));
+  }
+
+  get formControl(): FormControl<any> {
+    return this.control instanceof FormControl ? this.control : new FormControl();
   }
 
   get errorMessage(): string {

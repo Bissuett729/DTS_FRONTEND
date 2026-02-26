@@ -22,6 +22,11 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/home/home.routes').then(m => m.HomeRoutes)
             },
             {
+                path: 'register',
+                loadChildren: () => import ('./features/downtime-register/downtime-register.routes').then(r => r.DownTimeRegisterRoutes)
+
+            },
+            {
                 path: 'users',
                 loadChildren: () => import('./features/users/users.routes').then(m => m.UsersRoutes)
             },

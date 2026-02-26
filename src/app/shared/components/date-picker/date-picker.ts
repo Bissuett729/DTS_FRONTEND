@@ -1,19 +1,26 @@
 import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'dts-time-picker',
+  selector: 'dts-date-picker',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatTimepickerModule, ReactiveFormsModule],
-  templateUrl: './time-picker.html',
-  styles: [
-  ]
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ReactiveFormsModule
+  ],
+  templateUrl: './date-picker.html',
+  styles: []
 })
-export class DtsTimePicker {
+export class DtsDatePicker {
 
   @Input() label: string = '';
   @Input() control?: FormControl;
@@ -21,13 +28,14 @@ export class DtsTimePicker {
   @Input() disabled: boolean = false;
   @Input() required: boolean = false;
   @Input() hint?: string;
+  @Input() minDate?: Date;
+  @Input() maxDate?: Date;
 
   // Custom error messages
   @Input() errorMessages: { [key: string]: string } = {};
 
   isFocused = signal(false);
 
-  // ControlValueAccessor
   onChange: any = () => { };
   onTouched: any = () => { };
 
@@ -66,11 +74,9 @@ export class DtsTimePicker {
 
     // Default error messages
     if (errors['required']) return `${this.label || 'This field'} is required`;
-    if (errors['email']) return 'Please enter a valid email address';
-    if (errors['minlength']) return `Minimum length is ${errors['minlength'].requiredLength} characters`;
-    if (errors['min']) return `Minimum value is ${errors['min'].min}`;
-    if (errors['max']) return `Maximum value is ${errors['max'].max}`;
-    if (errors['pattern']) return 'Invalid format';
+    if (errors['matDatepickerMin']) return `Date must be on or after ${this.minDate?.toLocaleDateString()}`;
+    if (errors['matDatepickerMax']) return `Date must be on or before ${this.maxDate?.toLocaleDateString()}`;
+    if (errors['matDatepickerParse']) return 'Invalid date format';
 
     return 'Invalid value';
   }

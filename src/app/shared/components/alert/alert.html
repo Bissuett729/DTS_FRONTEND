@@ -1,0 +1,28 @@
+<div 
+    class="flex items-center gap-4 px-4 py-3 rounded-lg border"
+    [ngClass]="{
+        'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20': type === 'warning',
+        'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20': type === 'success',
+        'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20': type === 'error',
+        'border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20': type === 'info'
+    }">
+    <i
+        [ngClass]="{
+            'text-amber-500 ri-error-warning-line': type === 'warning',
+            'text-green-500 ri-check-line': type === 'success',
+            'text-red-500 ri-close-line': type === 'error',
+            'text-blue-500 ri-information-line': type === 'info'
+        }">
+    </i>
+
+    <p 
+        [ngClass]="{
+            'text-amber-800 dark:text-amber-200': type === 'warning',
+            'text-green-800 dark:text-green-200': type === 'success',
+            'text-red-800 dark:text-red-200': type === 'error',
+            'text-blue-800 dark:text-blue-200': type === 'info'
+        }"
+        class="text-sm leading-tight">
+        {{ message }}
+    </p>
+</div>

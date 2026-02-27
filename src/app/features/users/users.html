@@ -30,21 +30,21 @@
     <div class="bg-white dark:bg-slate-900 border border-primary/10 rounded-xl overflow-hidden shadow-sm">
         <table class="w-full text-left border-collapse">
             <thead>
-                <tr class="bg-slate-50 dark:bg-slate-800 border-b border-primary/10">
-                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Numero de empleado</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Nombre</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Roles</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Correo Electrónico</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Supervisor</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Autorizado</th>
-                    <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Acciones</th>
+                <tr class="bg-slate-50 dark:bg-[#222224] border-b border-primary/10">
+                    <th class="px-6 py-4 text-xs text-[#71717a] font-medium text-center uppercase">Numero de empleado</th>
+                    <th class="px-6 py-4 text-xs text-[#71717a] font-medium text-center uppercase">Nombre</th>
+                    <th class="px-6 py-4 text-xs text-[#71717a] font-medium text-center uppercase">Roles</th>
+                    <th class="px-6 py-4 text-xs text-[#71717a] font-medium text-center uppercase">Correo Electrónico</th>
+                    <th class="px-6 py-4 text-xs text-[#71717a] font-medium text-center uppercase">Supervisor</th>
+                    <th class="px-6 py-4 text-xs text-[#71717a] font-medium text-center uppercase">Autorizado</th>
+                    <th class="px-6 py-4 text-xs text-[#71717a] font-medium text-center uppercase">Acciones</th>
                 </tr>
             </thead>
 
             <tbody class="divide-y divide-primary/10">
                 @for (user of users$(); track $index) {
                     <tr>
-                        <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-mono">{{ user?.clock }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-mono text-center">{{ user?.clock }}</td>
 
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">

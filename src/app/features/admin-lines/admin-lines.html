@@ -1,0 +1,32 @@
+<section class="w-full h-full flex flex-col gap-y-2 p-2">
+
+    <dts-card shadow="none">
+
+        <div class="flex items-center justify-between">
+
+            <div class="flex flex-col gap-1">
+                <span class="text-3xl font-bold tracking-tight text-dts-title">Administración de Líneas</span>
+                <span class="text-dts-badges">Gestiona las líneas de producción y sus configuraciones.</span>
+            </div>
+
+            <dts-select
+                label="Selecciona una línea"
+                placeholder="Elige una línea para administrar"
+                icon="ri-building-3-line"
+                [control]="line"
+                [options]="['OL A2', 'FA BONDING A', 'TEST DOCKING 1', 'PA POLY']">
+            </dts-select>
+
+            <dts-button
+                label="Agregar Nueva Línea"
+                icon="ri-add-line"
+                (onClick)="addNewLine()">
+            </dts-button>
+
+        </div>
+
+    </dts-card>
+
+    <dts-update-line class="flex-1 min-h-0 overflow-hidden"></dts-update-line>
+
+</section>

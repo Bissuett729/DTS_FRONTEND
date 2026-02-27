@@ -1,0 +1,86 @@
+<dts-modal-layout
+    [title]="modalConfig.title"
+    [subtitle]="modalConfig.subtitle"
+    [icon]="modalConfig.icon"
+    (closeModal)="onClose()">
+
+    <div modalContent class="py-2">
+        <dts-card shadow="none">
+    
+            <div class="flex flex-col gap-y-4 py-2 overflow-y-auto  pr-1">
+                <!-- Información General -->
+                <section>
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <i class="ri-information-2-fill text-[#246ce0] text-base"></i>
+                        <h2 class="text-sm font-semibold text-dts-title">Información General</h2>
+                    </div>
+                    <dts-input
+                        label="Nombre de la Línea"
+                        [control]="lineForm.controls.lineName">
+                    </dts-input>
+                </section>
+        
+                <span class="h-px w-full bg-slate-100 dark:bg-[#3f3f46]"></span>
+        
+                <!-- Stages -->
+                <section>
+                    <div class="flex items-center gap-x-2">
+                        <i class="ri-stack-line text-[#246ce0] text-base"></i>
+                        <h2 class="text-sm font-semibold text-dts-title">Stages</h2>
+                    </div>
+    
+                    <!-- Agregar stage -->
+                    <div class="flex items-end gap-x-2">
+                        <div class="flex-1">
+                            <dts-input
+                                label="Nombre del Stage"
+                                [control]="newStage">
+                            </dts-input>
+                        </div>
+
+                        <dts-button
+                            label="Agregar"
+                            size="sm"
+                            icon="ri-add-line"
+                            variant="outline"
+                            (onClick)="addStage()">
+                        </dts-button>
+                    </div>
+        
+                    <!-- Chips de stages -->
+                    <div class="flex flex-wrap gap-2 mb-3 mt-3">
+                        @for (stage of stages; track $index) {
+                            <span class="flex items-center gap-x-1 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-xs font-bold text-blue-700 dark:text-blue-300">
+                                {{ stage }}
+                                <button (click)="removeStage($index)" class="ml-0.5 text-blue-400 hover:text-red-500 transition-colors">
+                                    <i class="ri-close-line text-xs"></i>
+                                </button>
+                            </span>
+                        }
+                        @if (stages.length === 0) {
+                            <span class="text-xs text-slate-400 italic">Sin stages agregados</span>
+                        }
+                    </div>
+                </section>
+            </div>
+    
+    
+        </dts-card>
+    </div>
+
+
+    <div modalActions class="flex items-center gap-x-2">
+        <dts-button
+            label="Cancelar"
+            variant="outline"
+            (onClick)="onClose()">
+        </dts-button>
+        <dts-button
+            label="Crear Línea"
+            icon="ri-add-line"
+            [disabled]="!canCreate"
+            (onClick)="onCreate()">
+        </dts-button>
+    </div>
+
+</dts-modal-layout>

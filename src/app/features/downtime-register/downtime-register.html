@@ -12,6 +12,7 @@
             <dts-button
                 label="Guardar Registro"
                 icon="ri-save-outline"
+                [disabled]="!canSave"
                 (onClick)="registerDownTime()">
             </dts-button>
 
@@ -32,15 +33,31 @@
                 <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
             </div>
 
-            <form [formGroup]="downtimeForm" class="grid grid-cols-4 gap-2">
+            <form [formGroup]="downtimeForm" class="grid grid-cols-7 gap-2">
 
                 <dts-date-picker
+                    class="col-span-1"
                     label="Fecha"
                     [control]="downtimeForm.controls.date"
                     hint="Selecciona una fecha">
                 </dts-date-picker>
 
+                <dts-time-picker
+                    class="col-span-1"
+                    label="Hora de Inicio"
+                    interval="1h"
+                    [control]="downtimeForm.controls.startTime">
+                </dts-time-picker>
+
+                <dts-time-picker
+                    class="col-span-1"
+                    label="Hora de Fin"
+                    interval="1h"
+                    [control]="downtimeForm.controls.endTime">
+                </dts-time-picker>
+
                 <dts-input
+                    class="col-span-1"
                     label="Numero de Semana"
                     type="number"
                     [control]="downtimeForm.controls.weekNumber">
@@ -48,6 +65,7 @@
 
 
                 <dts-select
+                    class="col-span-1"
                     label="Turno"
                     optionValue="value"
                     optionLabel="viewValue"
@@ -56,6 +74,7 @@
                 </dts-select>
 
                 <dts-select
+                    class="col-span-1"
                     label="Línea"
                     optionValue="value"
                     optionLabel="viewValue"
@@ -63,22 +82,9 @@
                     [options]="lines">
                 </dts-select>
 
-                <dts-time-picker
-                    label="Hora de Inicio"
-                    interval="1h"
-                    [control]="downtimeForm.controls.startTime">
-                </dts-time-picker>
-
-                <dts-time-picker
-                    label="Hora de Fin"
-                    interval="1h"
-                    hint="Auto-calculado (inicio + 1h)"
-                    [control]="downtimeForm.controls.endTime">
-                </dts-time-picker>
-
                 <dts-input
                     label="#Empleado del Supervisor"
-                    class="col-span-2"
+                    class="col-span-1"
                     type="number"
                     [control]="downtimeForm.controls.supervisor">
                 </dts-input>
@@ -255,10 +261,10 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50 dark:bg-[#222224] border-b border-primary/10">
-                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Departamento</th>
-                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Duraci&oacute;n</th>
-                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Descripcion del Problema</th>
-                            <th class="px-4 py-4 text-xs text-[#71717a] font-medium uppercase"></th>
+                            <th class="px-6 py-4 text-xs text-[#71717a] text-center font-medium uppercase">Departamento</th>
+                            <th class="px-6 py-4 text-xs text-[#71717a] text-center font-medium uppercase">Duraci&oacute;n</th>
+                            <th class="px-6 py-4 text-xs text-[#71717a] text-center font-medium uppercase">Descripcion del Problema</th>
+                            <th class="px-4 py-4 text-xs text-[#71717a] text-center font-medium uppercase"></th>
                         </tr>
                     </thead>
 
@@ -266,15 +272,15 @@
                         @for (classification of classifications; track $index) {
                             <tr class="hover:bg-slate-50/50 dark:hover:bg-[#3f3f46]/30 transition-colors">
 
-                                <td class="px-6 py-3 text-xs text-[#3f3f46] dark:text-[#b7b7b7] font-medium">
+                                <td class="px-6 py-3 text-xs text-[#3f3f46] dark:text-[#b7b7b7] font-medium text-center">
                                     {{ classification.department }}
                                 </td>
 
-                                <td class="px-6 py-3 text-xs text-[#3f3f46] dark:text-[#b7b7b7]">
+                                <td class="px-6 py-3 text-xs text-[#3f3f46] dark:text-[#b7b7b7] text-center">
                                     {{ classification.downtimeReported }} min
                                 </td>
 
-                                <td class="px-4 py-2 text-xs text-[#3f3f46] dark:text-[#b7b7b7]">
+                                <td class="px-4 py-2 text-xs text-[#3f3f46] dark:text-[#b7b7b7] text-center">
                                     {{ classification.problemDescription ?? '—' }}
                                 </td>
 

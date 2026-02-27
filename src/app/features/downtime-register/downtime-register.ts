@@ -50,6 +50,13 @@ export class DowntimeRegister implements OnInit {
     return STD_OUT_MAP[hour!] ?? 170;
   }
 
+  /** Puede guardar si actualOut tiene valor y no hay tiempo muerto no reportado */
+  get canSave(): boolean {
+    const actualOut = this.metricsForm.controls.actualOut.value;
+    const unreported = this.downtimeTotalForm.controls.unreportedDowntime.value ?? 0;
+    return !!actualOut && unreported === 0;
+  }
+
   /** Eficiencia = salida actual / salida estándar */
   get efficiency(): number {
     const actualOut = this.metricsForm.controls.actualOut.value;

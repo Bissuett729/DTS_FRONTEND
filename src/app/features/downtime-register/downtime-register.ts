@@ -125,8 +125,7 @@ export class DowntimeRegister implements OnInit {
       this.classifications.push({
         department,
         downtimeReported,
-        problemDescription: new FormControl<string | null>({ value: null, disabled: true }),
-        actionTaken: new FormControl<string | null>({ value: null, disabled: true }),
+        problemDescription: this.classficationForm.controls.problemDescription.value
       });
     }
 

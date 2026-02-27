@@ -209,7 +209,7 @@
                         <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
                     </div>
     
-                    <form class="flex flex-col gap-y-2">
+                    <form class="grid grid-cols-2 gap-2">
     
                         <dts-input
                             label="Tiempo muerto generado"
@@ -217,7 +217,13 @@
                             [control]="classficationForm.controls.downtimeReported">
                         </dts-input>
 
-                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 bg-slate-50 dark:bg-[#1f1f21] border border-slate-100 dark:border-[#343439] p-4 rounded-xl">
+                        <dts-select
+                            placeholder="Selecciona una razón"
+                            [options]="getReasons(classficationForm.controls.department.value ?? '')"
+                            [control]="classficationForm.controls.problemDescription">
+                        </dts-select>
+
+                        <div class="col-span-2 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 bg-slate-50 dark:bg-[#1f1f21] border border-slate-100 dark:border-[#343439] p-4 rounded-xl">
                             @for (department of departments; track $index) {
                                 <label class="flex items-center gap-2 cursor-pointer group">
                                     <input [formControl]="classficationForm.controls.department" [value]="department" class="rounded-full border-slate-300 text-primary focus:ring-primary" type="radio">
@@ -252,7 +258,6 @@
                             <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Departamento</th>
                             <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Duraci&oacute;n</th>
                             <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Descripcion del Problema</th>
-                            <th class="px-6 py-4 text-xs text-[#71717a] font-medium uppercase">Accion Realizada</th>
                             <th class="px-4 py-4 text-xs text-[#71717a] font-medium uppercase"></th>
                         </tr>
                     </thead>
@@ -270,18 +275,7 @@
                                 </td>
 
                                 <td class="px-4 py-2 text-xs text-[#3f3f46] dark:text-[#b7b7b7]">
-                                    <dts-select
-                                        placeholder="Selecciona una razón"
-                                        [options]="getReasons(classification.department)"
-                                        [control]="classification.problemDescription">
-                                    </dts-select>
-                                </td>
-
-                                <td class="px-4 py-2 text-xs text-[#3f3f46] dark:text-[#b7b7b7]">
-                                    <dts-input
-                                        label="Acción realizada"
-                                        [control]="classification.actionTaken">
-                                    </dts-input>
+                                    {{ classification.problemDescription ?? '—' }}
                                 </td>
 
                                 <td class="px-4 py-3">

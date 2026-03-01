@@ -50,9 +50,11 @@ export class Sidebar implements OnInit {
     { 
       name: 'Administración', 
       menus: [
+        // { name: 'Configuración', route: 'config', icon: 'ri-dashboard-2-line' },
         { name: 'Usuarios', route: 'users', icon: 'ri-dashboard-2-line' },
-        { name: 'Configuración', route: 'config', icon: 'ri-dashboard-2-line' },
-        { name: 'Líneas', route: 'admin-lines', icon: 'ri-dashboard-2-line' },
+        { name: 'Líneas', route: 'lines', icon: 'ri-dashboard-2-line' },
+        { name: 'Departamentos', route: 'departments', icon: 'ri-dashboard-2-line' },
+        { name: 'Turnos', route: 'shifts', icon: 'ri-dashboard-2-line' },
       ]
     },
   ];

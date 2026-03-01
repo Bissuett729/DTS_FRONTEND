@@ -1,0 +1,40 @@
+<dts-modal-layout
+    [title]="modalConfig.title"
+    [subtitle]="modalConfig.subtitle"
+    [icon]="modalConfig.icon"
+    (closeModal)="onClose()">
+
+    <div modalContent class="py-2">
+        <dts-card shadow="none">
+            <div class="flex flex-col gap-y-4 py-2 overflow-y-auto  pr-1">
+                <!-- Información General -->
+                <section>
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <i class="ri-information-2-fill text-[#246ce0] text-base"></i>
+                        <h2 class="text-sm font-semibold text-dts-title">Información General</h2>
+                    </div>
+                    <dts-input
+                        label="Nombre del departamento"
+                        [control]="departmentCotrol">
+                    </dts-input>
+                </section>
+            </div>    
+        </dts-card>
+    </div>
+
+
+    <div modalActions class="flex items-center gap-x-2">
+        <dts-button
+            label="Cancelar"
+            variant="outline"
+            (onClick)="onClose()">
+        </dts-button>
+        <dts-button
+            label="Crear Departamento"
+            icon="ri-add-line"
+            [disabled]="false"
+            (onClick)="onCreate()">
+        </dts-button>
+    </div>
+
+</dts-modal-layout>

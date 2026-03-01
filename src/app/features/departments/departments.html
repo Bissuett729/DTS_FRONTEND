@@ -1,0 +1,120 @@
+<section class="w-full h-full flex flex-col gap-y-2 p-2">
+
+    <dts-card shadow="none">
+
+        <div class="flex items-center justify-between">
+
+            <div class="flex flex-col gap-1">
+                <span class="text-3xl font-bold tracking-tight text-dts-title">Administración de Departamentos</span>
+                <span class="text-dts-badges">Gestiona los departamentos y sus causas de paro de producción.</span>
+            </div>
+
+            <dts-button
+                label="Agregar Nuevo Departamento"
+                icon="ri-add-line"
+                (onClick)="openNewDepartmentModal()">
+            </dts-button>
+
+        </div>
+
+    </dts-card>
+
+    <div class="grid grid-cols-4 gap-2">
+
+        @for (dept of departments; track $index; let deptIdx = $index) {
+            <div class="bg-white dark:bg-[#27272a] rounded-xl border border-slate-200 dark:border-[#3d3d3d] overflow-hidden shadow-sm flex flex-col">
+                <div class="p-2 border-b border-slate-100 dark:border-[#3d3d3d] bg-slate-50/50 dark:bg-[#3d3d3d]/20 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="size-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                            <i class="ri-user-community-line text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100">{{ dept.name }}</h3>
+                            <p class="text-xs text-slate-500 dark:text-[#b9b9b9] font-medium">{{ dept.reasons.length }} Reasons</p>
+                        </div>
+                    </div>
+    
+                    <div class="flex gap-2">
+                        <button class="p-2 text-slate-400 hover:text-primary">
+                            <i class="ri-pencil-ai-line text-xl"></i>
+                        </button>
+                        <button class="p-2 text-slate-400 hover:text-red-500">
+                            <i class="ri-delete-bin-line text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+    
+                <div class="p-3 flex flex-col gap-2">
+                    <div class="space-y-1 max-h-48 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
+
+                        @for (reason of dept.reasons; track $index; let rIdx = $index) {
+                            <!-- Modo edición -->
+                            @if (isEditing(deptIdx, rIdx)) {
+                                <div class="flex items-center gap-1 p-1 rounded-md border border-primary/50 bg-primary/5">
+                                    <input
+                                        class="flex-1 text-[10px] bg-transparent text-slate-700 dark:text-slate-200 outline-none placeholder:text-slate-400"
+                                        [(ngModel)]="editingState!.text"
+                                        (keydown.enter)="saveEdit()"
+                                        (keydown.escape)="cancelEdit()"
+                                        autofocus
+                                    />
+                                    <button class="text-green-500 hover:text-green-600 shrink-0" (click)="saveEdit()">
+                                        <i class="ri-check-line text-sm"></i>
+                                    </button>
+                                    <button class="text-slate-400 hover:text-red-500 shrink-0" (click)="cancelEdit()">
+                                        <i class="ri-close-line text-sm"></i>
+                                    </button>
+                                </div>
+                            } @else {
+                                <!-- Modo lectura -->
+                                <div class="group flex items-center justify-between p-1 rounded-md border border-slate-100 dark:border-[#3d3d3d] hover:border-primary/30 hover:bg-primary/5">
+                                    <p class="text-[10px] text-slate-500 dark:text-[#b9b9b9] flex-1 truncate">{{ reason.text }}</p>
+                                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                                        <button class="text-slate-400 hover:text-primary" (click)="startEdit(deptIdx, rIdx)">
+                                            <i class="ri-edit-line text-sm"></i>
+                                        </button>
+                                        <button class="text-slate-400 hover:text-red-500" (click)="deleteReason(deptIdx, rIdx)">
+                                            <i class="ri-delete-bin-line text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                        <!-- Input nueva razón -->
+                        @if (dept.addingReason) {
+                            <div class="flex items-center gap-1 p-1 rounded-md border border-primary/50 bg-primary/5">
+                                <input
+                                    class="flex-1 text-[10px] bg-transparent text-slate-700 dark:text-slate-200 outline-none placeholder:text-slate-400"
+                                    placeholder="Nueva razón..."
+                                    [(ngModel)]="dept.newReasonText"
+                                    (keydown.enter)="saveNewReason(deptIdx)"
+                                    (keydown.escape)="cancelAddReason(deptIdx)"
+                                    autofocus
+                                />
+                                <button class="text-green-500 hover:text-green-600 shrink-0" (click)="saveNewReason(deptIdx)">
+                                    <i class="ri-check-line text-sm"></i>
+                                </button>
+                                <button class="text-slate-400 hover:text-red-500 shrink-0" (click)="cancelAddReason(deptIdx)">
+                                    <i class="ri-close-line text-sm"></i>
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+    
+                    @if (!dept.addingReason) {
+                        <button
+                            class="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-200 dark:border-[#3d3d3d] rounded-lg text-slate-400 dark:text-[#b9b9b9] hover:text-primary hover:border-primary/50"
+                            (click)="startAddReason(deptIdx)">
+                            <i class="ri-add-line text-lg"></i>
+                            <span class="text-xs font-bold uppercase tracking-wider">Add New Reason</span>
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+
+    </div>
+
+</section>

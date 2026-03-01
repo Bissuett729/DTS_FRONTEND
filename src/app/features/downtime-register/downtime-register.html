@@ -33,7 +33,7 @@
                 <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
             </div>
 
-            <form [formGroup]="downtimeForm" class="grid grid-cols-7 gap-2">
+            <form [formGroup]="downtimeForm" class="grid grid-cols-8 gap-2">
 
                 <dts-date-picker
                     class="col-span-1"
@@ -76,6 +76,15 @@
                 <dts-select
                     class="col-span-1"
                     label="Línea"
+                    optionValue="value"
+                    optionLabel="viewValue"
+                    [control]="downtimeForm.controls.line"
+                    [options]="lines">
+                </dts-select>
+
+                <dts-select
+                    class="col-span-1"
+                    label="Segmento"
                     optionValue="value"
                     optionLabel="viewValue"
                     [control]="downtimeForm.controls.line"

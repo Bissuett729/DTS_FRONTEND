@@ -31,8 +31,16 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/users/users.routes').then(m => m.UsersRoutes)
             },
             {
-                path: 'admin-lines',
+                path: 'lines',
                 loadChildren: () => import('./features/admin-lines/admin-lines.routes').then(m => m.AdminLinesRoutes)
+            },
+            {
+                path: 'departments',
+                loadChildren: () => import('./features/departments/departments.routes').then(m => m.DepartmentRoutes)
+            },
+            {
+                path: 'shifts',
+                loadChildren: () => import('./features/shifts/shifts.routes').then(m => m.ShiftsRoutes)
             },
             {
                 path: '',

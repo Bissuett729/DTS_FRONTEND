@@ -32,7 +32,7 @@ export const routes: Routes = [
             },
             {
                 path: 'lines',
-                loadChildren: () => import('./features/admin-lines/admin-lines.routes').then(m => m.AdminLinesRoutes)
+                loadChildren: () => import('./features/lines/lines.routes').then(m => m.AdminLinesRoutes)
             },
             {
                 path: 'departments',

@@ -1,0 +1,65 @@
+<dts-modal-layout
+    [title]="modalConfig.title"
+    [subtitle]="modalConfig.subtitle"
+    [icon]="modalConfig.icon"
+    (closeModal)="onClose()">
+
+    <div modalContent class="py-2">
+        <dts-card shadow="none">
+            <div class="flex flex-col gap-y-4 py-2 overflow-y-auto  pr-1">
+                <!-- Información General -->
+                <section class="flex flex-col gap-y-2">
+                    <div class="flex items-center gap-x-2 mb-3">
+                        <i class="ri-information-2-fill text-[#246ce0] text-base"></i>
+                        <h2 class="text-sm font-semibold text-dts-title">Información General</h2>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-2">
+                        <dts-input
+                            label="Etiqueta del turno"
+                            [control]="shiftForm.controls.shift">
+                        </dts-input>
+                        
+                        <dts-time-picker
+                            class="col-span-1"
+                            label="Hora de Inicio"
+                            interval="1h"
+                            [control]="shiftForm.controls.startTime">
+                        </dts-time-picker>
+                    
+                        <dts-time-picker
+                            class="col-span-1"
+                            label="Hora de Fin"
+                            interval="1h"
+                            [control]="shiftForm.controls.endTime">
+                        </dts-time-picker>
+
+                        <dts-input
+                            class="col-span-1"
+                            label="Descripción"
+                            [control]="shiftForm.controls.description">
+                        </dts-input>
+                    </div>
+
+                </section>
+            </div>    
+        </dts-card>
+    </div>
+
+
+    <div modalActions class="flex items-center gap-x-2">
+        <dts-button
+            label="Cancelar"
+            variant="outline"
+            (onClick)="onClose()">
+        </dts-button>
+        <dts-button
+            label="Crear Turno"
+            icon="ri-add-line"
+            [disabled]="shiftForm.invalid"
+            [loading]="loadingNewShift$()"
+            (onClick)="onCreate()">
+        </dts-button>
+    </div>
+
+</dts-modal-layout>

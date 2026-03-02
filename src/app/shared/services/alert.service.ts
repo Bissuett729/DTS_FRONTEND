@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import Swal, { SweetAlertIcon, SweetAlertOptions } from 'sweetalert2';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
-  
   private readonly defaultConfig: SweetAlertOptions = {
     confirmButtonColor: '#006699', // Foxcode color
     cancelButtonColor: '#6b7280', // Gray
@@ -77,7 +76,7 @@ export class AlertService {
     title: string,
     message?: string,
     confirmText: string = 'Yes, confirm',
-    cancelText: string = 'Cancel'
+    cancelText: string = 'Cancel',
   ): Promise<any> {
     return Swal.fire({
       ...this.defaultConfig,
@@ -94,10 +93,7 @@ export class AlertService {
   /**
    * Show a delete confirmation dialog
    */
-  confirmDelete(
-    itemName: string = 'this item',
-    message?: string
-  ): Promise<any> {
+  confirmDelete(itemName: string = 'this item', message?: string): Promise<any> {
     return Swal.fire({
       ...this.defaultConfig,
       icon: 'warning',
@@ -141,8 +137,17 @@ export class AlertService {
   toast(
     icon: SweetAlertIcon,
     title: string,
-    position: 'top' | 'top-end' | 'top-start' | 'center' | 'center-start' | 'center-end' | 'bottom' | 'bottom-start' | 'bottom-end' = 'top-end',
-    timer: number = 3000
+    position:
+      | 'top'
+      | 'top-end'
+      | 'top-start'
+      | 'center'
+      | 'center-start'
+      | 'center-end'
+      | 'bottom'
+      | 'bottom-start'
+      | 'bottom-end' = 'top-end',
+    timer: number = 3000,
   ): Promise<any> {
     return Swal.fire({
       toast: true,
@@ -171,13 +176,10 @@ export class AlertService {
   /**
    * Specific alert for authorization actions
    */
-  confirmAuthorization(
-    username: string,
-    currentStatus: boolean
-  ): Promise<any> {
+  confirmAuthorization(username: string, currentStatus: boolean): Promise<any> {
     const action = currentStatus ? 'unauthorize' : 'authorize';
     const actionText = currentStatus ? 'Unauthorize' : 'Authorize';
-    
+
     return Swal.fire({
       ...this.defaultConfig,
       icon: 'question',
@@ -190,8 +192,6 @@ export class AlertService {
       reverseButtons: true,
     });
   }
-
-  
 
   /**
    * Show success toast

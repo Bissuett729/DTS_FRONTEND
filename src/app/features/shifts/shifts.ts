@@ -1,6 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DtsCard, DtsButton } from "../../shared";
+import { ShiftRequestService } from './services/shift-request.service';
+import { ShiftState } from './state/shift-state';
+import { OpenModal } from '../../core/infrastructure';
+import { NewShift } from './modals/new-shift/new-shift';
 
 export interface ShiftBreak {
   label: string;
@@ -23,7 +27,7 @@ export interface Shift {
   end: number;
   color: string;
   dotClass: string;
-  status: 'ACTIVE' | 'STANDBY';
+  status: boolean;
   staff: number;
   timeWindow: string;
 }
@@ -37,78 +41,29 @@ export interface Shift {
 })
 export class Shifts implements OnInit, OnDestroy {
 
+  private readonly shiftRequest = inject(ShiftRequestService);
+  private readonly shiftState = inject(ShiftState);
+
   private intervalId: any;
   public currentTime: Date = new Date();
 
-  public shifts: Shift[] = [
-    {
-      id: 1,
-      name: 'Turno A - Mañana',
-      shortName: 'Turno A',
-      type: 'Mañana',
-      start: 6,
-      end: 14,
-      color: '#f97316',
-      dotClass: 'bg-orange-500',
-      status: 'ACTIVE',
-      staff: 140,
-      timeWindow: '06:00 - 14:00',
-    },
-    {
-      id: 2,
-      name: 'Turno B - Tarde',
-      shortName: 'Turno B',
-      type: 'Tarde',
-      start: 14,
-      end: 22,
-      color: '#6366f1',
-      dotClass: 'bg-indigo-500',
-      status: 'STANDBY',
-      staff: 140,
-      timeWindow: '14:00 - 22:00',
-    },
-    {
-      id: 3,
-      name: 'Turno C - Noche',
-      shortName: 'Turno C',
-      type: 'Noche',
-      start: 22,
-      end: 6,
-      color: '#a855f7',
-      dotClass: 'bg-purple-500',
-      status: 'STANDBY',
-      staff: 140,
-      timeWindow: '22:00 - 06:00',
-    },
-  ];
-
-  public breakGroups: BreakGroup[] = [
-    {
-      shiftName: 'MORNING SHIFT',
-      color: '#f97316',
-      breaks: [
-        { label: 'Coffee Break', start: '09:30', end: '09:45' },
-        { label: 'Meal Time',    start: '12:00', end: '12:45' },
-      ],
-    },
-    {
-      shiftName: 'EVENING SHIFT',
-      color: '#6366f1',
-      breaks: [
-        { label: 'Tea Break',    start: '16:30', end: '16:45' },
-        { label: 'Dinner Time',  start: '19:00', end: '19:45' },
-      ],
-    },
-  ];
+  get shifts(): Shift[] { return this.shiftState.shifts(); }
 
   public timelineHours = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24];
 
   ngOnInit() {
+    this.shiftRequest.getShift();
     this.intervalId = setInterval(() => { this.currentTime = new Date(); }, 30000);
   }
 
   ngOnDestroy() {
     if (this.intervalId) clearInterval(this.intervalId);
+  }
+
+  shiftDuration(start: number, end: number): number {
+    const time = end > start ? end - start : (24 - start) + end;
+    // Solo 1 decimal para evitar problemas de redondeo en el timeline
+    return Math.round(time * 10) / 10;
   }
 
   get currentTimePercent(): number {
@@ -121,7 +76,7 @@ export class Shifts implements OnInit, OnDestroy {
     const total = this.currentTime.getHours() * 60 + this.currentTime.getMinutes();
     return this.shifts.find(s => {
       const startMin = s.start * 60;
-      const endMin   = s.end   * 60;
+      const endMin = s.end * 60;
       return startMin < endMin
         ? total >= startMin && total < endMin
         : total >= startMin || total < endMin;
@@ -139,9 +94,9 @@ export class Shifts implements OnInit, OnDestroy {
         result.push({ shift: s, left: (s.start / 24) * 100, width: ((s.end - s.start) / 24) * 100, label: true });
       } else {
         const wStart = ((24 - s.start) / 24) * 100;
-        const wEnd   = (s.end / 24) * 100;
+        const wEnd = (s.end / 24) * 100;
         result.push({ shift: s, left: (s.start / 24) * 100, width: wStart, label: wStart >= wEnd });
-        result.push({ shift: s, left: 0,                    width: wEnd,   label: wEnd > wStart  });
+        result.push({ shift: s, left: 0, width: wEnd, label: wEnd > wStart });
       }
     }
     return result;
@@ -151,6 +106,8 @@ export class Shifts implements OnInit, OnDestroy {
     return h === 24 ? '24:00' : h.toString().padStart(2, '0') + ':00';
   }
 
-  openNewShiftModal() {}
+  openNewShiftModal() {
+    OpenModal(NewShift)
+  }
 }
 

@@ -10,54 +10,6 @@
         </div>
     </dts-card>
 
-    <!-- Stats Row -->
-    <!-- <div class="grid grid-cols-3 gap-2">
-
-        <div class="bg-white dark:bg-[#27272a] border border-slate-200 dark:border-[#3d3d3d] rounded-xl p-4 flex items-center justify-between shadow-sm">
-            <div class="flex flex-col gap-1">
-                <span class="text-xs font-medium text-slate-500 dark:text-[#b9b9b9] uppercase tracking-wide">Total Daily Coverage</span>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-4xl font-bold text-slate-900 dark:text-slate-100">100%</span>
-                    <span class="text-sm font-semibold text-emerald-500">↑0.5%</span>
-                </div>
-            </div>
-            <div class="size-11 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                <i class="ri-bar-chart-box-line text-2xl"></i>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-[#27272a] border border-slate-200 dark:border-[#3d3d3d] rounded-xl p-4 flex items-center justify-between shadow-sm">
-            <div class="flex flex-col gap-1">
-                <span class="text-xs font-medium text-slate-500 dark:text-[#b9b9b9] uppercase tracking-wide">Current Active Shift</span>
-                @if (currentShift) {
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-4xl font-bold text-slate-900 dark:text-slate-100">{{ currentShift.shortName }}</span>
-                        <span class="text-base font-medium text-slate-500 dark:text-[#b9b9b9]">{{ currentShift.type }}</span>
-                    </div>
-                } @else {
-                    <span class="text-2xl font-bold text-slate-400">—</span>
-                }
-            </div>
-            <div class="size-11 rounded-lg bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center">
-                <i class="ri-time-line text-2xl"></i>
-            </div>
-        </div>
-
-        <div class="bg-white dark:bg-[#27272a] border border-slate-200 dark:border-[#3d3d3d] rounded-xl p-4 flex items-center justify-between shadow-sm">
-            <div class="flex flex-col gap-1">
-                <span class="text-xs font-medium text-slate-500 dark:text-[#b9b9b9] uppercase tracking-wide">Staff per Shift</span>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-4xl font-bold text-slate-900 dark:text-slate-100">{{ totalStaff }}</span>
-                    <span class="text-base font-medium text-slate-500 dark:text-[#b9b9b9]">Workers Total</span>
-                </div>
-            </div>
-            <div class="size-11 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-                <i class="ri-group-2-line text-2xl"></i>
-            </div>
-        </div>
-
-    </div> -->
-
     <!-- 24-Hour Timeline -->
     <div class="bg-white dark:bg-[#27272a] border border-slate-200 dark:border-[#3d3d3d] rounded-xl p-4 shadow-sm">
 
@@ -121,10 +73,10 @@
     </div>
 
     <!-- Bottom Row: Shift Config + Break Times -->
-    <div class="grid grid-cols-5 gap-2">
+    <div class="grid grid-cols-1 gap-2">
 
-        <!-- Shift Configuration Table (3/5) -->
-        <div class="col-span-3 bg-white dark:bg-[#27272a] border border-slate-200 dark:border-[#3d3d3d] rounded-xl shadow-sm overflow-hidden">
+        <!-- Shift Configuration Table -->
+        <div class="col-span-1 bg-white dark:bg-[#27272a] border border-slate-200 dark:border-[#3d3d3d] rounded-xl shadow-sm overflow-hidden">
 
             <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-[#3d3d3d]">
                 <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100">Configuración de Turnos</h2>
@@ -151,18 +103,15 @@
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-slate-500 dark:text-[#b9b9b9] text-sm font-medium">{{ shift.timeWindow }}</td>
-                            <td class="px-4 py-3 text-slate-600 dark:text-slate-300 text-sm">8 Horas</td>
+                            <!-- Redondear valor  -->
+                            <td class="px-4 py-3 text-slate-600 dark:text-slate-300 text-sm">{{ shiftDuration(shift.start, shift.end) }} Horas</td>
                             <td class="px-4 py-3">
-                                @if (shift.status === 'ACTIVE') {
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-                                        <span class="size-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Activo
-                                    </span>
-                                } @else {
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-slate-100 dark:bg-[#3d3d3d] text-slate-500 dark:text-[#b9b9b9] border border-slate-200 dark:border-[#4d4d4d]">
-                                        En espera
-                                    </span>
-                                }
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                                    <span 
+                                    class="size-1.5 rounded-full animate-pulse"
+                                    [ngClass]="shift?.status ? 'bg-emerald-500' : 'bg-red-500'"></span>
+                                    {{ shift.status ? 'Activo' : 'Inactivo' }}
+                                </span>
                             </td>
                             <td class="px-4 py-3">
                                 <button class="p-1.5 text-slate-400 hover:text-primary rounded-md hover:bg-slate-100 dark:hover:bg-[#3d3d3d] transition-colors">
@@ -174,43 +123,6 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Break & Meal Times (2/5) -->
-        <div class="col-span-2 bg-white dark:bg-[#27272a] border border-slate-200 dark:border-[#3d3d3d] rounded-xl shadow-sm overflow-hidden">
-
-            <div class="px-4 py-3 border-b border-slate-100 dark:border-[#3d3d3d]">
-                <h2 class="text-sm font-bold text-slate-900 dark:text-slate-100">Tiempos de Descanso y Comida</h2>
-            </div>
-
-            <div class="p-4 flex flex-col gap-4">
-
-                @for (group of breakGroups; track group.shiftName) {
-                    <div>
-                        <!-- Group Label -->
-                        <div class="flex items-center gap-2 mb-2">
-                            <div class="w-1 h-4 rounded-full" [style.background-color]="group.color"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest" [style.color]="group.color">{{ group.shiftName }}</span>
-                        </div>
-                        <!-- Breaks list -->
-                        <div class="flex flex-col gap-1.5 pl-3">
-                            @for (brk of group.breaks; track brk.label) {
-                                <div class="flex items-center justify-between">
-                                    <span class="text-sm text-slate-600 dark:text-[#b9b9b9]">{{ brk.label }}</span>
-                                    <span class="text-sm font-semibold tabular-nums" [style.color]="group.color">{{ brk.start }} - {{ brk.end }}</span>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                }
-
-                <button class="w-full mt-1 flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-200 dark:border-[#3d3d3d] rounded-lg text-slate-400 dark:text-[#b9b9b9] hover:text-primary hover:border-primary/50 transition-all text-xs font-bold uppercase tracking-wider">
-                    <i class="ri-add-line text-base"></i>
-                    + Agregar Tiempo de Descanso Personalizado
-                </button>
-
-            </div>
-        </div>
-
     </div>
 
 </section>

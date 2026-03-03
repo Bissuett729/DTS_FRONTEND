@@ -15,7 +15,7 @@ export class LinesRequestService {
 
   private readonly dtsURL = environment.dtsURL;
 
-  getLines(loading = true) {
+  async getLines(loading = true) {
     if (loading) this.linesState.loadingLines.set(true);
     this.http
       .get(`${this.dtsURL}/v1/line`)
@@ -35,12 +35,12 @@ export class LinesRequestService {
 
   async createLine(payload: any) {
     this.linesState.loadingCreateLine.set(true);
-    const sweetAlert = await this.alert.confirm(
-      '¿Estás seguro de crear la línea?',
-      'Esta acción no se puede revertir',
-      'Si, crear',
-    );
-    if (sweetAlert?.isDenied || sweetAlert?.isDismissed) return;
+    // const sweetAlert = await this.alert.confirm(
+    //   '¿Estás seguro de crear la línea?',
+    //   'Esta acción no se puede revertir',
+    //   'Si, crear',
+    // );
+    // if (sweetAlert?.isDenied || sweetAlert?.isDismissed) return;
     this.http
       .post(`${this.dtsURL}/v1/line`, payload)
       .pipe(finalize(() => this.linesState.loadingCreateLine.set(false)))

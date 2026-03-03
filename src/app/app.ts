@@ -7,26 +7,24 @@ import { MatDialog } from '@angular/material/dialog';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './app.html'
+  templateUrl: './app.html',
 })
 export class App {
-
   private dialog = inject(MatDialog);
 
   constructor() {
-    initModalHelper(this.dialog)
+    initModalHelper(this.dialog);
     this.printFoxCodeTerminal();
   }
 
-
   printFoxCodeTerminal(): void {
     console.log(`
-    ███████╗  ██████╗ ╔██      ██╗ ██████╗  ██████╗  ██████╗   ███████╗
-    ██╔════╝ ██╔═══██╗╚══██  ██══╝ ██╔═══╝ ██╔═══██╗ ██╔══██╗  ██╔════╝
-    ███████╗ ██║   ██║   ╚═██═╝    ██║     ██║   ██║ ██║    ██ ████║
-    ██╔════╝ ██║   ██║   ██  ██    ██╚═══╗ ██║   ██║ ██╚══██╝  ██║
-    ██║      ╚██████╔╝ ██║    ║██  ██████║ ╚██████╔╝ ██████║   ███████║
-    ╚═╝       ╚═════╝  ╚═╝    ╚═╝  ╚═════╝  ╚═════╝  ╚═════╝   ╚══════╝
+      ██████╗    ████████████   █████████
+      ██╔═══██╗  ╚═══╗██╔═══╝   ███╔════╝
+      ██║   ██║      ║██║       █████████
+      ██║   ██║      ║██║       ╔═════███
+      ╚██████╔╝      ║██║       █████████
+      ╚═════╝        ╚══╝       ╚═══════╝
     `);
   }
 }

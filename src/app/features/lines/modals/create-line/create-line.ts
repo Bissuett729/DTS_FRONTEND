@@ -10,6 +10,7 @@ import {
 import { MatDialogRef } from '@angular/material/dialog';
 import { DtsModalLayout, DtsCard, DtsButton, DtsInput } from '../../../../shared';
 import { LinesRequestService } from '../../services/lines-request.service';
+import { LinesState } from '../../state/lines-state';
 
 @Component({
   selector: 'dts-create-line',
@@ -29,6 +30,7 @@ export class CreateLine implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<CreateLine>);
 
   private readonly linesRequestService = inject(LinesRequestService);
+  private linesState = inject(LinesState);
 
   readonly modalConfig = {
     title: 'Nueva Línea',
@@ -47,7 +49,9 @@ export class CreateLine implements OnInit {
     }),
   });
 
-  stages: string[] = ['FA'];
+  loading$ = this.linesState.loadingCreateLine;
+
+  stages: { name: string }[] = [];
   newStage = new FormControl<string>('', { nonNullable: true });
 
   get canCreate(): boolean {
@@ -58,8 +62,9 @@ export class CreateLine implements OnInit {
 
   addStage(): void {
     const name = this.newStage.value.trim().toUpperCase();
-    if (!name || this.stages.includes(name)) return;
-    this.stages.push(name);
+
+    if (!name || this.stages.some((s) => s.name === name)) return;
+    this.stages.push({ name });
     this.newStage.reset();
   }
 

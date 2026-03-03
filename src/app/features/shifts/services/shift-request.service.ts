@@ -7,42 +7,49 @@ import { ShiftState } from '../state/shift-state';
 import { ApiShift, mapApiShiftsToShifts } from './shift.mapper';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShiftRequestService {
-
   private readonly http = inject(HttpService);
   private readonly alert = inject(AlertService);
   private shiftState = inject(ShiftState);
 
   private readonly userURL = environment.userURL;
 
-
   getShift(loading = true) {
     if (loading) {
       this.shiftState.loadingShifts.set(true);
     }
-    this.http.get(`${this.userURL}/v1/shifts`)
-      .pipe(finalize(() => {
-        if (loading) {
-          this.shiftState.loadingShifts.set(false);
-        }
-      }))
+    this.http
+      .get(`${this.userURL}/v1/shifts`)
+      .pipe(
+        finalize(() => {
+          if (loading) {
+            this.shiftState.loadingShifts.set(false);
+          }
+        }),
+      )
       .subscribe({
         next: (res: any) => {
           const mapped = mapApiShiftsToShifts(res as ApiShift[]);
-          console.log('mapped:', mapped);
+          // console.log('mapped:', mapped);
           this.shiftState.shifts.set(mapped);
         },
         error: (err) => {
           this.alert.error('Error al obtener los turnos');
-        }
+        },
       });
   }
 
-  createShift(payload: { shift: string; description: string; startTime: Date | null; endTime: Date | null }) {
+  createShift(payload: {
+    shift: string;
+    description: string;
+    startTime: Date | null;
+    endTime: Date | null;
+  }) {
     this.shiftState.loadingCreateShift.set(true);
-    this.http.post(`${this.userURL}/v1/shifts`, payload)
+    this.http
+      .post(`${this.userURL}/v1/shifts`, payload)
       .pipe(finalize(() => this.shiftState.loadingCreateShift.set(false)))
       .subscribe({
         next: (res: any) => {
@@ -51,8 +58,7 @@ export class ShiftRequestService {
         },
         error: (err) => {
           this.alert.error('Error al crear el turno');
-        }
+        },
       });
   }
-
 }

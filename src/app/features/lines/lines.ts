@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DtsCard, DtsButton, DtsSelect } from '../../shared';
 import { FormControl } from '@angular/forms';
-import { UpdateLine } from "./features/update-line/update-line";
+import { UpdateLine } from './features/update-line/update-line';
 import { OpenModal } from '../../core/infrastructure';
 import { CreateLine } from './modals/create-line/create-line';
 import { LinesRequestService } from './services/lines-request.service';
@@ -12,11 +12,9 @@ import { LinesRequestService } from './services/lines-request.service';
   standalone: true,
   imports: [CommonModule, DtsCard, DtsButton, DtsSelect, UpdateLine],
   templateUrl: './lines.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class AdminLines implements OnInit {
-
   private readonly linesRequestService = inject(LinesRequestService);
 
   public line = new FormControl('', { nonNullable: true });
@@ -28,5 +26,4 @@ export class AdminLines implements OnInit {
   addNewLine() {
     OpenModal(CreateLine);
   }
-
 }

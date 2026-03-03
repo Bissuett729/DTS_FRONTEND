@@ -50,3 +50,8 @@ button {
 .dark * {
   scrollbar-color: #3a424a #1a1f26;
 }
+
+/* SweetAlert2 always above Angular Material dialogs (z-index: 1000) */
+.swal2-container {
+  z-index: 10000 !important;
+}

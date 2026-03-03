@@ -7,30 +7,32 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './support-sidebar.html',
-  styles: [`
-    :host {
-      display: block;
-    }
+  styles: [
+    `
+      :host {
+        display: block;
+      }
 
-    /* Custom scrollbar for support sidebar */
-    .support-scroll::-webkit-scrollbar {
-      width: 8px;
-    }
+      /* Custom scrollbar for support sidebar */
+      .support-scroll::-webkit-scrollbar {
+        width: 8px;
+      }
 
-    .support-scroll::-webkit-scrollbar-track {
-      background: #002b47;
-      border-radius: 4px;
-    }
+      .support-scroll::-webkit-scrollbar-track {
+        background: #002b47;
+        border-radius: 4px;
+      }
 
-    .support-scroll::-webkit-scrollbar-thumb {
-      background: #035a8b;
-      border-radius: 4px;
-    }
+      .support-scroll::-webkit-scrollbar-thumb {
+        background: #035a8b;
+        border-radius: 4px;
+      }
 
-    .support-scroll::-webkit-scrollbar-thumb:hover {
-      background: #0478b8;
-    }
-  `]
+      .support-scroll::-webkit-scrollbar-thumb:hover {
+        background: #0478b8;
+      }
+    `,
+  ],
 })
 export class SupportSidebar implements OnInit {
   @Output() onClose = new EventEmitter<void>();
@@ -77,11 +79,11 @@ export class SupportSidebar implements OnInit {
 
   submitSupport(): void {
     // Handle form submission
-    console.log('Support request submitted', {
-      subject: this.subject,
-      details: this.details,
-      priority: this.priority,
-      relatedTool: this.relatedTool
-    });
+    // console.log('Support request submitted', {
+    //   subject: this.subject,
+    //   details: this.details,
+    //   priority: this.priority,
+    //   relatedTool: this.relatedTool
+    // });
   }
 }

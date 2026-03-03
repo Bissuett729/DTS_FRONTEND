@@ -1,8 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DtsModalLayout, DtsButton, DtsCard, DtsInput, DtsSelect } from "../../../../shared";
+import { DtsModalLayout, DtsButton, DtsCard, DtsInput, DtsSelect } from '../../../../shared';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { UsersRequestService } from '../../services/users-request.service';
 import { UsersState } from '../../state/users-state';
 import { ICreateUpdateUser } from '../../interfaces/users.interface';
@@ -18,12 +24,11 @@ import { ICreateUpdateUser } from '../../interfaces/users.interface';
     DtsInput,
     FormsModule,
     ReactiveFormsModule,
-    DtsSelect
+    DtsSelect,
   ],
-  templateUrl: './new-user.html'
+  templateUrl: './new-user.html',
 })
 export class NewUser implements OnInit {
-
   private readonly usersRequest = inject(UsersRequestService);
   private readonly usersState = inject(UsersState);
   private readonly dialogRef = inject(MatDialogRef<NewUser>);
@@ -36,17 +41,28 @@ export class NewUser implements OnInit {
 
   // Grupo de formulario
   readonly userForm = new FormGroup({
-    username: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.minLength(3)] }),
-    email: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-    clock: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(1)] }),
-    roleIds: new FormControl<string[]>([], { nonNullable: true, validators: [Validators.required] }),
+    username: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(3)],
+    }),
+    email: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
+    clock: new FormControl<number | null>(null, {
+      validators: [Validators.required, Validators.min(1)],
+    }),
+    roleIds: new FormControl<string[]>([], {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   readonly modalConfig = {
     title: 'Nuevo Usuario',
     subtitle: 'Crea un nuevo usuario para acceder a la plataforma.',
     icon: 'ri-user-add-line',
-  }
+  };
 
   ngOnInit(): void {
     this.getRoles();
@@ -58,11 +74,10 @@ export class NewUser implements OnInit {
 
   async createUser() {
     if (this.userForm.valid) {
-      console.log('User data:', this.userForm.value);
-      await this.usersRequest.createUser(this.userForm.value as Partial<ICreateUpdateUser>)
+      // console.log('User data:', this.userForm.value);
+      await this.usersRequest.createUser(this.userForm.value as Partial<ICreateUpdateUser>);
       // Aquí iría la lógica para crear el usuario
       this.dialogRef.close(this.userForm.value);
     }
   }
-
 }

@@ -10,7 +10,7 @@ interface SocketConnection {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SocketService {
   private connections: Map<string, SocketConnection> = new Map();
@@ -22,7 +22,7 @@ export class SocketService {
    */
   connect(configKey: string, authToken?: string): void {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return;
@@ -54,24 +54,24 @@ export class SocketService {
     const connection: SocketConnection = {
       socket,
       socketId: null,
-      connected: connectedSubject
+      connected: connectedSubject,
     };
 
     // Event listeners
     socket.on('connect', () => {
       connection.socketId = socket.id || null;
       connectedSubject.next(true);
-      console.log(`✅ Socket ${config.name} connected with ID: ${socket.id}`);
+      // console.log(`✅ Socket ${config.name} connected with ID: ${socket.id}`);
     });
 
     socket.on('disconnect', (reason: any) => {
       connection.socketId = null;
       connectedSubject.next(false);
-      console.log(`❌ Socket ${config.name} disconnected. Reason: ${reason}`);
+      // console.log(`❌ Socket ${config.name} disconnected. Reason: ${reason}`);
     });
 
     socket.on('connect_error', (error: any) => {
-      console.error(`Socket ${config.name} connection error:`, error);
+      // console.error(`Socket ${config.name} connection error:`, error);
     });
 
     socket.on('error', (error: any) => {
@@ -80,7 +80,7 @@ export class SocketService {
 
     // Listener genérico para debug - captura TODOS los eventos
     socket.onAny((eventName: string, ...args: any[]) => {
-      console.log(`🔔 Socket ${config.name} received event: ${eventName}`, args);
+      // console.log(`🔔 Socket ${config.name} received event: ${eventName}`, args);
     });
 
     this.connections.set(config.name, connection);
@@ -92,19 +92,19 @@ export class SocketService {
    */
   disconnect(configKey: string): void {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return;
     }
 
     const connection = this.connections.get(config.name);
-    
+
     if (connection) {
       connection.socket.disconnect();
       connection.connected.complete();
       this.connections.delete(config.name);
-      console.log(`Socket ${config.name} disconnected and removed`);
+      // console.log(`Socket ${config.name} disconnected and removed`);
     }
   }
 
@@ -115,7 +115,7 @@ export class SocketService {
    */
   getSocketId(configKey: string): string | null {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return null;
@@ -132,14 +132,16 @@ export class SocketService {
    */
   isConnected(configKey: string): Observable<boolean> {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return new BehaviorSubject<boolean>(false).asObservable();
     }
 
     const connection = this.connections.get(config.name);
-    return connection?.connected.asObservable() || new BehaviorSubject<boolean>(false).asObservable();
+    return (
+      connection?.connected.asObservable() || new BehaviorSubject<boolean>(false).asObservable()
+    );
   }
 
   /**
@@ -150,14 +152,14 @@ export class SocketService {
    */
   emit(configKey: string, event: string, data?: any): void {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return;
     }
 
     const connection = this.connections.get(config.name);
-    
+
     if (connection?.socket.connected) {
       connection.socket.emit(event, data);
     } else {
@@ -172,9 +174,9 @@ export class SocketService {
    * @returns Observable con los datos del evento
    */
   on<T = any>(configKey: string, event: string): Observable<T> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       const config = SOCKETS_CONFIG[configKey];
-      
+
       if (!config) {
         console.error(`Socket configuration not found for key: ${configKey}`);
         observer.error(`Socket configuration not found for key: ${configKey}`);
@@ -182,7 +184,7 @@ export class SocketService {
       }
 
       const connection = this.connections.get(config.name);
-      
+
       if (!connection) {
         console.error(`Socket ${config.name} is not connected`);
         observer.error(`Socket ${config.name} is not connected`);
@@ -190,17 +192,17 @@ export class SocketService {
       }
 
       const handler = (data: T) => {
-        console.log(`📨 Socket event received: ${event}`, data);
+        // console.log(`📨 Socket event received: ${event}`, data);
         observer.next(data);
       };
 
       connection.socket.on(event, handler);
-      console.log(`👂 Listening to socket event: ${event} on ${config.name}`);
+      // console.log(`👂 Listening to socket event: ${event} on ${config.name}`);
 
       // Cleanup cuando se desuscribe
       return () => {
         connection.socket.off(event, handler);
-        console.log(`🔇 Stopped listening to: ${event}`);
+        // console.log(`🔇 Stopped listening to: ${event}`);
       };
     });
   }
@@ -212,17 +214,17 @@ export class SocketService {
    */
   joinRoom(configKey: string, room: string): void {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return;
     }
 
     const connection = this.connections.get(config.name);
-    
+
     if (connection?.socket.connected) {
       connection.socket.emit('join-room', room);
-      console.log(`📥 Joined room: ${room} on socket ${config.name}`);
+      // console.log(`📥 Joined room: ${room} on socket ${config.name}`);
     } else {
       console.warn(`Socket ${config.name} is not connected. Cannot join room: ${room}`);
     }
@@ -235,17 +237,17 @@ export class SocketService {
    */
   leaveRoom(configKey: string, room: string): void {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return;
     }
 
     const connection = this.connections.get(config.name);
-    
+
     if (connection?.socket.connected) {
       connection.socket.emit('leave-room', room);
-      console.log(`📤 Left room: ${room} on socket ${config.name}`);
+      // console.log(`📤 Left room: ${room} on socket ${config.name}`);
     } else {
       console.warn(`Socket ${config.name} is not connected. Cannot leave room: ${room}`);
     }
@@ -261,14 +263,14 @@ export class SocketService {
   emitWithAck<T = any>(configKey: string, event: string, data?: any): Promise<T> {
     return new Promise((resolve, reject) => {
       const config = SOCKETS_CONFIG[configKey];
-      
+
       if (!config) {
         reject(`Socket configuration not found for key: ${configKey}`);
         return;
       }
 
       const connection = this.connections.get(config.name);
-      
+
       if (!connection?.socket.connected) {
         reject(`Socket ${config.name} is not connected`);
         return;
@@ -287,7 +289,7 @@ export class SocketService {
     this.connections.forEach((connection, name) => {
       connection.socket.disconnect();
       connection.connected.complete();
-      console.log(`Socket ${name} disconnected`);
+      // console.log(`Socket ${name} disconnected`);
     });
     this.connections.clear();
   }
@@ -299,7 +301,7 @@ export class SocketService {
    */
   getSocket(configKey: string): Socket | undefined {
     const config = SOCKETS_CONFIG[configKey];
-    
+
     if (!config) {
       console.error(`Socket configuration not found for key: ${configKey}`);
       return undefined;

@@ -376,11 +376,11 @@ export class GlobalStateService {
    */
   enableDebugMode(): void {
     this.debugMode = true;
-    console.log('[GlobalState] Debug mode enabled');
+    // console.log('[GlobalState] Debug mode enabled');
 
     // Log all state changes
     effect(() => {
-      console.log('[GlobalState] State snapshot:', this.getStateSnapshot());
+      // console.log('[GlobalState] State snapshot:', this.getStateSnapshot());
     });
   }
 
@@ -389,12 +389,12 @@ export class GlobalStateService {
    */
   disableDebugMode(): void {
     this.debugMode = false;
-    console.log('[GlobalState] Debug mode disabled');
+    // console.log('[GlobalState] Debug mode disabled');
   }
 
   private log(message: string, ...args: any[]): void {
     if (this.debugMode) {
-      console.log(`[GlobalState] ${message}`, ...args);
+      // console.log(`[GlobalState] ${message}`, ...args);
     }
   }
 }

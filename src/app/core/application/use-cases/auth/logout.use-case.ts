@@ -5,7 +5,7 @@ import { AuthApiRepository } from '../../../infrastructure';
 import { StorageUseCase } from '../..';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LogoutUseCase {
   private authRepository = inject(AuthApiRepository);
@@ -19,9 +19,9 @@ export class LogoutUseCase {
           this.storageRepository.removeItem('accessToken');
           this.storageRepository.removeItem('refreshToken');
           this.storageRepository.removeItem('user');
-          console.log('Logout successful:', response.message);
+          // console.log('Logout successful:', response.message);
         }
-      })
+      }),
     );
   }
 }

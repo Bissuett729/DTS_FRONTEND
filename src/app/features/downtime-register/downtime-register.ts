@@ -1,7 +1,14 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DtsCard, DtsButton, DtsInput, DtsTimePicker, DtsSelect, DtsDatePicker } from '../../shared';
+import {
+  DtsCard,
+  DtsButton,
+  DtsInput,
+  DtsTimePicker,
+  DtsSelect,
+  DtsDatePicker,
+} from '../../shared';
 import { departments, lines, reasons, shifts } from './data';
 import { classficationForm, downtimeForm, downtimeTotalForm, metricsForm } from './forms';
 import { IDowntimeClassification } from './models/downtime-classification.model';
@@ -9,24 +16,45 @@ import { CommonModule } from '@angular/common';
 
 /** =SWITCH(E2, 6,113, 7,142, ...) — salida estándar por hora de inicio */
 const STD_OUT_MAP: Record<number, number> = {
-  3: 127, 6: 113, 7: 142, 11: 142,
-  12: 113, 15: 127, 18: 85, 23: 113,
+  3: 127,
+  6: 113,
+  7: 142,
+  11: 142,
+  12: 113,
+  15: 127,
+  18: 85,
+  23: 113,
 };
 
 /** Tiempo de espera esperado por hora de inicio (para cálculo de tiempo muerto) */
 const EXPECTED_TIME_MAP: Record<number, number> = {
-  3: 45, 6: 40, 7: 50, 11: 50,
-  12: 40, 15: 45, 18: 30, 23: 40,
+  3: 45,
+  6: 40,
+  7: 50,
+  11: 50,
+  12: 40,
+  15: 45,
+  18: 30,
+  23: 40,
 };
 
 @Component({
   selector: 'dts-downtime-register',
-  imports: [CommonModule, DtsCard, DtsButton, DtsInput, DtsTimePicker, DtsSelect, FormsModule, ReactiveFormsModule, DtsDatePicker],
+  imports: [
+    CommonModule,
+    DtsCard,
+    DtsButton,
+    DtsInput,
+    DtsTimePicker,
+    DtsSelect,
+    FormsModule,
+    ReactiveFormsModule,
+    DtsDatePicker,
+  ],
   templateUrl: './downtime-register.html',
   styles: ``,
 })
 export class DowntimeRegister implements OnInit {
-
   private readonly destroyRef = inject(DestroyRef);
 
   readonly shifts = shifts;
@@ -111,12 +139,12 @@ export class DowntimeRegister implements OnInit {
   // ─── Actions ────────────────────────────────────────────────────────────────
 
   registerDownTime(): void {
-    console.log('downtimeForm:', this.downtimeForm.value);
-    console.log('metricsForm:', this.metricsForm.value);
-    console.log('STD:', this.standardOut);
-    console.log('Eficiencia:', this.efficiency + '%');
-    console.log('Tiempo muerto no reportado:', this.unreportedDowntime);
-    console.log('Tiempo muerto generado:', this.generatedDowntime);
+    // console.log('downtimeForm:', this.downtimeForm.value);
+    // console.log('metricsForm:', this.metricsForm.value);
+    // console.log('STD:', this.standardOut);
+    // console.log('Eficiencia:', this.efficiency + '%');
+    // console.log('Tiempo muerto no reportado:', this.unreportedDowntime);
+    // console.log('Tiempo muerto generado:', this.generatedDowntime);
   }
 
   addClassifyDowntime(): void {
@@ -124,7 +152,7 @@ export class DowntimeRegister implements OnInit {
 
     const department = this.classficationForm.controls.department.value!;
     const downtimeReported = Number(this.classficationForm.controls.downtimeReported.value);
-    const existing = this.classifications.find(c => c.department === department);
+    const existing = this.classifications.find((c) => c.department === department);
 
     if (existing) {
       existing.downtimeReported = downtimeReported;
@@ -132,7 +160,7 @@ export class DowntimeRegister implements OnInit {
       this.classifications.push({
         department,
         downtimeReported,
-        problemDescription: this.classficationForm.controls.problemDescription.value
+        problemDescription: this.classficationForm.controls.problemDescription.value,
       });
     }
 
@@ -161,5 +189,3 @@ export class DowntimeRegister implements OnInit {
     this.downtimeTotalForm.controls.unreportedDowntime.setValue(this.unreportedDowntime);
   }
 }
-
-

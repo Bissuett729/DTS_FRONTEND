@@ -98,16 +98,16 @@ export class AuthService {
       if (timeUntilRefresh > 0) {
         // Programar refresh del token antes de que expire
         this.tokenExpirationTimer = setTimeout(() => {
-          console.log('Token about to expire, refreshing...');
+          // console.log('Token about to expire, refreshing...');
           this.refreshToken();
         }, timeUntilRefresh);
       } else if (timeUntilExpiration > 0) {
         // Token está cerca de expirar, refresh inmediatamente
-        console.log('Token expiring soon, refreshing now...');
+        // console.log('Token expiring soon, refreshing now...');
         this.refreshToken();
       } else {
         // Token ya expiró
-        console.log('Token expired, logging out...');
+        // console.log('Token expired, logging out...');
         this.logout(currentToken!);
       }
     } catch (error) {
@@ -175,7 +175,7 @@ export class AuthService {
         tap((response) => {
           // Solo limpiar y redirigir si el logout fue exitoso
           if (response.success) {
-            console.log('Logout successful:', response.message);
+            // console.log('Logout successful:', response.message);
             this.clearAuthData();
             this.router.navigate(['/auth/login']);
           } else {
@@ -235,7 +235,7 @@ export class AuthService {
           // Reiniciar monitoreo del token con el nuevo token
           this.startTokenMonitoring(response.accessToken);
 
-          console.log('Token refreshed successfully');
+          // console.log('Token refreshed successfully');
         }),
         catchError((error) => {
           console.error('Error refreshing token:', error);

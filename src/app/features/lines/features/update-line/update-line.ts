@@ -1,24 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DtsCard, DtsInput, DtsButton } from "../../../../shared";
+import { DtsCard, DtsInput, DtsButton } from '../../../../shared';
 import { generalInfoForm } from '../../forms/information.form';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IStandard } from '../../interfaces/standard.interface';
-import { DtsToggle } from "../../../../shared/components/toggle/toggle.component";
-import { AlertComponent } from "../../../../shared/components/alert/alert";
-import { ITapSwitcher, TabSwitcherComponent } from "../../../../shared/components/tap-switcher/tap-switcher";
+import { DtsToggle } from '../../../../shared/components/toggle/toggle.component';
+import { AlertComponent } from '../../../../shared/components/alert/alert';
+import {
+  ITapSwitcher,
+  TabSwitcherComponent,
+} from '../../../../shared/components/tap-switcher/tap-switcher';
+import { LinesState } from '../../state/lines-state';
 
 @Component({
   selector: 'dts-update-line',
   standalone: true,
-  imports: [CommonModule, DtsCard, DtsInput, FormsModule, ReactiveFormsModule, DtsToggle, DtsButton, AlertComponent, TabSwitcherComponent],
+  imports: [
+    CommonModule,
+    DtsCard,
+    DtsInput,
+    FormsModule,
+    ReactiveFormsModule,
+    DtsToggle,
+    DtsButton,
+    AlertComponent,
+    TabSwitcherComponent,
+  ],
   templateUrl: './update-line.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class UpdateLine implements OnInit {
+  private linesState = inject(LinesState);
 
   readonly generalInfoForm = generalInfoForm;
+
+  lines$ = this.linesState.lines;
+  loadingLines$ = this.linesState.loadingLines;
 
   public readonly hourlyStandardsData: IStandard[] = [
     { startTime: '00:00', finishTime: '01:00', line: 'FAA', standard: 100 },
@@ -47,11 +64,7 @@ export class UpdateLine implements OnInit {
     { startTime: '23:00', finishTime: '00:00', line: 'FAA', standard: 100 },
   ];
 
-  public stages: ITapSwitcher[] = [
-    { label: 'FA' },
-    { label: 'FT' },
-    { label: 'PA' }
-  ];
+  public stages: ITapSwitcher[] = [{ label: 'FA' }, { label: 'FT' }, { label: 'PA' }];
 
   public stageSelectedIndex = 0;
 
@@ -59,12 +72,11 @@ export class UpdateLine implements OnInit {
 
   ngOnInit(): void {
     // apartir de hourlyStandardsData, crear un nuevo arreglo con un campo adicional para un formcontrol de standard editable y obtener la suma total de los estándares horarios
-    this.hourlyStandards = this.hourlyStandardsData.map(hs => ({
+    this.hourlyStandards = this.hourlyStandardsData.map((hs) => ({
       ...hs,
-      standardControl: new FormControl(hs.standard, { nonNullable: true })
+      standardControl: new FormControl(hs.standard, { nonNullable: true }),
     }));
   }
 
   public saveStandardHourly() {}
-
 }

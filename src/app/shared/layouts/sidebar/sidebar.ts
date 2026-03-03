@@ -11,8 +11,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GlobalStateService } from '../../../core/application';
-import { SettingsDtsIcon } from "../../icons";
-import { LoaderDts } from "../../components/loader-dts/loader-dts";
+import { SettingsDtsIcon } from '../../icons';
+import { LoaderDts } from '../../components/loader-dts/loader-dts';
 
 @Component({
   selector: 'foxcode-sidebar',
@@ -32,30 +32,30 @@ export class Sidebar implements OnInit {
   isLoading = signal(false);
 
   public menus = [
-    { 
-      name: 'Inicio', 
+    {
+      name: 'Inicio',
       menus: [
         { name: 'Panel de control', route: 'home', icon: 'ri-dashboard-2-line' },
         { name: 'Perfil', route: 'profile', icon: 'ri-user-line' },
-      ]
+      ],
     },
-    { 
-      name: 'Seguimiento', 
+    {
+      name: 'Seguimiento',
       menus: [
         { name: 'Registro', route: 'register', icon: 'ri-dashboard-2-line' },
         { name: 'Análisis', route: 'analysis', icon: 'ri-dashboard-2-line' },
         { name: 'Reportes', route: 'reports', icon: 'ri-dashboard-2-line' },
-      ]
+      ],
     },
-    { 
-      name: 'Administración', 
+    {
+      name: 'Administración',
       menus: [
         // { name: 'Configuración', route: 'config', icon: 'ri-dashboard-2-line' },
         { name: 'Usuarios', route: 'users', icon: 'ri-dashboard-2-line' },
         { name: 'Líneas', route: 'lines', icon: 'ri-dashboard-2-line' },
         { name: 'Departamentos', route: 'departments', icon: 'ri-dashboard-2-line' },
         { name: 'Turnos', route: 'shifts', icon: 'ri-dashboard-2-line' },
-      ]
+      ],
     },
   ];
 
@@ -68,7 +68,7 @@ export class Sidebar implements OnInit {
   // Filter tools based on business unit and mode
   filteredTools = computed(() => {
     return this.allTools()
-      .filter(tool => tool.active )
+      .filter((tool) => tool.active)
       .sort((a, b) => {
         const aIsAdmin = a?.businessUnitId?.name.toUpperCase() === 'DEVELOPMENT';
         const bIsAdmin = b?.businessUnitId?.name.toUpperCase() === 'DEVELOPMENT';
@@ -80,7 +80,7 @@ export class Sidebar implements OnInit {
   ngOnInit(): void {
     const user = this.user();
     if (user) {
-      console.log('Usuario cargado en sidebar:', user.username);
+      // console.log('Usuario cargado en sidebar:', user.username);
     }
     // Trigger animation on init
     setTimeout(() => this.isVisible.set(true), 10);

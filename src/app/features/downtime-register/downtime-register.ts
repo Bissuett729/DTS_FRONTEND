@@ -13,30 +13,9 @@ import { departments, lines, reasons, shifts } from './data';
 import { classficationForm, downtimeForm, downtimeTotalForm, metricsForm } from './forms';
 import { IDowntimeClassification } from './models/downtime-classification.model';
 import { CommonModule } from '@angular/common';
-
-/** =SWITCH(E2, 6,113, 7,142, ...) — salida estándar por hora de inicio */
-const STD_OUT_MAP: Record<number, number> = {
-  3: 127,
-  6: 113,
-  7: 142,
-  11: 142,
-  12: 113,
-  15: 127,
-  18: 85,
-  23: 113,
-};
-
-/** Tiempo de espera esperado por hora de inicio (para cálculo de tiempo muerto) */
-const EXPECTED_TIME_MAP: Record<number, number> = {
-  3: 45,
-  6: 40,
-  7: 50,
-  11: 50,
-  12: 40,
-  15: 45,
-  18: 30,
-  23: 40,
-};
+import { DowntimeState } from './state/downtime-state';
+import { DowntimeRequestService } from './services/downtime-request.service';
+import { GlobalStateService } from '../../core/application';
 
 @Component({
   selector: 'dts-downtime-register',
@@ -56,9 +35,12 @@ const EXPECTED_TIME_MAP: Record<number, number> = {
 })
 export class DowntimeRegister implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly downtimeRequestService = inject(DowntimeRequestService);
+  private readonly downtimeState = inject(DowntimeState);
+  private readonly globalState = inject(GlobalStateService);
 
-  readonly shifts = shifts;
-  readonly lines = lines;
+  readonly shifts$ = this.downtimeState.shifts;
+  readonly lines$ = this.downtimeState.lines;
   readonly departments = departments;
 
   readonly downtimeForm = downtimeForm;
@@ -70,12 +52,38 @@ export class DowntimeRegister implements OnInit {
 
   classifications: IDowntimeClassification[] = [];
 
+  /** Número de semana ISO actual */
+  readonly currentWeek: number = this.getWeekNumber();
+
   // ─── Getters ────────────────────────────────────────────────────────────────
 
-  /** =SWITCH(hora, ...) — salida estándar */
+  /** Stages de la línea seleccionada */
+  get stages() {
+    const lineName = this.downtimeForm.controls.line.value;
+    const line = this.lines$().find((l) => l.name === lineName);
+    return line?.stages ?? [];
+  }
+
+  /**
+   * Estándar de salida según la línea, stage y hora de inicio seleccionados.
+   * Busca el IHourlyStandard cuyo rango cubre la hora: startHour <= hour < endHour.
+   */
   get standardOut(): number {
-    const hour = this.downtimeForm.controls.startTime.value?.getHours();
-    return STD_OUT_MAP[hour!] ?? 170;
+    const startTime = this.downtimeForm.controls.startTime.value;
+    const lineName = this.downtimeForm.controls.line.value;
+    const stageName = this.downtimeForm.controls.stage.value;
+
+    if (!startTime || !lineName || !stageName) return 0;
+
+    const hour = startTime.getHours();
+    const line = this.lines$().find((l) => l.name === lineName);
+    const stage = line?.stages.find((s) => s.name === stageName);
+
+    const hourlyStandard = stage?.hourlyStandards.find(
+      (h) => hour >= h.startHour && hour < h.endHour,
+    );
+
+    return hourlyStandard?.standard ?? 0;
   }
 
   /** Puede guardar si actualOut tiene valor y no hay tiempo muerto no reportado */
@@ -92,12 +100,30 @@ export class DowntimeRegister implements OnInit {
     return Math.round((actualOut / this.standardOut) * 100);
   }
 
-  /** =ABS(MIN(0, ROUNDDOWN(12*60/STD, 0) - esperado)) */
+  /**
+   * Tiempo muerto generado = ABS(MIN(0, tiempoCalculado - tiempoEsperado)).
+   * El tiempo esperado se obtiene del IHourlyStandard activo (endHour - startHour) * 60.
+   */
   get generatedDowntime(): number {
-    const hour = this.downtimeForm.controls.startTime.value?.getHours();
-    const expectedTime = EXPECTED_TIME_MAP[hour!] ?? 60;
-    const actualOut = this.metricsForm.controls.actualOut.value ?? 12;
+    const startTime = this.downtimeForm.controls.startTime.value;
+    const lineName = this.downtimeForm.controls.line.value;
+    const stageName = this.downtimeForm.controls.stage.value;
+    const actualOut = this.metricsForm.controls.actualOut.value ?? 0;
+
+    if (!startTime || !lineName || !stageName || this.standardOut === 0) return 0;
+
+    const hour = startTime.getHours();
+    const line = this.lines$().find((l) => l.name === lineName);
+    const stage = line?.stages.find((s) => s.name === stageName);
+    const hourlyStandard = stage?.hourlyStandards.find(
+      (h) => hour >= h.startHour && hour < h.endHour,
+    );
+
+    // Minutos esperados = duración del rango en horas × 60
+    const rangeHours = hourlyStandard ? hourlyStandard.endHour - hourlyStandard.startHour : 1;
+    const expectedTime = rangeHours * 60;
     const calculatedTime = Math.floor((actualOut * 60) / this.standardOut);
+
     return Math.abs(Math.min(0, calculatedTime - expectedTime));
   }
 
@@ -110,9 +136,18 @@ export class DowntimeRegister implements OnInit {
   // ─── Lifecycle ──────────────────────────────────────────────────────────────
 
   ngOnInit(): void {
+    this.getLines();
+    this.getDepartments();
+    this.getShifts();
+
     this.metricsForm.controls.standardOut.setValue(this.standardOut);
     this.downtimeTotalForm.controls.generatedDowntime.setValue(this.generatedDowntime);
     this.downtimeTotalForm.controls.unreportedDowntime.setValue(this.unreportedDowntime);
+
+    this.downtimeForm.controls.weekNumber.setValue(this.currentWeek);
+    this.downtimeForm.controls.supervisor.setValue(
+      this.globalState.currentUser()?.supervisor?.clock ?? null,
+    );
 
     this.metricsForm.controls.actualOut.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -129,11 +164,36 @@ export class DowntimeRegister implements OnInit {
         const endTime = new Date(startTime);
         endTime.setHours(endTime.getHours() + 1, 0, 0, 0);
         this.downtimeForm.controls.endTime.setValue(endTime);
+        this.syncStandardOut();
       });
+
+    this.downtimeForm.controls.line.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        // Al cambiar la línea se limpia el stage previo y se recalcula el estándar
+        this.downtimeForm.controls.stage.setValue(null);
+        this.syncStandardOut();
+      });
+
+    this.downtimeForm.controls.stage.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.syncStandardOut());
 
     this.downtimeTotalForm.controls.totalReportedDowntime.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.syncUnreportedDowntime());
+  }
+
+  async getLines() {
+    await this.downtimeRequestService.getLines();
+  }
+
+  async getDepartments() {
+    await this.downtimeRequestService.getDepartments();
+  }
+
+  async getShifts() {
+    await this.downtimeRequestService.getShift();
   }
 
   // ─── Actions ────────────────────────────────────────────────────────────────
@@ -179,6 +239,22 @@ export class DowntimeRegister implements OnInit {
   }
 
   // ─── Private ────────────────────────────────────────────────────────────────
+
+  /** Retorna el número de semana ISO 8601 de la fecha dada (por defecto hoy) */
+  private getWeekNumber(date: Date = new Date()): number {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7; // Lunes=1 … Domingo=7
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil(((d.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7);
+  }
+
+  /** Sincroniza standardOut y generatedDowntime en los formularios */
+  private syncStandardOut(): void {
+    this.metricsForm.controls.standardOut.setValue(this.standardOut);
+    this.downtimeTotalForm.controls.generatedDowntime.setValue(this.generatedDowntime);
+    this.syncUnreportedDowntime();
+  }
 
   private syncTotalReportedDowntime(): void {
     const total = this.classifications.reduce((sum, c) => sum + c.downtimeReported, 0);

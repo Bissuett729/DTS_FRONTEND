@@ -13,6 +13,7 @@ export interface IUser {
   tools: ITool[];
   active: boolean;
   authorized: boolean;
+  supervisor?: Partial<IUser>;
   requiresPasswordChange?: boolean;
   createdAt?: Date;
   updatedAt?: Date;

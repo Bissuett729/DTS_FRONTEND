@@ -1,3 +1,5 @@
+import { FormControl } from "@angular/forms";
+
 export interface ILine {
   _id: string;
   name: string;
@@ -20,4 +22,5 @@ export interface IHourlyStandard {
   startHour: number;
   endHour: number;
   standard: number;
+  standardControl?: FormControl;
 }

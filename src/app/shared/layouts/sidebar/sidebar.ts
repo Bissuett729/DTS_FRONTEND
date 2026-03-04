@@ -43,7 +43,7 @@ export class Sidebar implements OnInit {
       name: 'Seguimiento',
       menus: [
         { name: 'Registro', route: 'register', icon: 'ri-dashboard-2-line' },
-        { name: 'Análisis', route: 'analysis', icon: 'ri-dashboard-2-line' },
+        { name: 'Tendencias', route: 'trends', icon: 'ri-dashboard-2-line' },
         { name: 'Reportes', route: 'reports', icon: 'ri-dashboard-2-line' },
       ],
     },

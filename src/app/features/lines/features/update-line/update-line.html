@@ -1,114 +1,112 @@
-@if (lines$().length > 0) {
-    <div class="h-full grid grid-cols-12 gap-2 overflow-hidden min-h-0">
+<div class="h-full grid grid-cols-12 gap-2 overflow-hidden min-h-0">
+
+    <section class="col-span-4 flex flex-col gap-y-2">
+        <dts-card shadow="none" customClass="!h-auto">
     
-        <section class="col-span-4 flex flex-col gap-y-2">
-            <dts-card shadow="none" customClass="!h-auto">
-        
-                <div class="space-y-2">
-        
-                    <div class="flex items-center gap-x-2">
-                        <i class="ri-information-2-fill text-[#246ce0] text-xl"></i>
-                        <h1 class="font-semibold text-lg text-dts-title">Informaci&oacute;n General</h1>
-                    </div>
-        
-                    <div class="w-full flex justify-center">
-                        <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
-                    </div>
-        
-                    <div class="flex flex-col gap-y-4">
-        
-                        <dts-input
-                            label="Nombre de la Línea"
-                            [control]="generalInfoForm.controls.lineName">
-                        </dts-input>
-        
-                        <dts-input
-                            label="Salida Estándar"
-                            type="number"
-                            [control]="generalInfoForm.controls.standard">
-                        </dts-input>
-        
-                        <div class="p-1 rounded-md bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-between px-4">
-                            <span class="text-xs">Indica si la linea esta activa o inactiva.</span>
-        
-                            <dts-toggle
-                                [isChecked]="generalInfoForm.controls.status.value"
-                                (toggleChange)="generalInfoForm.controls.status.setValue($event)">
-                            </dts-toggle>
-                        </div>
-        
-                    </div>
-        
+            <div class="space-y-2">
+    
+                <div class="flex items-center gap-x-2">
+                    <i class="ri-information-2-fill text-[#246ce0] text-xl"></i>
+                    <h1 class="font-semibold text-lg text-dts-title">Informaci&oacute;n General</h1>
                 </div>
-        
-            </dts-card>
     
-            <dts-card shadow="none" customClass="!h-auto">
-        
-                <div class="flex items-center justify-center">
-        
-                    <dts-button
-                        label="Guardar configuraci&oacute;n general"
-                        icon="ri-time-line"
-                        (onClick)="saveStandardHourly()">
-                    </dts-button>
-        
+                <div class="w-full flex justify-center">
+                    <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
                 </div>
-        
-            </dts-card>
-        </section>
     
+                <div class="flex flex-col gap-y-4">
     
-        <section class="col-span-8 flex flex-col gap-y-2">
+                    <dts-input
+                        label="Nombre de la Línea"
+                        [control]="generalInfoForm.controls.lineName">
+                    </dts-input>
     
-            <dts-tab-switcher 
-                [tabs]="stages" 
-                [selectedIndex]="stageSelectedIndex" 
-                (selectedIndexChange)="stageSelectedIndex = $event">
-            </dts-tab-switcher>
+                    <dts-input
+                        label="Salida Estándar"
+                        type="number"
+                        [control]="generalInfoForm.controls.standard">
+                    </dts-input>
     
-            <dts-card class="min-h-0 overflow-hidden" shadow="none" customClass="!h-auto">
-                <div class="h-full flex flex-col space-y-2">
-        
-                    <div class="flex items-center gap-x-2">
-                        <i class="ri-24-hours-line text-[#246ce0] text-xl"></i>
-                        <h1 class="font-semibold text-lg text-dts-title">Estandares por hora (Ciclo de 24 horas)</h1>
+                    <div class="p-1 rounded-md bg-[#f8fafc] border border-[#e2e8f0] flex items-center justify-between px-4">
+                        <span class="text-xs">Indica si la linea esta activa o inactiva.</span>
+    
+                        <dts-toggle
+                            [isChecked]="generalInfoForm.controls.status.value"
+                            (toggleChange)="generalInfoForm.controls.status.setValue($event)">
+                        </dts-toggle>
                     </div>
-        
-                    <div class="w-full flex justify-center">
-                        <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
-                    </div>
-        
-                    <div class="grid grid-cols-6 gap-1.5 flex-1 overflow-y-auto min-h-0 pr-1 items-start content-start">
-                        @for (standard of hourlyStandards; track $index) {
-                            <div class="px-2 pt-2 pb-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-[#246ce0] group">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ standard?.startTime }} - {{ standard?.finishTime }}</span>
-                                    <i class="ri-time-line text-amber-500 text-xs"></i>
-                                </div>
-                                <input
-                                    type="number"
-                                    [formControl]="standard?.standardControl!"
-                                    class="w-full text-sm font-semibold text-dts-title bg-transparent border-0 border-b border-slate-200 dark:border-slate-600 focus:border-[#246ce0] focus:outline-none py-0.5 px-0">
+    
+                </div>
+    
+            </div>
+    
+        </dts-card>
+
+        <dts-card shadow="none" customClass="!h-auto">
+    
+            <div class="flex items-center justify-center">
+    
+                <dts-button
+                    label="Guardar configuraci&oacute;n general"
+                    icon="ri-time-line"
+                    (onClick)="saveStandardHourly()">
+                </dts-button>
+    
+            </div>
+    
+        </dts-card>
+    </section>
+
+
+    <section class="col-span-8 flex flex-col gap-y-2">
+
+        <dts-tab-switcher 
+            [tabs]="stages" 
+            [selectedIndex]="stageSelectedIndex" 
+            (selectedIndexChange)="getHourlyStandard($event)">
+        </dts-tab-switcher>
+
+        <dts-card class="min-h-0 overflow-hidden" shadow="none" customClass="!h-auto">
+            <div class="h-full flex flex-col space-y-2">
+    
+                <div class="flex items-center gap-x-2">
+                    <i class="ri-24-hours-line text-[#246ce0] text-xl"></i>
+                    <h1 class="font-semibold text-lg text-dts-title">Estandares por hora (Ciclo de 24 horas)</h1>
+                </div>
+    
+                <div class="w-full flex justify-center">
+                    <span class="h-px w-[90%] bg-[#f1f1f1] dark:bg-[#3f3f46]"></span>
+                </div>
+    
+                <div class="grid grid-cols-6 gap-1.5 flex-1 overflow-y-auto min-h-0 pr-1 items-start content-start">
+                    @for (standard of hourlyStandards; track $index) {
+                        <div class="px-2 pt-2 pb-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-[#246ce0] group">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ standard?.startHour }} - {{ standard?.endHour }}</span>
+                                <i class="ri-time-line text-amber-500 text-xs"></i>
                             </div>
-                        }
-        
-                    </div>
-        
-                </div>
-            </dts-card>
+                            <input
+                                type="number"
+                                [formControl]="standard?.standardControl!"
+                                class="w-full text-sm font-semibold text-dts-title bg-transparent border-0 border-b border-slate-200 dark:border-slate-600 focus:border-[#246ce0] focus:outline-none py-0.5 px-0">
+                        </div>
+                    }
     
-            <dts-card class="min-h-0 overflow-hidden" shadow="none" customClass="!h-auto">
-                <div class="flex items-center justify-between px-3">
-                    <div>
-                        <p class="text-xs uppercase font-bold text-slate-500 dark:text-slate-400">Total Daily Target</p>
-                        <p class="text-2xl font-black text-slate-900 dark:text-slate-100">890 <span class="text-sm font-normal text-slate-500">Units</span></p>
-                    </div>
-        
-                    <dts-alert type="info" message="Estas normas afectarán a los cálculos de OEE en tiempo real y a los informes de equilibrio de la línea FA."></dts-alert>
                 </div>
-            </dts-card>
-        </section>
     
-    </div>
-}
+            </div>
+        </dts-card>
+
+        <dts-card class="min-h-0 overflow-hidden" shadow="none" customClass="!h-auto">
+            <div class="flex items-center justify-between px-3">
+                <div>
+                    <p class="text-xs uppercase font-bold text-slate-500 dark:text-slate-400">Total Daily Target</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-slate-100">{{ standardTotal || 0 }} <span class="text-sm font-normal text-slate-500">Units</span></p>
+                </div>
+    
+                <dts-alert type="info" message="Estas normas afectarán a los cálculos de OEE en tiempo real y a los informes de equilibrio de la línea FA."></dts-alert>
+            </div>
+        </dts-card>
+    </section>
+
+</div>

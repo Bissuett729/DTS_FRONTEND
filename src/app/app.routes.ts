@@ -22,6 +22,10 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/home/home.routes').then(m => m.HomeRoutes)
             },
             {
+                path: 'profile',
+                loadChildren: () => import('./features/profile/profile.routes').then(m => m.ProfileRoutes)
+            },
+            {
                 path: 'register',
                 loadChildren: () => import ('./features/downtime-register/downtime-register.routes').then(r => r.DownTimeRegisterRoutes)
 
@@ -41,6 +45,14 @@ export const routes: Routes = [
             {
                 path: 'shifts',
                 loadChildren: () => import('./features/shifts/shifts.routes').then(m => m.ShiftsRoutes)
+            },
+            {
+                path: 'trends',
+                loadChildren: () => import('./features/trends/trends.routes').then(m => m.TrendsRoutes)
+            },
+            {
+                path: 'reports',
+                loadChildren: () => import('./features/reports/reports.routes').then(m => m.ReportsRoutes)
             },
             {
                 path: '',

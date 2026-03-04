@@ -14,7 +14,10 @@
                 placeholder="Elige una línea para administrar"
                 icon="ri-building-3-line"
                 [control]="line"
-                [options]="['OL A2', 'FA BONDING A', 'TEST DOCKING 1', 'PA POLY']">
+                optionValue="_id"
+                optionLabel="name"
+                [options]="lines$()"
+                (selectionChange)="selectLine($event)">
             </dts-select>
 
             <dts-button
@@ -27,6 +30,8 @@
 
     </dts-card>
 
-    <dts-update-line class="flex-1 min-h-0 overflow-hidden"></dts-update-line>
+    @if (selectedLine$()) {
+        <dts-update-line class="flex-1 min-h-0 overflow-hidden"></dts-update-line>
+    }
 
 </section>

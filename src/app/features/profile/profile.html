@@ -1,0 +1,351 @@
+<section class="w-full h-full flex flex-col gap-y-2 p-2 overflow-auto">
+
+  <!-- ── Header card ────────────────────────────────────────────────── -->
+  <dts-card shadow="none">
+    <div class="flex items-center gap-x-6 flex-wrap gap-y-4">
+
+      <!-- Avatar -->
+      <div class="relative flex-shrink-0">
+        <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white
+          bg-gradient-to-br from-[#006699] to-[#004466] shadow-lg select-none">
+          {{ initials() }}
+        </div>
+        <!-- Active dot -->
+        <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-[#27272a]"
+          [class.bg-green-500]="isActive()"
+          [class.bg-red-400]="!isActive()">
+        </span>
+      </div>
+
+      <!-- User info -->
+      <div class="flex flex-col gap-y-1 flex-1 min-w-0">
+        <span class="text-2xl font-bold tracking-tight text-dts-title truncate">{{ user()?.username ?? 'Usuario' }}</span>
+        <span class="text-dts-badges text-sm">{{ user()?.email }}</span>
+
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-1">
+          <!-- Role -->
+          <span class="flex items-center gap-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+            bg-[#006699]/10 text-[#006699] dark:bg-[#006699]/20">
+            <i class="ri-shield-user-line"></i>
+            {{ roleLabel() }}
+          </span>
+
+          <!-- Department -->
+          @if (user()?.departmentId) {
+            <span class="flex items-center gap-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+              bg-violet-100 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300">
+              <i class="ri-building-3-line"></i>
+              {{ user()?.departmentId?.name ?? user()?.departmentId }}
+            </span>
+          }
+
+          <!-- Business Unit -->
+          @if (user()?.businessUnitId) {
+            <span class="flex items-center gap-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+              bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300">
+              <i class="ri-community-line"></i>
+              {{ user()?.businessUnitId?.name ?? user()?.businessUnitId }}
+            </span>
+          }
+
+          <!-- Authorized badge -->
+          <span class="flex items-center gap-x-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
+            [class.bg-green-100]="isAuthorized()"
+            [class.text-green-700]="isAuthorized()"
+            [class.dark:bg-green-900/20]="isAuthorized()"
+            [class.dark:text-green-300]="isAuthorized()"
+            [class.bg-gray-100]="!isAuthorized()"
+            [class.text-gray-500]="!isAuthorized()">
+            <i [class]="isAuthorized() ? 'ri-checkbox-circle-line' : 'ri-close-circle-line'"></i>
+            {{ isAuthorized() ? 'Autorizado' : 'No autorizado' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex gap-x-6 text-center flex-shrink-0">
+        <div class="flex flex-col gap-y-0.5">
+          <span class="text-2xl font-bold text-dts-title">{{ user()?.clock ?? '—' }}</span>
+          <span class="text-xs text-dts-badges">Clock #</span>
+        </div>
+        <div class="w-px bg-gray-200 dark:bg-[#3f3f46]"></div>
+        <div class="flex flex-col gap-y-0.5">
+          <span class="text-2xl font-bold text-dts-title">{{ user()?.tools?.length ?? 0 }}</span>
+          <span class="text-xs text-dts-badges">Herramientas</span>
+        </div>
+        <div class="w-px bg-gray-200 dark:bg-[#3f3f46]"></div>
+        <div class="flex flex-col gap-y-0.5">
+          <span class="text-sm font-semibold text-dts-title">{{ lastLogin() }}</span>
+          <span class="text-xs text-dts-badges">Último acceso</span>
+        </div>
+      </div>
+    </div>
+  </dts-card>
+
+  <!-- ── Tab bar ────────────────────────────────────────────────────── -->
+  <div class="flex gap-x-1 border-b dark:border-[#3f3f46] px-1">
+    @for (tab of [{id:'info',label:'Información',icon:'ri-user-3-line'},
+                  {id:'security',label:'Seguridad',icon:'ri-lock-password-line'},
+                  {id:'tools',label:'Herramientas',icon:'ri-tools-line'}]; track tab.id) {
+      <button
+        class="flex items-center gap-x-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors"
+        [class.border-[#006699]]="activeTab() === tab.id"
+        [class.text-[#006699]]="activeTab() === tab.id"
+        [class.border-transparent]="activeTab() !== tab.id"
+        [class.text-dts-badges]="activeTab() !== tab.id"
+        [class.hover:text-dts-title]="activeTab() !== tab.id"
+        (click)="activeTab.set($any(tab.id))">
+        <i [class]="tab.icon"></i>
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- ── TAB: Información General ──────────────────────────────────── -->
+  @if (activeTab() === 'info') {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+
+      <!-- Personal data -->
+      <dts-card shadow="none" class="lg:col-span-2">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-x-2">
+            <i class="ri-user-3-line text-[#006699]"></i>
+            <span class="font-bold text-dts-title">Datos personales</span>
+          </div>
+          @if (!editMode()) {
+            <dts-button label="Editar" icon="ri-edit-line" variant="outline" size="sm" (onClick)="startEdit()"></dts-button>
+          }
+        </div>
+
+        @if (!editMode()) {
+          <!-- Read mode -->
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Usuario</dt>
+              <dd class="font-medium text-dts-title">{{ user()?.username ?? '—' }}</dd>
+            </div>
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Email</dt>
+              <dd class="font-medium text-dts-title">{{ user()?.email ?? '—' }}</dd>
+            </div>
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Rol</dt>
+              <dd class="font-medium text-dts-title">{{ roleLabel() }}</dd>
+            </div>
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Departamento</dt>
+              <dd class="font-medium text-dts-title">{{ user()?.departmentId?.name ?? '—' }}</dd>
+            </div>
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Unidad de Negocio</dt>
+              <dd class="font-medium text-dts-title">{{ user()?.businessUnitId?.name ?? '—' }}</dd>
+            </div>
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Supervisor</dt>
+              <dd class="font-medium text-dts-title">{{ user()?.supervisor?.username ?? '—' }}</dd>
+            </div>
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Miembro desde</dt>
+              <dd class="font-medium text-dts-title">{{ memberSince() }}</dd>
+            </div>
+            <div>
+              <dt class="text-dts-badges text-xs font-semibold uppercase tracking-widest mb-0.5">Número de reloj</dt>
+              <dd class="font-medium text-dts-title">#{{ user()?.clock ?? '—' }}</dd>
+            </div>
+          </dl>
+        } @else {
+          <!-- Edit mode -->
+          <form [formGroup]="infoForm" class="flex flex-col gap-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <dts-input label="Usuario" icon="ri-user-3-line" [control]="$any(infoForm.get('username'))"></dts-input>
+              <dts-input label="Email"   icon="ri-mail-line"   [control]="$any(infoForm.get('email'))"></dts-input>
+            </div>
+            <div class="flex gap-x-2 justify-end">
+              <dts-button label="Cancelar" variant="ghost"   size="sm" (onClick)="cancelEdit()"></dts-button>
+              <dts-button label="Guardar"  variant="primary" size="sm" (onClick)="saveInfo()"></dts-button>
+            </div>
+          </form>
+        }
+      </dts-card>
+
+      <!-- Account status sidebar -->
+      <dts-card shadow="none">
+        <div class="flex items-center gap-x-2 mb-5">
+          <i class="ri-information-line text-[#006699]"></i>
+          <span class="font-bold text-dts-title">Estado de la cuenta</span>
+        </div>
+
+        <div class="flex flex-col gap-y-3">
+
+          <!-- Status row -->
+          <div class="flex items-center justify-between py-2.5 border-b dark:border-[#3f3f46]">
+            <span class="text-sm text-dts-badges">Estado</span>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold"
+              [class.bg-green-100]="isActive()"
+              [class.text-green-700]="isActive()"
+              [class.bg-red-100]="!isActive()"
+              [class.text-red-600]="!isActive()">
+              {{ isActive() ? 'Activo' : 'Inactivo' }}
+            </span>
+          </div>
+
+          <!-- Auth row -->
+          <div class="flex items-center justify-between py-2.5 border-b dark:border-[#3f3f46]">
+            <span class="text-sm text-dts-badges">Autorización</span>
+            <span class="px-2.5 py-1 rounded-full text-xs font-bold"
+              [class.bg-green-100]="isAuthorized()"
+              [class.text-green-700]="isAuthorized()"
+              [class.bg-amber-100]="!isAuthorized()"
+              [class.text-amber-700]="!isAuthorized()">
+              {{ isAuthorized() ? 'Autorizado' : 'Pendiente' }}
+            </span>
+          </div>
+
+          <!-- Requires pw change -->
+          <div class="flex items-center justify-between py-2.5 border-b dark:border-[#3f3f46]">
+            <span class="text-sm text-dts-badges">Cambio de contraseña</span>
+            <span class="text-xs font-semibold"
+              [class.text-amber-500]="user()?.requiresPasswordChange"
+              [class.text-green-500]="!user()?.requiresPasswordChange">
+              {{ user()?.requiresPasswordChange ? 'Requerido' : 'OK' }}
+            </span>
+          </div>
+
+          <!-- Last login -->
+          <div class="flex flex-col gap-y-0.5 py-2.5">
+            <span class="text-xs text-dts-badges uppercase tracking-widest font-semibold">Último acceso</span>
+            <span class="text-sm font-medium text-dts-title">{{ lastLogin() }}</span>
+          </div>
+        </div>
+      </dts-card>
+    </div>
+  }
+
+  <!-- ── TAB: Seguridad ───────────────────────────────────────────────── -->
+  @if (activeTab() === 'security') {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+
+      <dts-card shadow="none">
+        <div class="flex items-center gap-x-2 mb-5">
+          <i class="ri-lock-password-line text-[#006699]"></i>
+          <span class="font-bold text-dts-title">Cambiar contraseña</span>
+        </div>
+
+        <form [formGroup]="pwForm" class="flex flex-col gap-y-4">
+          <dts-input label="Contraseña actual"      type="password" icon="ri-lock-line"         [control]="$any(pwForm.get('current'))"></dts-input>
+          <dts-input label="Nueva contraseña"        type="password" icon="ri-lock-2-line"       [control]="$any(pwForm.get('newPw'))"></dts-input>
+          <dts-input label="Confirmar nueva contraseña" type="password" icon="ri-lock-2-line"   [control]="$any(pwForm.get('confirm'))"></dts-input>
+
+          <div class="flex items-start gap-x-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10
+            border border-amber-200 dark:border-amber-800/40 text-xs text-amber-700 dark:text-amber-300">
+            <i class="ri-information-line mt-0.5 flex-shrink-0"></i>
+            <span>La contraseña debe tener al menos 8 caracteres e incluir letras y números.</span>
+          </div>
+
+          <div class="flex justify-end">
+            <dts-button label="Actualizar contraseña" icon="ri-save-line" (onClick)="changePassword()"></dts-button>
+          </div>
+        </form>
+      </dts-card>
+
+      <!-- Security info -->
+      <dts-card shadow="none">
+        <div class="flex items-center gap-x-2 mb-5">
+          <i class="ri-shield-check-line text-[#006699]"></i>
+          <span class="font-bold text-dts-title">Información de sesión</span>
+        </div>
+
+        <div class="flex flex-col gap-y-4">
+          <div class="flex items-center gap-x-4 p-4 rounded-xl border dark:border-[#3f3f46]
+            bg-gray-50/50 dark:bg-[#1e1e1e]">
+            <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/20
+              flex items-center justify-center shrink-0">
+              <i class="ri-computer-line text-lg text-green-600"></i>
+            </div>
+            <div class="flex flex-col gap-y-0.5">
+              <span class="text-sm font-semibold text-dts-title">Sesión actual</span>
+              <span class="text-xs text-dts-badges">Activa · {{ lastLogin() }}</span>
+            </div>
+            <span class="ml-auto px-2 py-0.5 rounded-full text-[11px] font-bold
+              bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300">En línea</span>
+          </div>
+
+          <div class="flex flex-col gap-y-3 text-sm">
+            <div class="flex items-center justify-between py-2 border-b dark:border-[#3f3f46]">
+              <span class="text-dts-badges">Autenticación en dos pasos</span>
+              <span class="text-xs font-semibold text-amber-500">No configurado</span>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b dark:border-[#3f3f46]">
+              <span class="text-dts-badges">Intentos fallidos recientes</span>
+              <span class="text-xs font-semibold text-green-500">0</span>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <span class="text-dts-badges">Cuenta creada</span>
+              <span class="text-xs font-semibold text-dts-title">{{ memberSince() }}</span>
+            </div>
+          </div>
+        </div>
+      </dts-card>
+    </div>
+  }
+
+  <!-- ── TAB: Herramientas ─────────────────────────────────────────────── -->
+  @if (activeTab() === 'tools') {
+    <dts-card shadow="none">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-x-2">
+          <i class="ri-tools-line text-[#006699]"></i>
+          <span class="font-bold text-dts-title">Herramientas asignadas</span>
+        </div>
+        <span class="px-2.5 py-1 rounded-full text-xs font-bold
+          bg-[#006699]/10 text-[#006699]">{{ user()?.tools?.length ?? 0 }} total</span>
+      </div>
+
+      @if (!toolsByBu().length) {
+        <div class="flex flex-col items-center justify-center py-12 gap-y-2">
+          <div class="w-14 h-14 rounded-full bg-gray-100 dark:bg-[#3f3f46]
+            flex items-center justify-center">
+            <i class="ri-tools-line text-2xl text-gray-300 dark:text-gray-600"></i>
+          </div>
+          <span class="text-sm text-dts-badges">No tienes herramientas asignadas.</span>
+        </div>
+      } @else {
+        <div class="flex flex-col gap-y-6">
+          @for (group of toolsByBu(); track group.bu) {
+            <div>
+              <div class="flex items-center gap-x-2 mb-3">
+                <span class="text-xs font-bold uppercase tracking-widest text-dts-badges">{{ group.bu }}</span>
+                <div class="flex-1 h-px bg-gray-200 dark:bg-[#3f3f46]"></div>
+                <span class="text-xs text-dts-badges">{{ group.items.length }}</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                @for (tool of group.items; track tool._id) {
+                  <div class="flex items-center gap-x-3 px-4 py-3 rounded-xl border
+                    dark:border-[#3f3f46] hover:border-[#006699]/40 transition-colors
+                    bg-gray-50/50 dark:bg-[#1e1e1e]">
+                    <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0
+                      bg-[#006699]/10 dark:bg-[#006699]/20">
+                      <i [class]="(tool.icon ?? 'ri-app-store-line') + ' text-[#006699]'"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm font-semibold text-dts-title truncate">{{ tool.title ?? tool.name }}</div>
+                      @if (tool.businessUnitId?.name) {
+                        <div class="text-xs text-dts-badges truncate">{{ tool.businessUnitId.name }}</div>
+                      }
+                    </div>
+                    <span class="w-2 h-2 rounded-full shrink-0"
+                      [class.bg-green-500]="tool.active"
+                      [class.bg-gray-300]="!tool.active">
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </dts-card>
+  }
+
+</section>

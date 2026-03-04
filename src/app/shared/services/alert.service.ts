@@ -56,7 +56,7 @@ export class AlertService {
       ...this.cfg,
       icon: 'success',
       title,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       text: message,
       confirmButtonText: 'OK',
     });
@@ -70,7 +70,7 @@ export class AlertService {
       ...this.cfg,
       icon: 'error',
       title,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       text: message,
       confirmButtonText: 'OK',
     });
@@ -84,7 +84,7 @@ export class AlertService {
       ...this.cfg,
       icon: 'warning',
       title,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       text: message,
       confirmButtonText: 'OK',
     });
@@ -98,7 +98,7 @@ export class AlertService {
       ...this.cfg,
       icon: 'info',
       title,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       text: message,
       confirmButtonText: 'OK',
     });
@@ -118,7 +118,7 @@ export class AlertService {
       icon: 'question',
       title,
       text: message,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       showCancelButton: true,
       confirmButtonText: confirmText,
       cancelButtonText: cancelText,
@@ -138,7 +138,7 @@ export class AlertService {
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it',
       cancelButtonText: 'Cancel',
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       confirmButtonColor: '#dc2626', // Red for delete
       reverseButtons: true,
     });
@@ -152,7 +152,7 @@ export class AlertService {
       ...this.cfg,
       title,
       text: message,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       allowOutsideClick: false,
       allowEscapeKey: false,
       showConfirmButton: false,
@@ -194,7 +194,7 @@ export class AlertService {
       position,
       icon,
       title,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
       showConfirmButton: false,
       timer,
       timerProgressBar: true,
@@ -233,7 +233,7 @@ export class AlertService {
       cancelButtonText: 'Cancel',
       confirmButtonColor: currentStatus ? '#dc2626' : '#006699',
       reverseButtons: true,
-      theme: this.globalState.theme() === 'light' ? 'dark' : 'light',
+      theme: this.globalState.theme() as 'light' | 'dark',
     });
   }
 

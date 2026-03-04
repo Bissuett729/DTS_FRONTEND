@@ -67,28 +67,28 @@
                 <dts-select
                     class="col-span-1"
                     label="Turno"
-                    optionValue="value"
-                    optionLabel="viewValue"
+                    optionValue="shift"
+                    optionLabel="shift"
                     [control]="downtimeForm.controls.shift"
-                    [options]="shifts">
+                    [options]="shifts$()">
                 </dts-select>
 
                 <dts-select
                     class="col-span-1"
                     label="Línea"
-                    optionValue="value"
-                    optionLabel="viewValue"
+                    optionValue="name"
+                    optionLabel="name"
                     [control]="downtimeForm.controls.line"
-                    [options]="lines">
+                    [options]="lines$()">
                 </dts-select>
 
                 <dts-select
                     class="col-span-1"
                     label="Segmento"
-                    optionValue="value"
-                    optionLabel="viewValue"
-                    [control]="downtimeForm.controls.line"
-                    [options]="lines">
+                    optionValue="name"
+                    optionLabel="name"
+                    [control]="downtimeForm.controls.stage"
+                    [options]="stages">
                 </dts-select>
 
                 <dts-input

@@ -80,4 +80,18 @@ export class LinesRequestService {
         error: () => this.alert.error('Error al eliminar la línea'),
       });
   }
+
+  updateHourlyBulk(lineId: string, stageId: string, standards: { startHour: number; standard: number }[]) {
+    this.linesState.loadingUpdateHourly.set(true);
+    this.http
+      .patch(`${this.dtsURL}/v1/line/${lineId}/stage/${stageId}/hourly/bulk`, { standards })
+      .pipe(finalize(() => this.linesState.loadingUpdateHourly.set(false)))
+      .subscribe({
+        next: () => {
+          this.alert.success('Estándares horarios actualizados');
+          this.getLines(false);
+        },
+        error: () => this.alert.error('Error al actualizar los estándares horarios'),
+      });
+  }
 }

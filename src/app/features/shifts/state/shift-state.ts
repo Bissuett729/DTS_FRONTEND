@@ -10,5 +10,7 @@ export class ShiftState {
   
   loadingShifts = signal<boolean>(false);
   loadingCreateShift = signal<boolean>(false);
+  loadingUpdateShift = signal<boolean>(false);
+  loadingDeleteShift = signal<boolean>(false);
 
 }

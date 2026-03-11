@@ -16,5 +16,7 @@ export class UsersState {
     loadingCreateUser = signal<boolean>(false);
     
     loadingUpdateUser = signal<boolean>(false);
+
+    loadingDeleteUser = signal<boolean>(false);
  
 }

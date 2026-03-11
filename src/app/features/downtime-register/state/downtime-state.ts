@@ -17,4 +17,9 @@ export class DowntimeState {
   shifts = signal<IShift[]>([]);
   loadingShifts = signal<boolean>(false);
 
+  downtimes = signal<any[]>([]);
+  loadingDowntimes = signal<boolean>(false);
+
+  loadingCreateDowntime = signal<boolean>(false);
+
 }

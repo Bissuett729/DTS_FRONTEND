@@ -61,4 +61,32 @@ export class ShiftRequestService {
         },
       });
   }
+
+  updateShift(id: string, payload: { shift?: string; description?: string; startTime?: Date | null; endTime?: Date | null }) {
+    this.shiftState.loadingUpdateShift.set(true);
+    this.http
+      .put(`${this.userURL}/v1/shifts/${id}`, payload)
+      .pipe(finalize(() => this.shiftState.loadingUpdateShift.set(false)))
+      .subscribe({
+        next: () => {
+          this.alert.success('Turno actualizado exitosamente');
+          this.getShift(false);
+        },
+        error: () => this.alert.error('Error al actualizar el turno'),
+      });
+  }
+
+  deleteShift(id: string) {
+    this.shiftState.loadingDeleteShift.set(true);
+    this.http
+      .delete(`${this.userURL}/v1/shifts/${id}`)
+      .pipe(finalize(() => this.shiftState.loadingDeleteShift.set(false)))
+      .subscribe({
+        next: () => {
+          this.alert.success('Turno eliminado exitosamente');
+          this.getShift(false);
+        },
+        error: () => this.alert.error('Error al eliminar el turno'),
+      });
+  }
 }

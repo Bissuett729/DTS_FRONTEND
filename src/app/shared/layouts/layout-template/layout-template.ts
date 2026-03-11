@@ -16,6 +16,8 @@ import { Sidebar } from '../sidebar/sidebar';
 import { environment } from '../../../../environments/environment';
 import { InitSidebarSockets } from './core/sockets/init-sockets.socket';
 import { UsersSocketManager, ToolsSocketManager } from '../..';
+import { LinesSocketManager } from '../../services/lines-socket-manager.service';
+import { DowntimeSocketManager } from '../../services/downtime-socket-manager.service';
 
 @Component({
   selector: 'foxcode-layout-template',
@@ -26,6 +28,8 @@ import { UsersSocketManager, ToolsSocketManager } from '../..';
 export class LayoutTemplate implements OnInit, OnDestroy {
   private usersSocketManager = inject(UsersSocketManager);
   private toolsSocketManager = inject(ToolsSocketManager);
+  private linesSocketManager = inject(LinesSocketManager);
+  private downtimeSocketManager = inject(DowntimeSocketManager);
   private initSidebarSockets = inject(InitSidebarSockets);
   private authService = inject(AuthService);
   private globalState = inject(GlobalStateService);
@@ -49,6 +53,8 @@ export class LayoutTemplate implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.usersSocketManager.connect();
     this.toolsSocketManager.connect();
+    this.linesSocketManager.connect();
+    this.downtimeSocketManager.connect();
     this.initSidebarSockets.InitSockets();
 
     // Ensure routing state is clean on init
@@ -92,5 +98,7 @@ export class LayoutTemplate implements OnInit, OnDestroy {
     }
     this.usersSocketManager.disconnect();
     this.toolsSocketManager.disconnect();
+    this.linesSocketManager.disconnect();
+    this.downtimeSocketManager.disconnect();
   }
 }

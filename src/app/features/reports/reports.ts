@@ -1,37 +1,47 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DtsCard, DtsButton, DtsSelect, DtsDatePicker } from '../../shared';
+import { DtsAnalyticsService, HourlyRecord } from '../downtime-register/services/dts-analytics.service';
+import { LinesRequestService } from '../lines/services/lines-request.service';
+import { LinesState } from '../lines/state/lines-state';
+import { PendingSolutionsState } from '../pending-solutions/state/pending-solutions.state';
+export type { PendingRow, ActionLogRow } from '../pending-solutions/state/pending-solutions.state';
 
+// ── View model for a single table row ─────────────────────────────────────────
 export interface HourRow {
   hour: string;
   standard: number;
   production: number;
   efficiency: number;
-  mfgTop: string | null;
-  mfgNr: string | null;
-  dtReported: string;
-  realTime: string;
-  dtGenerated: string;
-  dtNotReported: string;
+  topDept: string | null;
+  dtReported: number;
+  dtGenerated: number;
+  dtNotReported: number;
   isCurrentHour?: boolean;
 }
 
-export interface ActionLogRow {
-  department: string;
-  cause: string;
-  start: string;
-  startHour: string;
-  endHour: string;
-  total: string;
-  actionNum: number;
-  status: 'Abierto' | 'Cerrado';
-  dueDate: string;
-  overdueTime: string;
-  closeDate: string;
-  rca: string;
-  ica: string;
-  pca: string;
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function toHourRange(startIso: string): string {
+  const d = new Date(startIso);
+  const h = d.getHours();
+  return `${h}:00 - ${h + 1}:00`;
+}
+
+function topDeptFromClassification(rec: HourlyRecord): string | null {
+  if (!rec.classification?.length) return null;
+  return rec.classification.reduce((best, c) =>
+    c.downTimeGenerated > (best?.downTimeGenerated ?? -1) ? c : best,
+  rec.classification[0]).department ?? null;
+}
+
+function fmtMins(mins: number): string {
+  if (!mins) return '0m';
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
 }
 
 @Component({
@@ -41,27 +51,35 @@ export interface ActionLogRow {
   templateUrl: './reports.html',
   styles: ``,
 })
-export class Reports {
-  activeTab = signal<'hourly' | 'actionlog'>('hourly');
+export class Reports implements OnInit {
+  private analyticsSvc = inject(DtsAnalyticsService);
+  private linesSvc     = inject(LinesRequestService);
+  private linesState   = inject(LinesState);
+  readonly pendingSvc  = inject(PendingSolutionsState);
+  readonly fmtMins = fmtMins;
+
+  activeTab = signal<'hourly' | 'pending' | 'actionlog'>('hourly');
+  loading   = this.analyticsSvc.loadingHourly;
 
   dateControl = new FormControl(new Date());
-  lineControl = new FormControl('SA2');
+  lineControl = new FormControl<string | null>(null);
   deptControl = new FormControl('Todos');
   statusControl = new FormControl('Todos');
   startDateControl = new FormControl<Date | null>(null);
   endDateControl = new FormControl<Date | null>(null);
 
-  lines = [
-    { _id: 'SA2', name: 'SA2' },
-    { _id: 'FA1', name: 'FA1' },
-    { _id: 'FA2', name: 'FA2' },
-  ];
+  lines = computed(() => [
+    { name: null as any, label: 'Todas las líneas' },
+    ...this.linesState.lines().map(l => ({ name: l.name, label: l.name })),
+  ]);
+  loadingLines = this.linesState.loadingLines;
+
   departments = [
     { _id: 'Todos', name: 'Todos' },
-    { _id: 'AUTO', name: 'AUTO' },
-    { _id: 'DIAG', name: 'DIAG' },
-    { _id: 'PMC',  name: 'PMC'  },
-    { _id: 'MFG',  name: 'MFG'  },
+    { _id: 'AUTO',  name: 'AUTO'  },
+    { _id: 'DIAG',  name: 'DIAG'  },
+    { _id: 'PMC',   name: 'PMC'   },
+    { _id: 'MFG',   name: 'MFG'   },
   ];
   statuses = [
     { _id: 'Todos',   name: 'Todos'   },
@@ -69,41 +87,87 @@ export class Reports {
     { _id: 'Cerrado', name: 'Cerrado' },
   ];
 
-  hourlyRows: HourRow[] = [
-    { hour: '0:00 - 1:00',   standard: 157, production: 370, efficiency: 235.67, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '1:00 - 2:00',   standard: 157, production: 270, efficiency: 171.97, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '2:00 - 3:00',   standard: 157, production: 415, efficiency: 264.33, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '3:00 - 4:00',   standard: 90,  production: 325, efficiency: 361.11, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '4:00 - 5:00',   standard: 157, production: 395, efficiency: 251.59, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '5:00 - 6:00',   standard: 157, production: 365, efficiency: 232.48, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '6:00 - 7:00',   standard: 80,  production: 60,  efficiency: 75.00,  mfgTop: '0:00', mfgNr: 'NR: 10:00', dtReported: '0:00', realTime: '0:00', dtGenerated: '10:00', dtNotReported: '10:00' },
-    { hour: '7:00 - 8:00',   standard: 157, production: 200, efficiency: 127.39, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '8:00 - 9:00',   standard: 157, production: 345, efficiency: 219.75, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '9:00 - 10:00',  standard: 157, production: 315, efficiency: 200.64, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00'  },
-    { hour: '10:00 - 11:00', standard: 157, production: 290, efficiency: 184.71, mfgTop: null,  mfgNr: null,        dtReported: '0:00', realTime: '0:00', dtGenerated: '0:00',  dtNotReported: '0:00',  isCurrentHour: true  },
-  ];
+  // ── Derived rows from raw API records ────────────────────────────────────
+  hourlyRows = computed<HourRow[]>(() => {
+    const now = new Date();
+    return this.analyticsSvc.hourlyRows().map(rec => {
+      const start = new Date(rec.startTime);
+      const isCurrent = start.getHours() === now.getHours()
+          && start.toDateString() === now.toDateString();
+      return {
+        hour:          toHourRange(rec.startTime),
+        standard:      rec.standardOutput ?? 0,
+        production:    rec.currentOutput  ?? 0,
+        efficiency:    rec.efficiency     ?? 0,
+        topDept:       topDeptFromClassification(rec),
+        dtReported:    rec.downTimeReported    ?? 0,
+        dtGenerated:   rec.downTimeGenerated   ?? 0,
+        dtNotReported: rec.downTimeUnreported  ?? 0,
+        isCurrentHour: isCurrent,
+      };
+    });
+  });
 
-  totals = computed(() => ({
-    standard:      this.hourlyRows.reduce((s, r) => s + r.standard, 0),
-    production:    this.hourlyRows.reduce((s, r) => s + r.production, 0),
-    efficiency:    +(this.hourlyRows.reduce((s, r) => s + r.efficiency, 0) / this.hourlyRows.length).toFixed(2),
-    dtGenerated:   '10:00',
-    dtNotReported: '10:00',
-  }));
+  totals = computed(() => {
+    const rows = this.hourlyRows();
+    const eff  = rows.length ? rows.reduce((s, r) => s + r.efficiency, 0) / rows.length : 0;
+    return {
+      standard:      rows.reduce((s, r) => s + r.standard,      0),
+      production:    rows.reduce((s, r) => s + r.production,    0),
+      efficiency:    +eff.toFixed(2),
+      dtGenerated:   rows.reduce((s, r) => s + r.dtGenerated,   0),
+      dtNotReported: rows.reduce((s, r) => s + r.dtNotReported, 0),
+    };
+  });
 
-  top3Depts = [
-    { name: 'MFG',  time: '10:00', color: '#ef4444' },
-  ];
+  top3Depts = computed(() => {
+    const palette = ['#ef4444','#f97316','#3a57e8'];
+    const map = new Map<string, number>();
+    this.analyticsSvc.hourlyRows().forEach(rec =>
+      rec.classification?.forEach(c => {
+        map.set(c.department, (map.get(c.department) ?? 0) + c.downTimeGenerated);
+      }),
+    );
+    const sorted = Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    const maxVal = sorted[0]?.[1] ?? 1;
+    return sorted.map(([name, mins], i) => ({
+      name,
+      time: fmtMins(mins),
+      color: palette[i],
+      pct: Math.round((mins / maxVal) * 100),
+    }));
+  });
 
-  actionLog: ActionLogRow[] = [
-    { department: 'AUTO', cause: 'Espera de Soporte', start: '30/12/2025', startHour: '12:54:58', endHour: '14:47:05', total: '112:07', actionNum: 4773, status: 'Abierto', dueDate: '--', overdueTime: '--', closeDate: '--', rca: '', ica: '', pca: '' },
-    { department: 'AUTO', cause: 'Espera de Soporte', start: '06/10/2025', startHour: '16:10:39', endHour: '16:39:35', total: '28:56',  actionNum: 4729, status: 'Abierto', dueDate: '--', overdueTime: '--', closeDate: '--', rca: '', ica: '', pca: '' },
-    { department: 'DIAG', cause: 'Paro por Diag',     start: '04/10/2025', startHour: '17:31:56', endHour: '17:45:22', total: '13:26',  actionNum: 4725, status: 'Abierto', dueDate: '--', overdueTime: '--', closeDate: '--', rca: '', ica: '', pca: '' },
-    { department: 'PMC',  cause: 'Espera de Surtido', start: '04/10/2025', startHour: '13:04:31', endHour: '13:31:33', total: '27:02',  actionNum: 4718, status: 'Abierto', dueDate: '--', overdueTime: '--', closeDate: '--', rca: '', ica: '', pca: '' },
-  ];
+  // ── KPI cards ─────────────────────────────────────────────────────────────
+  totalDtGenerated = computed(() => this.totals().dtGenerated);
+  totalDtNotReported = computed(() => this.totals().dtNotReported);
+  avgEfficiency = computed(() => this.totals().efficiency);
+  totalEvents = computed(() => this.hourlyRows().filter(r => r.dtGenerated > 0).length);
 
-  exportToExcel(): void { console.log('Export to Excel'); }
-  applyFilter():   void { console.log('Apply filter'); }
-  setToday():      void { this.dateControl.setValue(new Date()); }
-  filterActionLog(): void { console.log('Filter action log'); }
+  // ── Pending & action log via shared PendingSolutionsState ──────────────────────
+  get pendingRows() { return this.pendingSvc.pendingRows; }
+  get actionLog()   { return this.pendingSvc.actionLog;   }
+  saveSolution = (row: any) => this.pendingSvc.saveSolution(row);
+
+  // ── Lifecycle ─────────────────────────────────────────────────────────────
+  async ngOnInit() {
+    await this.linesSvc.getLines();
+    await this.applyFilter();
+  }
+
+  async applyFilter() {
+    const date = this.dateControl.value ?? new Date();
+    await this.analyticsSvc.fetchHourlyReport(date, {
+      line: this.lineControl.value ?? undefined,
+    });
+    this.pendingSvc.refreshFromRecords(this.analyticsSvc.hourlyRows());
+  }
+
+  setToday() {
+    this.dateControl.setValue(new Date());
+    this.applyFilter();
+  }
+
+  filterActionLog() { /* future */ }
+  exportToExcel()   { /* future */ }
 }

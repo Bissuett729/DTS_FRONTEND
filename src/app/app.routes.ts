@@ -55,6 +55,10 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/reports/reports.routes').then(m => m.ReportsRoutes)
             },
             {
+                path: 'pending-solutions',
+                loadChildren: () => import('./features/pending-solutions/pending-solutions.routes').then(m => m.PendingSolutionsRoutes)
+            },
+            {
                 path: '',
                 redirectTo: 'home',
                 pathMatch: 'full'

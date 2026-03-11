@@ -94,4 +94,32 @@ export class LinesRequestService {
         error: () => this.alert.error('Error al actualizar los estándares horarios'),
       });
   }
+
+  addStage(lineId: string, name: string, defaultStandard: number) {
+    this.linesState.loadingCreateLine.set(true);
+    this.http
+      .post(`${this.dtsURL}/v1/line/${lineId}/stage`, { name, defaultStandard })
+      .pipe(finalize(() => this.linesState.loadingCreateLine.set(false)))
+      .subscribe({
+        next: () => {
+          this.alert.success('Etapa agregada exitosamente');
+          this.getLines(false);
+        },
+        error: () => this.alert.error('Error al agregar la etapa'),
+      });
+  }
+
+  removeStage(lineId: string, stageId: string) {
+    this.linesState.loadingDeleteLine.set(true);
+    this.http
+      .delete(`${this.dtsURL}/v1/line/${lineId}/stage/${stageId}`)
+      .pipe(finalize(() => this.linesState.loadingDeleteLine.set(false)))
+      .subscribe({
+        next: () => {
+          this.alert.success('Etapa eliminada exitosamente');
+          this.getLines(false);
+        },
+        error: () => this.alert.error('Error al eliminar la etapa'),
+      });
+  }
 }

@@ -35,26 +35,26 @@ export class Sidebar implements OnInit {
     {
       name: 'Inicio',
       menus: [
-        { name: 'Panel de control', route: 'home', icon: 'ri-dashboard-2-line' },
-        { name: 'Perfil', route: 'profile', icon: 'ri-user-line' },
+        { name: 'Panel de control', route: 'home',    icon: 'ri-dashboard-2-line' },
+        { name: 'Perfil',           route: 'profile', icon: 'ri-user-line'        },
       ],
     },
     {
       name: 'Seguimiento',
       menus: [
-        { name: 'Registro', route: 'register', icon: 'ri-dashboard-2-line' },
-        { name: 'Tendencias', route: 'trends', icon: 'ri-dashboard-2-line' },
-        { name: 'Reportes', route: 'reports', icon: 'ri-dashboard-2-line' },
+        { name: 'Registro',       route: 'register',           icon: 'ri-file-edit-line'      },
+        { name: 'Tendencias',     route: 'trends',             icon: 'ri-line-chart-line'     },
+        { name: 'Reporte Hora x Hora',       route: 'reports',            icon: 'ri-bar-chart-2-line'    },
+        { name: 'Sin Solución',   route: 'pending-solutions',  icon: 'ri-error-warning-line'  },
       ],
     },
     {
       name: 'Administración',
       menus: [
-        // { name: 'Configuración', route: 'config', icon: 'ri-dashboard-2-line' },
-        { name: 'Usuarios', route: 'users', icon: 'ri-dashboard-2-line' },
-        { name: 'Líneas', route: 'lines', icon: 'ri-dashboard-2-line' },
-        { name: 'Departamentos', route: 'departments', icon: 'ri-dashboard-2-line' },
-        { name: 'Turnos', route: 'shifts', icon: 'ri-dashboard-2-line' },
+        { name: 'Usuarios',      route: 'users',       icon: 'ri-group-line'         },
+        { name: 'Líneas',        route: 'lines',       icon: 'ri-layout-row-line'    },
+        { name: 'Departamentos', route: 'departments', icon: 'ri-building-2-line'    },
+        { name: 'Turnos',        route: 'shifts',      icon: 'ri-time-line'          },
       ],
     },
   ];

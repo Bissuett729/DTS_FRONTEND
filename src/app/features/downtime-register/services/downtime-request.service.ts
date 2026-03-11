@@ -30,7 +30,6 @@ export class DowntimeRequestService {
       )
       .subscribe({
         next: (res) => {
-          console.log('[getDepartments] res:', res);
           this.downtimeState.departments.set(res);
         },
         error: () => this.alert.error('Error al obtener los departamentos'),
@@ -48,7 +47,6 @@ export class DowntimeRequestService {
       )
       .subscribe({
         next: (res) => {
-          console.log('[getLines] res:', res);
           this.downtimeState.lines.set(res);
         },
         error: () => this.alert.error('Error al obtener las líneas'),
@@ -70,13 +68,64 @@ export class DowntimeRequestService {
       )
       .subscribe({
         next: (res) => {
-          console.log('[getShift] res:', res);
           this.downtimeState.shifts.set(res);
         },
-        error: (err) => {
+        error: () => {
           this.alert.error('Error al obtener los turnos');
         },
       });
   }
 
+  createDowntime(
+    payload: {
+      startTime: Date;
+      endTime: Date;
+      week?: number;
+      shift?: string;
+      line?: string;
+      stage?: string;
+      supervisor?: string;
+      registeredBy?: string;
+      standardOutput?: number;
+      currentOutput?: number;
+      efficiency?: number;
+      downTimeGenerated?: number;
+      downTimeUnreported?: number;
+      downTimeReported?: number;
+      classification?: { downTimeGenerated: number; department: string; reason: string }[];
+    },
+    onSuccess?: () => void,
+  ) {
+    this.downtimeState.loadingCreateDowntime.set(true);
+    this.http
+      .post(`${this.dtsURL}/v1/down-time`, payload)
+      .pipe(finalize(() => this.downtimeState.loadingCreateDowntime.set(false)))
+      .subscribe({
+        next: () => {
+          this.alert.success('Downtime registrado exitosamente');
+          onSuccess?.();
+        },
+        error: () => this.alert.error('Error al registrar el downtime'),
+      });
+  }
+
+  getDowntimes(filters?: { page?: number; limit?: number; week?: number; shift?: string; line?: string; stage?: string }) {
+    this.downtimeState.loadingDowntimes.set(true);
+    const params = new URLSearchParams();
+    if (filters) {
+      Object.entries(filters).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) params.append(k, String(v));
+      });
+    }
+    const query = params.toString() ? `?${params.toString()}` : '';
+    this.http
+      .get<any>(`${this.dtsURL}/v1/down-time${query}`)
+      .pipe(finalize(() => this.downtimeState.loadingDowntimes.set(false)))
+      .subscribe({
+        next: (res: any) => {
+          this.downtimeState.downtimes.set(Array.isArray(res) ? res : (res.data ?? res.items ?? []));
+        },
+        error: () => this.alert.error('Error al obtener los downtimes'),
+      });
+  }
 }

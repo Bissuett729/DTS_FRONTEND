@@ -5,6 +5,7 @@ import { ShiftRequestService } from './services/shift-request.service';
 import { ShiftState } from './state/shift-state';
 import { OpenModal } from '../../core/infrastructure';
 import { NewShift } from './modals/new-shift/new-shift';
+import { ShiftsSocketManager } from '../../shared/services/shifts-socket-manager.service';
 
 export interface ShiftBreak {
   label: string;
@@ -43,6 +44,7 @@ export class Shifts implements OnInit, OnDestroy {
 
   private readonly shiftRequest = inject(ShiftRequestService);
   private readonly shiftState = inject(ShiftState);
+  private readonly shiftsSocketManager = inject(ShiftsSocketManager);
 
   private intervalId: any;
   public currentTime: Date = new Date();
@@ -54,10 +56,16 @@ export class Shifts implements OnInit, OnDestroy {
   ngOnInit() {
     this.shiftRequest.getShift();
     this.intervalId = setInterval(() => { this.currentTime = new Date(); }, 30000);
+
+    this.shiftsSocketManager.connect();
+    this.shiftsSocketManager.onShiftCreated(() => this.shiftRequest.getShift(false));
+    this.shiftsSocketManager.onShiftUpdated(() => this.shiftRequest.getShift(false));
+    this.shiftsSocketManager.onShiftDeleted(() => this.shiftRequest.getShift(false));
   }
 
   ngOnDestroy() {
     if (this.intervalId) clearInterval(this.intervalId);
+    this.shiftsSocketManager.disconnect();
   }
 
   shiftDuration(start: number, end: number): number {

@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   DtsCard,
   DtsButton,
@@ -9,7 +9,7 @@ import {
   DtsSelect,
   DtsDatePicker,
 } from '../../shared';
-import { departments, lines, reasons, shifts } from './data';
+import { reasons } from './data';
 import { classficationForm, downtimeForm, downtimeTotalForm, metricsForm } from './forms';
 import { IDowntimeClassification } from './models/downtime-classification.model';
 import { CommonModule } from '@angular/common';
@@ -41,14 +41,20 @@ export class DowntimeRegister implements OnInit {
 
   readonly shifts$ = this.downtimeState.shifts;
   readonly lines$ = this.downtimeState.lines;
-  readonly departments = departments;
+  readonly loadingCreateDowntime$ = this.downtimeState.loadingCreateDowntime;
+  readonly loadingLines$ = this.downtimeState.loadingLines;
+  readonly loadingShifts$ = this.downtimeState.loadingShifts;
+
+  /** Department names from API, used in classification radio buttons */
+  readonly departments$ = computed(() => this.downtimeState.departments().map(d => d.department));
 
   readonly downtimeForm = downtimeForm;
   readonly metricsForm = metricsForm;
   readonly downtimeTotalForm = downtimeTotalForm;
   readonly classficationForm = classficationForm;
 
-  readonly reasons = reasons;
+  /** Fallback hardcoded reasons when API has none */
+  private readonly fallbackReasons = reasons;
 
   classifications: IDowntimeClassification[] = [];
 
@@ -86,11 +92,13 @@ export class DowntimeRegister implements OnInit {
     return hourlyStandard?.standard ?? 0;
   }
 
-  /** Puede guardar si actualOut tiene valor y no hay tiempo muerto no reportado */
+  /** Puede guardar si los campos obligatorios están completos y no hay tiempo muerto no reportado */
   get canSave(): boolean {
+    const f = this.downtimeForm.value;
     const actualOut = this.metricsForm.controls.actualOut.value;
     const unreported = this.downtimeTotalForm.controls.unreportedDowntime.value ?? 0;
-    return !!actualOut && unreported === 0;
+    const hasRequiredFields = !!f.startTime && !!f.shift && !!f.line && !!f.stage;
+    return !!actualOut && unreported === 0 && hasRequiredFields;
   }
 
   /** Eficiencia = salida actual / salida estándar */
@@ -199,12 +207,32 @@ export class DowntimeRegister implements OnInit {
   // ─── Actions ────────────────────────────────────────────────────────────────
 
   registerDownTime(): void {
-    // console.log('downtimeForm:', this.downtimeForm.value);
-    // console.log('metricsForm:', this.metricsForm.value);
-    // console.log('STD:', this.standardOut);
-    // console.log('Eficiencia:', this.efficiency + '%');
-    // console.log('Tiempo muerto no reportado:', this.unreportedDowntime);
-    // console.log('Tiempo muerto generado:', this.generatedDowntime);
+    if (!this.canSave) return;
+
+    const formValues = this.downtimeForm.getRawValue();
+    const payload = {
+      startTime: formValues.startTime!,
+      endTime: formValues.endTime!,
+      week: formValues.weekNumber ?? undefined,
+      shift: formValues.shift ?? undefined,
+      line: formValues.line ?? undefined,
+      stage: formValues.stage ?? undefined,
+      supervisor: formValues.supervisor != null ? String(formValues.supervisor) : undefined,
+      registeredBy: this.globalState.currentUser()?.username ?? undefined,
+      standardOutput: this.standardOut,
+      currentOutput: Number(this.metricsForm.controls.actualOut.value) ?? undefined,
+      efficiency: this.efficiency,
+      downTimeGenerated: this.generatedDowntime,
+      downTimeUnreported: this.unreportedDowntime,
+      downTimeReported: this.downtimeTotalForm.getRawValue().totalReportedDowntime ?? undefined,
+      classification: this.classifications.map((c) => ({
+        downTimeGenerated: c.downtimeReported,
+        department: c.department,
+        reason: c.problemDescription ?? '',
+      })),
+    };
+
+    this.downtimeRequestService.createDowntime(payload, () => this.resetForms());
   }
 
   addClassifyDowntime(): void {
@@ -234,7 +262,11 @@ export class DowntimeRegister implements OnInit {
   }
 
   getReasons(department: string): string[] {
-    const r = this.reasons as Record<string, string[]>;
+    // Try API departments first
+    const apiDept = this.downtimeState.departments().find(d => d.department === department);
+    if (apiDept?.reasons?.length) return apiDept.reasons;
+    // Fallback to hardcoded
+    const r = this.fallbackReasons as Record<string, string[]>;
     return r[department] ?? r['AUTO'] ?? [];
   }
 
@@ -263,5 +295,33 @@ export class DowntimeRegister implements OnInit {
 
   private syncUnreportedDowntime(): void {
     this.downtimeTotalForm.controls.unreportedDowntime.setValue(this.unreportedDowntime);
+  }
+
+  private resetForms(): void {
+    const now = new Date();
+    now.setMinutes(0, 0, 0);
+    const end = new Date(now);
+    end.setHours(end.getHours() + 1, 0, 0, 0);
+
+    downtimeForm.reset({
+      date: new Date(),
+      weekNumber: this.currentWeek,
+      startTime: now,
+      endTime: end,
+      reason: '',
+      shift: null,
+      line: null,
+      stage: null,
+      supervisor: this.globalState.currentUser()?.supervisor?.clock ?? null,
+    });
+
+    metricsForm.reset({ actualOut: null, standardOut: null });
+    downtimeTotalForm.reset({
+      generatedDowntime: null,
+      unreportedDowntime: null,
+      totalReportedDowntime: 0,
+    });
+    classficationForm.reset();
+    this.classifications = [];
   }
 }

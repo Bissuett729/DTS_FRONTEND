@@ -9,4 +9,6 @@ export * from './tools-socket-manager.service';
 export * from './roles-socket-manager.service';
 export * from './shifts-socket-manager.service';
 export * from './business-units-socket-manager.service';
+export * from './lines-socket-manager.service';
+export * from './downtime-socket-manager.service';
 export * from './notifications-socket-manager.service';

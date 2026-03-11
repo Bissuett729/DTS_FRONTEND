@@ -25,8 +25,7 @@
       <div class="flex flex-col gap-y-1">
         <span class="text-xs font-semibold uppercase tracking-widest text-dts-badges">DT Semana Actual</span>
         <div class="flex items-end gap-x-2 mt-1">
-          <span class="text-3xl font-bold text-dts-title">{{ currentWeekDt }}</span>
-          <span class="text-sm text-dts-badges mb-1">min</span>
+          <span class="text-3xl font-bold text-dts-title">{{ fmtMins(currentWeekDt()) }}</span>
         </div>
         <div class="flex items-center gap-x-1 text-xs" [class.text-red-500]="kpiTrend().up" [class.text-green-500]="!kpiTrend().up">
           <i [class]="kpiTrend().up ? 'ri-arrow-up-line' : 'ri-arrow-down-line'"></i>
@@ -35,48 +34,53 @@
       </div>
     </dts-card>
 
-    <!-- DT Predicho -->
+    <!-- DT Semana Anterior -->
     <dts-card shadow="none">
       <div class="flex flex-col gap-y-1">
-        <div class="flex items-center gap-x-1.5">
-          <span class="text-xs font-semibold uppercase tracking-widest text-dts-badges">DT Predicho (Prox. Sem)</span>
-          <i class="ri-ai-generate text-sm text-[#006699]"></i>
-        </div>
+        <span class="text-xs font-semibold uppercase tracking-widest text-dts-badges">DT Semana Anterior</span>
         <div class="flex items-end gap-x-2 mt-1">
-          <span class="text-3xl font-bold text-[#006699]">{{ predictedNextDt }}</span>
-          <span class="text-sm text-dts-badges mb-1">min</span>
+          <span class="text-3xl font-bold text-dts-title">{{ fmtMins(prevWeekDt()) }}</span>
         </div>
-        <div class="flex items-center gap-x-1 text-xs text-green-500">
-          <i class="ri-arrow-down-line"></i>
-          <span>{{ expectedReduction() }}% reducción esperada</span>
+        <div class="flex items-center gap-x-1 text-xs text-dts-badges">
+          <i class="ri-history-line"></i>
+          <span>Semana comparativa</span>
         </div>
       </div>
     </dts-card>
 
-    <!-- Causa Principal Predicha -->
+    <!-- Top Causa -->
     <dts-card shadow="none">
       <div class="flex flex-col gap-y-1">
-        <span class="text-xs font-semibold uppercase tracking-widest text-dts-badges">Causa Principal Predicha</span>
+        <span class="text-xs font-semibold uppercase tracking-widest text-dts-badges">Top Causa (Sem. Actual)</span>
         <div class="mt-1">
-          <span class="text-lg font-bold text-dts-title">Espera de Soporte</span>
+          @if (causeTrends().length) {
+            <span class="text-sm font-bold text-dts-title leading-tight">{{ causeTrends()[0].cause }}</span>
+          } @else {
+            <span class="text-sm text-dts-badges">Sin datos</span>
+          }
         </div>
         <div class="flex items-center gap-x-2 mt-1">
-          <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">AUTO</span>
-          <span class="text-xs text-red-500 font-semibold">~190 min predichos</span>
+          @if (causeTrends().length) {
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">{{ causeTrends()[0].dept }}</span>
+            <span class="text-xs font-semibold" [class.text-red-500]="causeTrends()[0].trend === 'up'" [class.text-green-500]="causeTrends()[0].trend === 'down'" [class.text-gray-400]="causeTrends()[0].trend === 'stable'">
+              {{ fmtMins(causeTrends()[0].currentWeek) }}
+            </span>
+          }
         </div>
       </div>
     </dts-card>
 
-    <!-- Confianza del Modelo -->
+    <!-- Semanas analizadas -->
     <dts-card shadow="none">
       <div class="flex flex-col gap-y-1">
-        <span class="text-xs font-semibold uppercase tracking-widest text-dts-badges">Confianza del Modelo</span>
+        <span class="text-xs font-semibold uppercase tracking-widest text-dts-badges">Semanas Analizadas</span>
         <div class="flex items-end gap-x-2 mt-1">
-          <span class="text-3xl font-bold text-green-500">87</span>
-          <span class="text-sm text-dts-badges mb-1">%</span>
+          <span class="text-3xl font-bold text-dts-title">{{ weeklyData().length }}</span>
+          <span class="text-sm text-dts-badges mb-1">sem</span>
         </div>
-        <div class="w-full bg-gray-200 dark:bg-[#3f3f46] rounded-full h-1.5 mt-1">
-          <div class="bg-green-500 h-1.5 rounded-full" style="width: 87%;"></div>
+        <div class="flex items-center gap-x-1 text-xs text-dts-badges">
+          <i class="ri-calendar-line"></i>
+          <span>Historial cargado</span>
         </div>
       </div>
     </dts-card>
@@ -99,8 +103,19 @@
         </div>
       </div>
 
+      @if (loading()) {
+        <div class="flex items-center justify-center py-12">
+          <i class="ri-loader-4-line animate-spin text-2xl text-[#006699]"></i>
+          <span class="ml-2 text-dts-badges">Cargando datos…</span>
+        </div>
+      } @else if (!weeklyData().length) {
+        <div class="flex flex-col items-center justify-center py-12 text-dts-badges">
+          <i class="ri-bar-chart-2-line text-3xl mb-2"></i>
+          <span>Sin datos para el rango seleccionado</span>
+        </div>
+      } @else {
       <div class="flex flex-col gap-y-3">
-        @for (week of weeklyData; track week.label) {
+        @for (week of weeklyData(); track week.label) {
           <div class="flex items-center gap-x-3">
             <!-- Label -->
             <span class="w-16 text-xs font-medium text-right shrink-0"
@@ -123,20 +138,27 @@
               <span class="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold"
                 [class.text-dts-title]="!week.predicted"
                 [class.text-[#006699]]="week.predicted">
-                {{ week.dt }} min
+              {{ fmtMins(week.dt) }}
               </span>
             </div>
           </div>
         }
       </div>
+      }
     </dts-card>
 
     <!-- Top causas -->
     <dts-card shadow="none" class="lg:col-span-2">
       <span class="font-bold text-dts-title block mb-4">Top Causas — Análisis de Tendencia</span>
 
+      @if (!causeTrends().length) {
+        <div class="flex flex-col items-center justify-center py-8 text-dts-badges">
+          <i class="ri-file-list-3-line text-3xl mb-2"></i>
+          <span>Sin causas registradas para el periodo</span>
+        </div>
+      } @else {
       <div class="flex flex-col gap-y-2">
-        @for (c of causeTrends; track c.cause) {
+        @for (c of causeTrends(); track c.cause) {
           <div class="flex items-center gap-x-3 px-3 py-2.5 rounded-lg border
             dark:border-[#3f3f46] hover:border-[#006699]/30 transition-colors">
 
@@ -166,13 +188,14 @@
                   bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">{{ c.dept }}</span>
               </div>
               <div class="flex items-center gap-x-3 mt-0.5 text-[11px] text-dts-badges">
-                <span>Esta sem: <strong class="text-dts-title">{{ c.currentWeek }} min</strong></span>
-                <span class="text-[#006699] font-medium">→ pred: {{ c.predicted }} min</span>
+                <span>Esta sem: <strong class="text-dts-title">{{ fmtMins(c.currentWeek) }}</strong></span>
+                <span>Sem ant: <strong>{{ fmtMins(c.prevWeek) }}</strong></span>
               </div>
             </div>
           </div>
         }
       </div>
+      }
     </dts-card>
   </div>
 
@@ -186,7 +209,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-      @for (insight of insights; track insight.title) {
+      @for (insight of insights(); track insight.title) {
         <div class="flex gap-x-3 p-3.5 rounded-xl border {{ insightBg[insight.type] }}"
           [ngClass]="insightBg[insight.type]">
           <div class="shrink-0 mt-0.5">

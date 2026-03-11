@@ -13,6 +13,8 @@ export * from './departments.events';
 export * from './business-units.events';
 export * from './shifts.events';
 export * from './notifications.events';
+export * from './lines.events';
+export * from './downtime.events';
 
 // Re-export for backward compatibility
 import { USER_EVENTS } from './users.events';

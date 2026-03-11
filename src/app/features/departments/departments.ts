@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DtsCard, DtsButton } from "../../shared";
@@ -7,6 +7,7 @@ import { NewDepartment } from './modals/new-department/new-department';
 import { DepartmentRequestService } from './services/department-request.service';
 import { DepartmentState } from './state/department-state';
 import { IEditingState, UIDepartment } from './interfaces/department.interface';
+import { DepartmentsSocketManager } from '../../shared/services/departments-socket-manager.service';
 
 @Component({
   selector: 'dts-departments',
@@ -15,10 +16,11 @@ import { IEditingState, UIDepartment } from './interfaces/department.interface';
   templateUrl: './departments.html',
   styles: []
 })
-export class Departments implements OnInit {
+export class Departments implements OnInit, OnDestroy {
 
   private readonly departmentRequest = inject(DepartmentRequestService);
   private readonly departmentState    = inject(DepartmentState);
+  private readonly departmentsSocketManager = inject(DepartmentsSocketManager);
 
   departments$ = this.departmentState.departments;
   loadingDepartments$ = this.departmentState.loadingDepartments;
@@ -27,6 +29,15 @@ export class Departments implements OnInit {
 
   ngOnInit(): void {
     this.departmentRequest.getDepartments();
+
+    this.departmentsSocketManager.connect();
+    this.departmentsSocketManager.onDepartmentCreated(() => this.departmentRequest.getDepartments(false));
+    this.departmentsSocketManager.onDepartmentUpdated(() => this.departmentRequest.getDepartments(false));
+    this.departmentsSocketManager.onDepartmentDeleted(() => this.departmentRequest.getDepartments(false));
+  }
+
+  ngOnDestroy(): void {
+    this.departmentsSocketManager.disconnect();
   }
 
   public openNewDepartmentModal() {

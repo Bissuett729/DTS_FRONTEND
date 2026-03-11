@@ -12,11 +12,15 @@
                 </div>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">14h 22m</span>
-                <span class="text-sm font-semibold text-red-500">-12% vs LW</span>
+                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ fmtMins(totalDtMin()) }}</span>
+                <span class="text-sm font-semibold"
+                    [class.text-red-500]="dtDeltaPct() > 0"
+                    [class.text-emerald-500]="dtDeltaPct() <= 0">
+                    {{ dtDeltaPct() > 0 ? '+' : '' }}{{ dtDeltaPct() }}% vs LW
+                </span>
             </div>
             <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-[#3d3d3d] overflow-hidden">
-                <div class="h-full rounded-full bg-red-500" style="width: 60%"></div>
+                <div class="h-full rounded-full bg-red-500" [style.width.%]="dtBarPct()"></div>
             </div>
         </div>
 
@@ -29,12 +33,11 @@
                 </div>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">128.5</span>
+                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ mtbf() }}</span>
                 <span class="text-base font-semibold text-slate-500 dark:text-[#b9b9b9]">hrs</span>
-                <span class="text-sm font-semibold text-red-500">-5% vs LW</span>
             </div>
             <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-[#3d3d3d] overflow-hidden">
-                <div class="h-full rounded-full bg-blue-500" style="width: 80%"></div>
+                <div class="h-full rounded-full bg-blue-500" [style.width.%]="mtbfBarPct()"></div>
             </div>
         </div>
 
@@ -47,12 +50,10 @@
                 </div>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">42</span>
-                <span class="text-base font-semibold text-slate-500 dark:text-[#b9b9b9]">minutos</span>
-                <span class="text-sm font-semibold text-emerald-500">+8% Mejora</span>
+                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ fmtMins(mttr()) }}</span>
             </div>
             <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-[#3d3d3d] overflow-hidden">
-                <div class="h-full rounded-full bg-emerald-500" style="width: 45%"></div>
+                <div class="h-full rounded-full bg-emerald-500" [style.width.%]="mttrBarPct()"></div>
             </div>
         </div>
 
@@ -65,15 +66,75 @@
                 </div>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">94.2%</span>
-                <span class="text-sm font-semibold text-emerald-500">+1.2% vs Objetivo</span>
+                <span class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ availability() }}%</span>
             </div>
             <div class="h-1.5 w-full rounded-full bg-slate-100 dark:bg-[#3d3d3d] overflow-hidden">
-                <div class="h-full rounded-full bg-emerald-500" style="width: 94.2%"></div>
+                <div class="h-full rounded-full bg-emerald-500" [style.width.%]="availability()"></div>
             </div>
         </div>
 
     </div>
+
+    <!-- ── Tiempos Muertos Sin Solución ────────────────────────────────────── -->
+    @if (pendingSvc.pendingRows().length > 0) {
+    <div class="bg-white dark:bg-[#27272a] border border-amber-200 dark:border-amber-800/40 rounded-xl p-4 shadow-sm">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+                <div class="size-8 rounded-lg bg-amber-100 dark:bg-amber-900/20 text-amber-500 flex items-center justify-center">
+                    <i class="ri-error-warning-line text-base"></i>
+                </div>
+                <div>
+                    <span class="text-sm font-bold text-slate-900 dark:text-slate-100">Sin Solución</span>
+                    <span class="text-xs text-slate-500 dark:text-[#b9b9b9] block">Tiempos muertos pendientes de hoy</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                    {{ pendingSvc.pendingRows().length }} pendientes
+                </span>
+                <a routerLink="/dts/pending-solutions"
+                   class="flex items-center gap-1 text-xs font-semibold text-[#006699] hover:underline">
+                    Ver todos <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Mini table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+                <thead>
+                    <tr class="border-b border-slate-100 dark:border-[#3f3f46]">
+                        <th class="text-left py-1.5 pr-3 font-semibold text-slate-500 dark:text-[#b9b9b9]">Hora</th>
+                        <th class="text-left py-1.5 pr-3 font-semibold text-slate-500 dark:text-[#b9b9b9]">Departamento</th>
+                        <th class="text-left py-1.5 pr-3 font-semibold text-slate-500 dark:text-[#b9b9b9]">Razón</th>
+                        <th class="text-left py-1.5 pr-3 font-semibold text-slate-500 dark:text-[#b9b9b9]">Línea</th>
+                        <th class="text-right py-1.5 font-semibold text-slate-500 dark:text-[#b9b9b9]">DT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (row of pendingPreview(); track row.id) {
+                    <tr class="border-b border-slate-50 dark:border-[#3f3f46]/50 hover:bg-amber-50/40 dark:hover:bg-amber-900/10 transition-colors">
+                        <td class="py-1.5 pr-3 text-slate-500 dark:text-[#b9b9b9] whitespace-nowrap">{{ row.hourRange }}</td>
+                        <td class="py-1.5 pr-3 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{{ row.department }}</td>
+                        <td class="py-1.5 pr-3 text-slate-600 dark:text-[#b9b9b9] max-w-[200px] truncate">{{ row.reason }}</td>
+                        <td class="py-1.5 pr-3 text-slate-500 dark:text-[#b9b9b9]">{{ row.line }}</td>
+                        <td class="py-1.5 text-right font-semibold text-amber-600 dark:text-amber-400 whitespace-nowrap">{{ fmtMins(row.dt) }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (pendingSvc.pendingRows().length > 5) {
+        <p class="mt-2 text-center text-xs text-slate-400 dark:text-[#b9b9b9]">
+            +{{ pendingSvc.pendingRows().length - 5 }} más —
+            <a routerLink="/dts/pending-solutions" class="text-[#006699] hover:underline font-medium">ver todos</a>
+        </p>
+        }
+    </div>
+    }
 
     <!-- ── Middle Row: Pareto + Donut ──────────────────────────────────────── -->
     <div class="grid grid-cols-5 gap-2">
@@ -96,21 +157,31 @@
                     </div>
                 </div>
             </div>
-            <apx-chart
-                [series]="paretoOptions.series"
-                [chart]="paretoOptions.chart"
-                [plotOptions]="paretoOptions.plotOptions"
-                [colors]="paretoOptions.colors"
-                [dataLabels]="paretoOptions.dataLabels"
-                [stroke]="paretoOptions.stroke"
-                [xaxis]="paretoOptions.xaxis"
-                [yaxis]="paretoOptions.yaxis"
-                [grid]="paretoOptions.grid"
-                [legend]="paretoOptions.legend"
-                [fill]="paretoOptions.fill"
-                [tooltip]="paretoOptions.tooltip"
-                [theme]="paretoOptions.theme">
-            </apx-chart>
+            @if (loading()) {
+                <div class="flex justify-center items-center h-40 text-slate-400 text-sm">
+                    <i class="ri-loader-4-line animate-spin mr-2"></i> Cargando...
+                </div>
+            } @else if (analyticsSvc.dashboard()?.pareto?.length) {
+                <apx-chart
+                    [series]="paretoOptions().series"
+                    [chart]="paretoOptions().chart"
+                    [plotOptions]="paretoOptions().plotOptions"
+                    [colors]="paretoOptions().colors"
+                    [dataLabels]="paretoOptions().dataLabels"
+                    [stroke]="paretoOptions().stroke"
+                    [xaxis]="paretoOptions().xaxis"
+                    [yaxis]="paretoOptions().yaxis"
+                    [grid]="paretoOptions().grid"
+                    [legend]="paretoOptions().legend"
+                    [fill]="paretoOptions().fill"
+                    [tooltip]="paretoOptions().tooltip"
+                    [theme]="paretoOptions().theme">
+                </apx-chart>
+            } @else {
+                <div class="flex justify-center items-center h-40 text-slate-400 text-sm">
+                    Sin datos de clasificación — agrega registros con causas para ver el Pareto
+                </div>
+            }
         </div>
 
         <!-- Distribution by Department -->
@@ -120,33 +191,41 @@
                 <p class="text-xs text-slate-500 dark:text-[#b9b9b9]">Participación del tiempo muerto por departamento</p>
             </div>
 
-            <div class="flex flex-col items-center gap-1">
-                <apx-chart
-                    [series]="donutOptions.series"
-                    [chart]="donutOptions.chart"
-                    [colors]="donutOptions.colors"
-                    [labels]="donutOptions.labels"
-                    [plotOptions]="donutOptions.plotOptions"
-                    [dataLabels]="donutOptions.dataLabels"
-                    [legend]="donutOptions.legend"
-                    [stroke]="donutOptions.stroke"
-                    [tooltip]="donutOptions.tooltip"
-                    [theme]="donutOptions.theme">
-                </apx-chart>
-
-                <!-- Leyenda -->
-                <div class="w-full flex flex-col gap-1.5 px-2">
-                    @for (dept of departments; track dept.name) {
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="size-2.5 rounded-full" [style.background-color]="dept.color"></span>
-                                <span class="text-xs text-slate-600 dark:text-[#b9b9b9]">{{ dept.name }}</span>
-                            </div>
-                            <span class="text-xs font-bold text-slate-800 dark:text-slate-200">{{ dept.pct }}%</span>
-                        </div>
-                    }
+            @if (loading()) {
+                <div class="flex justify-center items-center h-40 text-slate-400 text-sm">
+                    <i class="ri-loader-4-line animate-spin mr-2"></i> Cargando...
                 </div>
-            </div>
+            } @else if (departments().length) {
+                <div class="flex flex-col items-center gap-1">
+                    <apx-chart
+                        [series]="donutOptions().series"
+                        [chart]="donutOptions().chart"
+                        [colors]="donutOptions().colors"
+                        [labels]="donutOptions().labels"
+                        [plotOptions]="donutOptions().plotOptions"
+                        [dataLabels]="donutOptions().dataLabels"
+                        [legend]="donutOptions().legend"
+                        [stroke]="donutOptions().stroke"
+                        [tooltip]="donutOptions().tooltip"
+                        [theme]="donutOptions().theme">
+                    </apx-chart>
+                    <div class="w-full flex flex-col gap-1.5 px-2">
+                        @for (dept of departments(); track dept.name) {
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="size-2.5 rounded-full" [style.background-color]="dept.color"></span>
+                                    <span class="text-xs text-slate-600 dark:text-[#b9b9b9]">{{ dept.name }}</span>
+                                </div>
+                                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">{{ dept.pct }}%</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            } @else {
+                <div class="flex justify-center items-center h-40 text-slate-400 text-sm">
+                    Sin datos de departamentos disponibles
+                </div>
+            }
         </div>
 
     </div>
@@ -172,16 +251,16 @@
                 </div>
             </div>
             <apx-chart
-                [series]="heatmapOptions.series"
-                [chart]="heatmapOptions.chart"
-                [dataLabels]="heatmapOptions.dataLabels"
-                [colors]="heatmapOptions.colors"
-                [xaxis]="heatmapOptions.xaxis"
-                [yaxis]="heatmapOptions.yaxis"
-                [grid]="heatmapOptions.grid"
-                [tooltip]="heatmapOptions.tooltip"
-                [theme]="heatmapOptions.theme"
-                [plotOptions]="heatmapOptions.plotOptions">
+                [series]="heatmapOptions().series"
+                [chart]="heatmapOptions().chart"
+                [dataLabels]="heatmapOptions().dataLabels"
+                [colors]="heatmapOptions().colors"
+                [xaxis]="heatmapOptions().xaxis"
+                [yaxis]="heatmapOptions().yaxis"
+                [grid]="heatmapOptions().grid"
+                [tooltip]="heatmapOptions().tooltip"
+                [theme]="heatmapOptions().theme"
+                [plotOptions]="heatmapOptions().plotOptions">
             </apx-chart>
         </div>
 
@@ -204,18 +283,18 @@
                 </div>
             </div>
             <apx-chart
-                [series]="trendOptions.series"
-                [chart]="trendOptions.chart"
-                [colors]="trendOptions.colors"
-                [fill]="trendOptions.fill"
-                [stroke]="trendOptions.stroke"
-                [dataLabels]="trendOptions.dataLabels"
-                [xaxis]="trendOptions.xaxis"
-                [yaxis]="trendOptions.yaxis"
-                [grid]="trendOptions.grid"
-                [legend]="trendOptions.legend"
-                [tooltip]="trendOptions.tooltip"
-                [theme]="trendOptions.theme">
+                [series]="trendOptions().series"
+                [chart]="trendOptions().chart"
+                [colors]="trendOptions().colors"
+                [fill]="trendOptions().fill"
+                [stroke]="trendOptions().stroke"
+                [dataLabels]="trendOptions().dataLabels"
+                [xaxis]="trendOptions().xaxis"
+                [yaxis]="trendOptions().yaxis"
+                [grid]="trendOptions().grid"
+                [legend]="trendOptions().legend"
+                [tooltip]="trendOptions().tooltip"
+                [theme]="trendOptions().theme">
             </apx-chart>
         </div>
 

@@ -10,4 +10,8 @@ export const SOCKETS_CONFIG: Record<string, SocketConfig> = {
         name: 'socketUser', 
         url: environment.userURL 
     },
+    Dts: {
+        name: 'socketDts',
+        url: environment.dtsURL
+    },
 };

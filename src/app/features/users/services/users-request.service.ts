@@ -90,4 +90,21 @@ export class UsersRequestService {
       },
     });
   }
+
+  deleteUser(userId: string) {
+    this.userState.loadingDeleteUser.set(true);
+    this.http
+      .delete(`${this.userURL}/v1/users/${userId}`)
+      .pipe(finalize(() => this.userState.loadingDeleteUser.set(false)))
+      .subscribe({
+        next: () => {
+          this.alert.success('User deleted successfully!');
+          this.getUsers(false);
+        },
+        error: (error) => {
+          console.error('Error deleting user:', error);
+          this.alert.error('Failed to delete user. Please try again.');
+        },
+      });
+  }
 }

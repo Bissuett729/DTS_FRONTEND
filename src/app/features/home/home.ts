@@ -20,6 +20,7 @@ import {
   ApexAnnotations,
   ApexTheme,
 } from 'ng-apexcharts';
+import { DtsCard } from "../../shared";
 
 const DARK_CHART = {
   background: 'transparent',
@@ -41,7 +42,7 @@ function fmtMins(mins: number): string {
 @Component({
   selector: 'foxcode-home',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule, RouterModule],
+  imports: [CommonModule, NgApexchartsModule, RouterModule, DtsCard],
   templateUrl: './home.html',
 })
 export class Home implements OnInit {

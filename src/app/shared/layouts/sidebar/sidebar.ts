@@ -42,10 +42,11 @@ export class Sidebar implements OnInit {
     {
       name: 'Seguimiento',
       menus: [
-        { name: 'Registro',       route: 'register',           icon: 'ri-file-edit-line'      },
-        { name: 'Tendencias',     route: 'trends',             icon: 'ri-line-chart-line'     },
-        { name: 'Reporte Hora x Hora',       route: 'reports',            icon: 'ri-bar-chart-2-line'    },
-        { name: 'Sin Solución',   route: 'pending-solutions',  icon: 'ri-error-warning-line'  },
+        { name: 'Registro',           route: 'register',           icon: 'ri-file-edit-line'      },
+        { name: 'Tendencias',         route: 'trends',             icon: 'ri-line-chart-line'     },
+        { name: 'Reporte Hora x Hora',route: 'reports',            icon: 'ri-bar-chart-2-line'    },
+        { name: 'Sin Solución',       route: 'pending-solutions',  icon: 'ri-error-warning-line'  },
+        { name: 'Predicciones IA',    route: 'ai-insights',        icon: 'ri-brain-line'          },
       ],
     },
     {

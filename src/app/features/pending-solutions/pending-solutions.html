@@ -144,14 +144,13 @@
                     </textarea>
                   </td>
                   <td class="px-3 py-3 text-center">
-                    <button
-                      (click)="saveSolution(row)"
+                    <dts-button
+                      size="xs"
+                      label="Guardar"
+                      icon="ri-save-line"
                       [disabled]="!row.rca.trim()"
-                      class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors
-                        bg-[#006699] text-white hover:bg-[#005580]
-                        disabled:opacity-40 disabled:cursor-not-allowed">
-                      <i class="ri-save-line mr-1"></i>Guardar
-                    </button>
+                      (onClick)="saveSolution(row)">
+                    </dts-button>
                   </td>
                 </tr>
               }

@@ -1,6 +1,6 @@
-<section class="h-full w-full flex flex-col gap-y-2 p-2">
+<section class="w-full h-full flex flex-col gap-y-2 p-2">
 
-    <dts-card>
+    <dts-card shadow="none">
 
         <div class="flex items-center justify-between">
 
@@ -73,13 +73,14 @@
                         </td>
     
                         <td class="px-6 py-4 text-right">
-                            <div class="flex items-center justify-center">
-                                <button (click)="openUpdateUserModal(user)" class="p-1 text-slate-400 hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined">Editar</span>
+                            <div class="flex items-center justify-center gap-x-1">
+                                <button (click)="openUpdateUserModal(user)" title="Editar usuario"
+                                    class="p-1.5 text-slate-400 hover:text-primary rounded-md hover:bg-slate-100 dark:hover:bg-[#3d3d3d] transition-colors">
+                                    <i class="ri-pencil-line text-base"></i>
                                 </button>
-
-                                <button class="p-1 text-slate-400 hover:text-red-500 transition-colors">
-                                    <span class="material-symbols-outlined">Desactivar</span>
+                                <button title="Desactivar usuario"
+                                    class="p-1.5 text-slate-400 hover:text-red-500 rounded-md hover:bg-slate-100 dark:hover:bg-[#3d3d3d] transition-colors">
+                                    <i class="ri-user-forbid-line text-base"></i>
                                 </button>
                             </div>
                         </td>

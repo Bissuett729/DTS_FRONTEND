@@ -59,6 +59,10 @@ export const routes: Routes = [
                 loadChildren: () => import('./features/pending-solutions/pending-solutions.routes').then(m => m.PendingSolutionsRoutes)
             },
             {
+                path: 'ai-insights',
+                loadChildren: () => import('./features/ai-insights/ai-insights.routes').then(m => m.AiInsightsRoutes)
+            },
+            {
                 path: '',
                 redirectTo: 'home',
                 pathMatch: 'full'
